@@ -3,4 +3,6 @@ General Constrained Diophantine Equation Solver
 
 pip install PEQNP
 
-More Info https://twitter.com/maxtuno
+Documentation by example https://github.com/maxtuno/PEQNP
+
+More info https://twitter.com/maxtuno
