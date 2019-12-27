@@ -20,31 +20,21 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-import numpy as np
-from peqnp import *
+import sys
+import random
 
 if __name__ == '__main__':
 
-    n = int(sys.argv[1])
+    seed = 0
 
-    np.random.seed(n)
+    random.seed(seed)
 
-    matrix = np.random.randint(0, 2, size=(n, n))
-    matrix -= np.identity(n, dtype=int) * np.diagonal(matrix)
+    capacity = int(sys.argv[1])
+    size = int(sys.argv[1])
 
-    print(matrix)
-
-    engine(2 * n.bit_length())
-
-    indexes, elements = permutations((1 - matrix).tolist(), n)
-
-    assert sum(elements) == 0
-
-    if satisfy(turbo=True):
-        for i in indexes:
-            for j in indexes:
-                sys.stdout.write('{} '.format(matrix[i.value][j.value]))
-            print()
-        print()
-    else:
-        print('Infeasible ...')
+    elements = sorted([random.randint(1, capacity // 2 - 1) for _ in range(size)], reverse=True)
+    with open('bpp.txt', 'w') as file:
+        print(size, file=file)
+        print(capacity, file=file)
+        for element in elements:
+            print(element, file=file)

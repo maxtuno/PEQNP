@@ -20,31 +20,39 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-import numpy as np
 from peqnp import *
+
+
+def load_file(file_name):
+    mat = []
+    with open(file_name, 'r') as file:
+        for line in file.readlines():
+            if line.startswith('p edge '):
+                n_ = int(line[len('p edge '):].split(' ')[0])
+            elif line.startswith('e '):
+                x, y = map(int, line[len('e '):].split(' '))
+                mat.append((x, y))
+    return n_, mat
+
 
 if __name__ == '__main__':
 
-    n = int(sys.argv[1])
+    n, matrix = load_file(sys.argv[1])
+    size = int(sys.argv[2])
 
-    np.random.seed(n)
+    engine(bits=size.bit_length())
 
-    matrix = np.random.randint(0, 2, size=(n, n))
-    matrix -= np.identity(n, dtype=int) * np.diagonal(matrix)
+    bits = integer(bits=n)
 
-    print(matrix)
+    assert sum(switch(bits, i) for i in range(n)) == size
 
-    engine(2 * n.bit_length())
-
-    indexes, elements = permutations((1 - matrix).tolist(), n)
-
-    assert sum(elements) == 0
+    for i in range(n - 1):
+        for j in range(i + 1, n):
+            if (i, j) not in matrix and (j, i) not in matrix:
+                assert switch(bits, i) + switch(bits, j) <= 1
 
     if satisfy(turbo=True):
-        for i in indexes:
-            for j in indexes:
-                sys.stdout.write('{} '.format(matrix[i.value][j.value]))
-            print()
-        print()
+        print(size)
+        print(' '.join([str(i) for i in range(n) if not bits.binary[i]]))
     else:
         print('Infeasible ...')
