@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
-//        Copyright (c) 2012-2019 Oscar Riveros. all rights reserved.        //
-//                        oscar.riveros@peqnp-lib.science                        //
+//        Copyright (c) 2012-2020 Oscar Riveros. all rights reserved.        //
+//                        oscar.riveros@peqnp.science                        //
 //                                                                           //
 //   without any restriction, Oscar Riveros reserved rights, patents and     //
 //  commercialization of this knowledge or derived directly from this work.  //
@@ -18,7 +18,6 @@ using namespace SLIME;
 
 SimpSolver *S;
 int v;
-bool logs;
 
 #if _WIN32 || _WIN64
 void printHeader() {
@@ -87,21 +86,12 @@ PyObject *solve(PyObject *self, PyObject *args) {
         Py_RETURN_NONE;
     }
 
-    if (simplify && !logs) {
-        // printHeader();
+    if (simplify) {
         S->eliminate();
-        logs = true;
-        // S->log = true;
-    } else {
-        S->log = false;
     }
 
     vec<Lit> assumptions;
     lbool result = S->solveLimited(assumptions, false);
-
-    if (simplify) {
-        // printf("\n\n");
-    }
 
     if (result == l_True) {
         PyObject *modelList = PyList_New(S->nVars());

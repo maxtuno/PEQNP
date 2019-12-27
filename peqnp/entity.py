@@ -1,7 +1,7 @@
 """
 ///////////////////////////////////////////////////////////////////////////////
-//        Copyright (c) 2012-2019 Oscar Riveros. all rights reserved.        //
-//                        oscar.riveros@peqnp-lib.science                        //
+//        Copyright (c) 2012-2020 Oscar Riveros. all rights reserved.        //
+//                        oscar.riveros@peqnp.science                        //
 //                                                                           //
 //   without any restriction, Oscar Riveros reserved rights, patents and     //
 //  commercialization of this knowledge or derived directly from this work.  //
@@ -37,9 +37,9 @@ class Entity:
             return self.value + other
         output_block = self._encoder.create_block()
         if isinstance(other, Entity):
-            self._encoder.encode_bv_ripple_carry_adder_gate(self._block, other._block, self._encoder.true, output_block, self._encoder.true)
+            self._encoder.bv_rca_gate(self._block, other._block, self._encoder.true, output_block, self._encoder.true)
         else:
-            self._encoder.encode_bv_ripple_carry_adder_gate(self._block, self._encoder.create_constant(other), self._encoder.true, output_block, self._encoder.true)
+            self._encoder.bv_rca_gate(self._block, self._encoder.create_constant(other), self._encoder.true, output_block, self._encoder.true)
         return Entity(self._encoder, block=output_block)
 
     def __radd__(self, other):
@@ -52,8 +52,8 @@ class Entity:
             else:
                 return self.value == other
         if isinstance(other, Entity):
-            return self._encoder.encode_bv_eq_gate(self._block, other._block, self._encoder.false)
-        return self._encoder.encode_bv_eq_gate(self._block, self._encoder.create_constant(other), self._encoder.false)
+            return self._encoder.bv_eq_gate(self._block, other._block, self._encoder.false)
+        return self._encoder.bv_eq_gate(self._block, self._encoder.create_constant(other), self._encoder.false)
 
     def __mod__(self, other):
         if self.value is not None and other.value is not None:
@@ -62,15 +62,15 @@ class Entity:
             return self.value % other
         output_block = self._encoder.create_block()
         if isinstance(other, Entity):
-            self._encoder.encode_bv_long_urem_gate(self._block, other._block, output_block)
+            self._encoder.bv_lur_gate(self._block, other._block, output_block)
         else:
-            self._encoder.encode_bv_long_urem_gate(self._block, self._encoder.create_constant(other), output_block)
+            self._encoder.bv_lur_gate(self._block, self._encoder.create_constant(other), output_block)
         return Entity(self._encoder, block=output_block)
 
     def __ne__(self, other):
         if isinstance(other, Entity):
-            return self._encoder.encode_bv_eq_gate(self._block, other._block, self._encoder.true)
-        return self._encoder.encode_bv_eq_gate(self._block, self._encoder.create_constant(other), self._encoder.true)
+            return self._encoder.bv_eq_gate(self._block, other._block, self._encoder.true)
+        return self._encoder.bv_eq_gate(self._block, self._encoder.create_constant(other), self._encoder.true)
 
     def __mul__(self, other):
         if self.value is not None:
@@ -79,9 +79,9 @@ class Entity:
             return self.value * other
         output_block = self._encoder.create_block()
         if isinstance(other, Entity):
-            self._encoder.encode_bv_parallel_mul_gate(self._block, other._block, output_block, self._encoder.true)
+            self._encoder.bv_pm_gate(self._block, other._block, output_block, self._encoder.true)
         else:
-            self._encoder.encode_bv_parallel_mul_gate(self._block, self._encoder.create_constant(other), output_block, self._encoder.true)
+            self._encoder.bv_pm_gate(self._block, self._encoder.create_constant(other), output_block, self._encoder.true)
         return Entity(self._encoder, block=output_block)
 
     def __rmul__(self, other):
@@ -116,9 +116,9 @@ class Entity:
                 return self.value / other.value
         output_block = self._encoder.create_block()
         if isinstance(other, Entity):
-            self._encoder.encode_bv_long_udiv_gate(self._block, other._block, output_block, self._encoder.zero._block)
+            self._encoder.bv_lud_gate(self._block, other._block, output_block, self._encoder.zero._block)
         else:
-            self._encoder.encode_bv_long_udiv_gate(self._block, self._encoder.create_constant(other), output_block, self._encoder.zero._block)
+            self._encoder.bv_lud_gate(self._block, self._encoder.create_constant(other), output_block, self._encoder.zero._block)
         return Entity(self._encoder, block=output_block)
 
     def __sub__(self, other):
@@ -129,9 +129,9 @@ class Entity:
                 return self.value - other
         output_block = self._encoder.create_block()
         if isinstance(other, Entity):
-            output_block = self._encoder.encode_bv_ripple_carry_sub_gate(self._block, other._block, output_block)
+            output_block = self._encoder.bv_rcs_gate(self._block, other._block, output_block)
         else:
-            output_block = self._encoder.encode_bv_ripple_carry_sub_gate(self._block, self._encoder.create_constant(other), output_block)
+            output_block = self._encoder.bv_rcs_gate(self._block, self._encoder.create_constant(other), output_block)
         return Entity(self._encoder, block=output_block)
 
     def __rsub__(self, other):
@@ -144,9 +144,9 @@ class Entity:
             else:
                 return self.value < other
         if isinstance(other, Entity):
-            self._encoder.encode_bv_ule_gate(other._block, self._block, self._encoder.true)
+            self._encoder.bv_ule_gate(other._block, self._block, self._encoder.true)
         else:
-            self._encoder.encode_bv_ule_gate(self._encoder.create_constant(other), self._block, self._encoder.true)
+            self._encoder.bv_ule_gate(self._encoder.create_constant(other), self._block, self._encoder.true)
         return self
 
     def __le__(self, other):
@@ -159,9 +159,9 @@ class Entity:
             else:
                 return self.value > other
         if isinstance(other, Entity):
-            return self._encoder.encode_bv_ule_gate(self._block, other._block, self._encoder.true)
+            return self._encoder.bv_ule_gate(self._block, other._block, self._encoder.true)
         else:
-            return self._encoder.encode_bv_ule_gate(self._block, self._encoder.create_constant(other), self._encoder.true)
+            return self._encoder.bv_ule_gate(self._block, self._encoder.create_constant(other), self._encoder.true)
 
     def __ge__(self, other):
         if other > 0:
@@ -187,9 +187,9 @@ class Entity:
             else:
                 return self.value & other
         if isinstance(other, Entity):
-            output_block = self._encoder.encode_bv_and_gate(self._block, other._block)
+            output_block = self._encoder.bv_and_gate(self._block, other._block)
         else:
-            output_block = self._encoder.encode_bv_and_gate(self._block, self._encoder.create_constant(other))
+            output_block = self._encoder.bv_and_gate(self._block, self._encoder.create_constant(other))
         return Entity(self._encoder, block=output_block)
 
     def __or__(self, other):
@@ -199,9 +199,9 @@ class Entity:
             else:
                 return self.value | other
         if isinstance(other, Entity):
-            output_block = self._encoder.encode_bv_or_gate(self._block, other._block)
+            output_block = self._encoder.bv_or_gate(self._block, other._block)
         else:
-            output_block = self._encoder.encode_bv_or_gate(self._block, self._encoder.create_constant(other))
+            output_block = self._encoder.bv_or_gate(self._block, self._encoder.create_constant(other))
         return Entity(self._encoder, block=output_block)
 
     def __xor__(self, other):
@@ -211,9 +211,9 @@ class Entity:
             else:
                 return self.value ^ other
         if isinstance(other, Entity):
-            output_block = self._encoder.encode_bv_xor_gate(self._block, other._block)
+            output_block = self._encoder.bv_xor_gate(self._block, other._block)
         else:
-            output_block = self._encoder.encode_bv_xor_gate(self._block, self._encoder.create_constant(other))
+            output_block = self._encoder.bv_xor_gate(self._block, self._encoder.create_constant(other))
         return Entity(self._encoder, block=output_block)
 
     def iff(self, bit, other):
@@ -230,10 +230,10 @@ class Entity:
             else:
                 return self.iff(functools.reduce(operator.and_, [self._encoder.zero.iff(bit[j], self._encoder.one) for j in range(self._encoder.bits)])[0], self._encoder.create_constant(other))
         if isinstance(other, Entity):
-            output_block = self._encoder.encode_bv_mux_gate(self._block, other._block, bit)
+            output_block = self._encoder.bv_mux_gate(self._block, other._block, bit)
             return Entity(self._encoder, block=output_block)
         else:
-            output_block = self._encoder.encode_bv_mux_gate(self._block, self._encoder.create_constant(other), bit)
+            output_block = self._encoder.bv_mux_gate(self._block, self._encoder.create_constant(other), bit)
             return Entity(self._encoder, key=str(other), block=output_block)
 
     def __getitem__(self, item):
@@ -275,7 +275,6 @@ class Entity:
     @property
     def binary(self):
         def __encode(n):
-            #s = True if n >= 0 else False
             bits = []
             n = abs(n)
             for i in range(self._size):
@@ -284,7 +283,6 @@ class Entity:
                 else:
                     bits += [True]
                 n //= 2
-            #bits.append(s)
             return bits
 
         return __encode(self.value)

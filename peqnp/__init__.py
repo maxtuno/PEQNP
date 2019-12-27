@@ -1,7 +1,7 @@
 """
 ///////////////////////////////////////////////////////////////////////////////
-//        Copyright (c) 2012-2019 Oscar Riveros. all rights reserved.        //
-//                        oscar.riveros@peqnp-lib.science                        //
+//        Copyright (c) 2012-2020 Oscar Riveros. all rights reserved.        //
+//                        oscar.riveros@peqnp.science                        //
 //                                                                           //
 //   without any restriction, Oscar Riveros reserved rights, patents and     //
 //  commercialization of this knowledge or derived directly from this work.  //
@@ -17,4 +17,5 @@ __maintainer__ = "Oscar Riveros"
 __email__ = "oscar.riveros@peqnp-lib.science"
 __status__ = "Production"
 
+from .solver import hess_binary, hess_sequence
 from .stdlib import *

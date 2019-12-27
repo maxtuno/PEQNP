@@ -1,7 +1,7 @@
 """
 ///////////////////////////////////////////////////////////////////////////////
-//        Copyright (c) 2012-2019 Oscar Riveros. all rights reserved.        //
-//                        oscar.riveros@peqnp-lib.science                        //
+//        Copyright (c) 2012-2020 Oscar Riveros. all rights reserved.        //
+//                        oscar.riveros@peqnp.science                        //
 //                                                                           //
 //   without any restriction, Oscar Riveros reserved rights, patents and     //
 //  commercialization of this knowledge or derived directly from this work.  //
@@ -122,6 +122,16 @@ def sigma(f, i, n):
 def pi(f, i, n):
     global csp
     return csp.pi(f, i, n)
+
+
+def dot(xs, ys):
+    global csp
+    return csp.dot(xs, ys)
+
+
+def mul(xs, ys):
+    global csp
+    return csp.mul(xs, ys)
 
 
 def apply_single(args, f):

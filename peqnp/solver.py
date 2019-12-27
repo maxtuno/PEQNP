@@ -1,22 +1,18 @@
 """
 ///////////////////////////////////////////////////////////////////////////////
-//        Copyright (c) 2012-2019 Oscar Riveros. all rights reserved.        //
-//                        oscar.riveros@peqnp-lib.science                        //
+//        Copyright (c) 2012-2020 Oscar Riveros. all rights reserved.        //
+//                        oscar.riveros@peqnp.science                        //
 //                                                                           //
 //   without any restriction, Oscar Riveros reserved rights, patents and     //
 //  commercialization of this knowledge or derived directly from this work.  //
 ///////////////////////////////////////////////////////////////////////////////
 """
 
-import datetime
 import functools
 import operator
-import os
-import platform
-import sqlite3
-import subprocess
 import sys
 import uuid
+
 import slime
 
 from peqnp.entity import Entity
@@ -119,33 +115,33 @@ class CSP:
 
         return __encode(value)
 
-    def encode_or_gate(self, il, ol=None):
+    def or_gate(self, il, ol=None):
         if ol is None:
             ol = self.add_variable()
 
-        fwd_clause = list(il)
-        fwd_clause.append(-ol)
-        self.add_block(fwd_clause)
+        fc = list(il)
+        fc.append(-ol)
+        self.add_block(fc)
 
         for lit in il:
             self.add_block([-lit, ol])
 
         return ol
 
-    def encode_and_gate(self, il, ol=None):
+    def and_gate(self, il, ol=None):
         if ol is None:
             ol = self.add_variable()
 
-        fwd_clause = list(map(lambda x: -x, il))
-        fwd_clause.append(ol)
-        self.add_block(fwd_clause)
+        fc = list(map(lambda x: -x, il))
+        fc.append(ol)
+        self.add_block(fc)
 
         for lit in il:
             self.add_block([lit, -ol])
 
         return ol
 
-    def encode_binary_xor_gate(self, il, ol=None):
+    def binary_xor_gate(self, il, ol=None):
         if ol is None:
             ol = self.add_variable()
         l1, l2 = il[0], il[1]
@@ -157,7 +153,7 @@ class CSP:
 
         return ol
 
-    def encode_binary_mux_gate(self, il, ol=None):
+    def binary_mux_gate(self, il, ol=None):
         if ol is None:
             ol = self.add_variable()
         sel, lhs, rhs = il[0], il[1], il[2]
@@ -169,7 +165,7 @@ class CSP:
 
         return ol
 
-    def encode_full_adder_sum_gate(self, il, ol=None):
+    def fas_gate(self, il, ol=None):
         if ol is None:
             ol = self.add_variable()
 
@@ -187,7 +183,7 @@ class CSP:
 
         return ol
 
-    def encode_full_adder_carry_gate(self, il, ol=None):
+    def fac_gate(self, il, ol=None):
         if ol is None:
             ol = self.add_variable()
 
@@ -203,108 +199,124 @@ class CSP:
 
         return ol
 
-    def encode_cnf_constraint_as_gate(self, formula, ol=None):
-        clause_outs = list(map(lambda clause: self.encode_or_gate(clause), formula))
-        return self.encode_and_gate(clause_outs, ol)
-
-    def encode_gate_vector(self, basic_gate_encoder_fn, lhs_il, rhs_il, ol=None):
+    def gate_vector(self, bge, lhs_il, rhs_il, ol=None):
         if ol is None:
             ol = [None] * len(lhs_il)
 
-        return [basic_gate_encoder_fn((lhs, rhs), ol) for lhs, rhs, ol in zip(lhs_il, rhs_il, ol)]
+        return [bge((lhs, rhs), ol) for lhs, rhs, ol in zip(lhs_il, rhs_il, ol)]
 
-    def encode_bv_and_gate(self, lhs_il, rhs_il, ol=None):
-        ol = self.encode_gate_vector(self.encode_and_gate, lhs_il, rhs_il, ol)
+    def bv_and_gate(self, lhs_il, rhs_il, ol=None):
+        ol = self.gate_vector(self.and_gate, lhs_il, rhs_il, ol)
         return ol
 
-    def encode_bv_or_gate(self, lhs_il, rhs_il, ol=None):
-        return self.encode_gate_vector(self.encode_or_gate, lhs_il, rhs_il, ol)
+    def bv_or_gate(self, lhs_il, rhs_il, ol=None):
+        return self.gate_vector(self.or_gate, lhs_il, rhs_il, ol)
 
-    def encode_bv_xor_gate(self, lhs_il, rhs_il, ol=None):
-        return self.encode_gate_vector(self.encode_binary_xor_gate, lhs_il, rhs_il, ol)
+    def bv_xor_gate(self, lhs_il, rhs_il, ol=None):
+        return self.gate_vector(self.binary_xor_gate, lhs_il, rhs_il, ol)
 
-    def encode_bv_ripple_carry_adder_gate(self, lhs_il, rhs_il, carry_in_lit=None, ol=None, carry_out_lit=None):
-        width = min(len(lhs_il), len(rhs_il))
+    def bv_rca_gate(self, lhs_il, rhs_il, carry_in_lit=None, ol=None, carry_out_lit=None):
+        wt = min(len(lhs_il), len(rhs_il))
 
-        if width == 0:
+        if wt == 0:
             return []
 
         if ol is None:
-            ol = [self.add_variable() for _ in range(0, width)]
+            ol = [self.add_variable() for _ in range(0, wt)]
 
         ol = [o if o is not None else self.add_variable() for o in ol]
 
-        carries = [self.add_variable() for _ in range(0, width - 1)]
-        carries.append(carry_out_lit)
+        crr = [self.add_variable() for _ in range(0, wt - 1)]
+        crr.append(carry_out_lit)
 
         if carry_in_lit is not None:
-            adder_input = (lhs_il[0], rhs_il[0], carry_in_lit)
-            self.encode_full_adder_sum_gate(adder_input, ol[0])
-            if carries[0] is not None:
-                self.encode_full_adder_carry_gate(adder_input, carries[0])
+            adi = (lhs_il[0], rhs_il[0], carry_in_lit)
+            self.fas_gate(adi, ol[0])
+            if crr[0] is not None:
+                self.fac_gate(adi, crr[0])
         else:
-            adder_input = (lhs_il[0], rhs_il[0])
-            self.encode_binary_xor_gate(adder_input, ol[0])
-            if carries[0] is not None:
-                self.encode_and_gate(adder_input, carries[0])
+            adi = (lhs_il[0], rhs_il[0])
+            self.binary_xor_gate(adi, ol[0])
+            if crr[0] is not None:
+                self.and_gate(adi, crr[0])
 
-        for i in range(1, width):
-            adder_input = (lhs_il[i], rhs_il[i], carries[i - 1])
-            self.encode_full_adder_sum_gate(adder_input, ol[i])
-            if carries[i] is not None:
-                self.encode_full_adder_carry_gate(adder_input, carries[i])
+        for i in range(1, wt):
+            adi = (lhs_il[i], rhs_il[i], crr[i - 1])
+            self.fas_gate(adi, ol[i])
+            if crr[i] is not None:
+                self.fac_gate(adi, crr[i])
 
         return ol
 
-    def encode_bv_ripple_carry_sub_gate(self, lhs_il, rhs_il, ol=None):
-        flipped_rhs = [-x for x in rhs_il]
-        constantly_1 = self.add_variable()
-        self.add_block([constantly_1])
-        return self.encode_bv_ripple_carry_adder_gate(lhs_il=lhs_il, rhs_il=flipped_rhs, carry_in_lit=constantly_1, ol=ol)
+    def bv_rcs_gate(self, lhs_il, rhs_il, ol=None):
+        fl_rhs = [-x for x in rhs_il]
+        one = self.add_variable()
+        self.add_block([one])
+        return self.bv_rca_gate(lhs_il=lhs_il, rhs_il=fl_rhs, carry_in_lit=one, ol=ol)
 
-    def encode_bv_parallel_mul_gate(self, lhs_il, rhs_il, ol=None, overflow_literal=None):
-        width = len(lhs_il)
+    def bv_pm_gate(self, lhs_il, rhs_il, ol=None, ow_lit=None):
+        wt = len(lhs_il)
 
-        if width == 0:
+        if wt == 0:
             return []
 
-        def __create_fresh_literals(n):
+        def __cfl(n):
             return [self.add_variable() for _ in range(0, n)]
 
         if ol is None:
-            ol = __create_fresh_literals(width)
+            ol = __cfl(wt)
         else:
             ol = list(map(lambda l: self.add_variable() if l is None else l, ol))
 
-        partial_products = [[ol[0]] + __create_fresh_literals(width - 1)]
-        lowest_lhs = lhs_il[0]
-        self.encode_bv_and_gate(rhs_il, [lowest_lhs] * width, partial_products[0])
-        if overflow_literal is not None:
-            partial_products += [self.encode_bv_and_gate(rhs_il, [l] * width) for l in lhs_il[1:]]
+        pp = [[ol[0]] + __cfl(wt - 1)]
+        l_lhs = lhs_il[0]
+        self.bv_and_gate(rhs_il, [l_lhs] * wt, pp[0])
+        if ow_lit is not None:
+            pp += [self.bv_and_gate(rhs_il, [l] * wt) for l in lhs_il[1:]]
         else:
-            partial_products += [self.encode_bv_and_gate(rhs_il[0:width - i], [lhs_il[i]] * (width - i)) for i in range(1, width)]
-        partial_sums = [([ol[i]] + __create_fresh_literals(width - i - 1)) for i in range(1, width)]
-        partial_sum_carries = __create_fresh_literals(width - 1) if overflow_literal is not None else [None] * (width - 1)
+            pp += [self.bv_and_gate(rhs_il[0:wt - i], [lhs_il[i]] * (wt - i)) for i in range(1, wt)]
+        partial_sums = [([ol[i]] + __cfl(wt - i - 1)) for i in range(1, wt)]
+        csc = __cfl(wt - 1) if ow_lit is not None else [None] * (wt - 1)
 
-        current_partial_sum = partial_products[0][1:width]
-        for i in range(1, width):
-            current_partial_product = partial_products[i][0:width - i]
-            partial_sum_accu = partial_sums[i - 1]
-            assert len(current_partial_sum) == width - i
-            self.encode_bv_ripple_carry_adder_gate(lhs_il=current_partial_sum, rhs_il=current_partial_product, ol=partial_sum_accu, carry_out_lit=partial_sum_carries[i - 1])
-            current_partial_sum = partial_sum_accu[1:]
+        cps = pp[0][1:wt]
+        for i in range(1, wt):
+            cpp = pp[i][0:wt - i]
+            psa = partial_sums[i - 1]
+            assert len(cps) == wt - i
+            self.bv_rca_gate(lhs_il=cps, rhs_il=cpp, ol=psa, carry_out_lit=csc[i - 1])
+            cps = psa[1:]
 
-        if overflow_literal is not None:
-            overflow_indicators = partial_sum_carries[:]
-            for i in range(1, width):
-                overflow_indicators += partial_products[i][width - i:width]
-            self.encode_or_gate(overflow_indicators, overflow_literal)
+        if ow_lit is not None:
+            ow = csc[:]
+            for i in range(1, wt):
+                ow += pp[i][wt - i:wt]
+            self.or_gate(ow, ow_lit)
 
         return ol
 
-    def encode_bv_ule_gate(self, lhs_il, rhs_il, ol=None):
-        if len(lhs_il) != len(rhs_il):
-            raise ValueError("Sizes of lhs_il and rhs_il illegally mismatching")
+    def bv_ule_gate(self, lhs_il, rhs_il, ol=None):
+        if ol is None:
+            ol = self.add_variable()
+
+        if len(lhs_il) == 0:
+            self.add_block([ol])
+            return ol
+
+        if len(lhs_il) == 1:
+            self.and_gate([lhs_il[0], -rhs_il[0]], -ol)
+            return ol
+
+        wt = len(lhs_il)
+        rl = self.bv_ule_gate(lhs_il[:wt - 1], rhs_il[:wt - 1])
+
+        lhs_msb, rhs_msb = lhs_il[wt - 1], rhs_il[wt - 1]
+        msb_is_lt = self.and_gate([-lhs_msb, rhs_msb])
+        msb_is_eq = -self.binary_xor_gate([lhs_msb, rhs_msb])
+
+        leq_if_first_is_eq = self.and_gate([msb_is_eq, rl])
+        return self.or_gate([msb_is_lt, leq_if_first_is_eq], ol)
+
+    def bv_sle_gate(self, lhs_il, rhs_il, ol=None):
 
         if ol is None:
             ol = self.add_variable()
@@ -314,122 +326,99 @@ class CSP:
             return ol
 
         if len(lhs_il) == 1:
-            self.encode_and_gate([lhs_il[0], -rhs_il[0]], -ol)
-            return ol
+            return self.or_gate([lhs_il[0], -rhs_il[0]], ol)
 
-        width = len(lhs_il)
-        rest_leq = self.encode_bv_ule_gate(lhs_il[:width - 1], rhs_il[:width - 1])
+        wt = len(lhs_il)
+        lhs_msb = lhs_il[wt - 1]
+        rhs_msb = rhs_il[wt - 1]
+        rest_leq = self.bv_ule_gate(lhs_il=lhs_il[:wt - 1], rhs_il=rhs_il[:wt - 1])
+        msb_eq = -self.binary_xor_gate(il=[lhs_msb, rhs_msb])
+        sleq = self.and_gate(il=[msb_eq, rest_leq])
+        npos = self.and_gate(il=[lhs_msb, -rhs_msb])
+        return self.or_gate(il=[npos, sleq], ol=ol)
 
-        lhs_msb, rhs_msb = lhs_il[width - 1], rhs_il[width - 1]
-        msb_is_lt = self.encode_and_gate([-lhs_msb, rhs_msb])
-        msb_is_eq = -self.encode_binary_xor_gate([lhs_msb, rhs_msb])
-
-        leq_if_first_is_eq = self.encode_and_gate([msb_is_eq, rest_leq])
-        return self.encode_or_gate([msb_is_lt, leq_if_first_is_eq], ol)
-
-    def encode_bv_sle_gate(self, lhs_il, rhs_il, ol=None):
+    def bv_eq_gate(self, lhs_il, rhs_il, ol=None):
 
         if ol is None:
             ol = self.add_variable()
 
-        if len(lhs_il) == 0:
-            self.add_block([ol])
-            return ol
-
-        if len(lhs_il) == 1:
-            return self.encode_or_gate([lhs_il[0], -rhs_il[0]], ol)
-
-        width = len(lhs_il)
-        lhs_msb = lhs_il[width - 1]
-        rhs_msb = rhs_il[width - 1]
-        rest_leq = self.encode_bv_ule_gate(lhs_il=lhs_il[:width - 1], rhs_il=rhs_il[:width - 1])
-        msb_eq = -self.encode_binary_xor_gate(il=[lhs_msb, rhs_msb])
-        same_sign_and_leq = self.encode_and_gate(il=[msb_eq, rest_leq])
-        lhs_neg_and_rhs_pos = self.encode_and_gate(il=[lhs_msb, -rhs_msb])
-        return self.encode_or_gate(il=[lhs_neg_and_rhs_pos, same_sign_and_leq], ol=ol)
-
-    def encode_bv_eq_gate(self, lhs_il, rhs_il, ol=None):
-
-        if ol is None:
-            ol = self.add_variable()
-
-        differences = self.encode_bv_xor_gate(lhs_il, rhs_il)
-        self.encode_or_gate(differences, -ol)
+        dif = self.bv_xor_gate(lhs_il, rhs_il)
+        self.or_gate(dif, -ol)
         return ol
 
-    def encode_bv_mux_gate(self, lhs_il, rhs_il, select_lhs_lit=None, ol=None):
-        select_lhs_lit = self.add_variable() if select_lhs_lit is None else select_lhs_lit
-        lhs_selection = self.encode_bv_and_gate(lhs_il=lhs_il, rhs_il=[select_lhs_lit] * len(lhs_il))
-        rhs_selection = self.encode_bv_and_gate(lhs_il=rhs_il, rhs_il=[-select_lhs_lit] * len(rhs_il))
-        return self.encode_bv_or_gate(lhs_il=lhs_selection, rhs_il=rhs_selection, ol=ol)
+    def bv_mux_gate(self, lhs_il, rhs_il, s_lhs_lit=None, ol=None):
+        s_lhs_lit = self.add_variable() if s_lhs_lit is None else s_lhs_lit
+        lhs_s = self.bv_and_gate(lhs_il=lhs_il, rhs_il=[s_lhs_lit] * len(lhs_il))
+        rhs_s = self.bv_and_gate(lhs_il=rhs_il, rhs_il=[-s_lhs_lit] * len(rhs_il))
+        return self.bv_or_gate(lhs_il=lhs_s, rhs_il=rhs_s, ol=ol)
 
-    def encode_staggered_or_gate(self, il, ol=None):
-        width = len(il)
+    def bv_lud_gate(self, lhs_il, rhs_il, ol=None, remainder_ol=None):
+        wt = len(lhs_il)
 
-        if width == 0:
+        if wt == 0:
             return []
 
-        if ol is None:
-            result = [self.add_variable() for _ in range(0, width)]
-        else:
-            result = [out_lit if out_lit is not None else self.add_variable() for out_lit in ol]
-
-        self.encode_or_gate(il=[il[-1]], ol=result[-1])
-
-        for idx in reversed(range(0, width - 1)):
-            self.encode_or_gate(il=[il[idx], result[idx + 1]], ol=result[idx])
-
-        return result
-
-    def encode_bv_long_udiv_gate(self, lhs_il, rhs_il, ol=None, remainder_ol=None):
-        width = len(lhs_il)
-
-        if width == 0:
-            return []
-
-        def __create_fresh_literals(n):
+        def __cfl(n):
             return [self.add_variable() for _ in range(0, n)]
 
-        constantly_false = self.add_variable()
-        self.add_block([-constantly_false])
+        cf = self.add_variable()
+        self.add_block([-cf])
 
-        divisor_any_higher_bits_nonzero = self.encode_staggered_or_gate(il=rhs_il)
+        dnz = self.stg_or_gate(il=rhs_il)
 
-        quotient = __create_fresh_literals(width)
+        qt = __cfl(wt)
 
-        remainder = list()
-        for step_idx in reversed(range(0, width)):
-            remainder = [lhs_il[step_idx]] + remainder
+        rem = list()
+        for step_idx in reversed(range(0, wt)):
+            rem = [lhs_il[step_idx]] + rem
 
-            if len(remainder) == len(rhs_il):
-                self.encode_bv_ule_gate(lhs_il=rhs_il, rhs_il=remainder, ol=quotient[step_idx])
+            if len(rem) == len(rhs_il):
+                self.bv_ule_gate(lhs_il=rhs_il, rhs_il=rem, ol=qt[step_idx])
             else:
-                lower_bit_comparison = self.encode_bv_ule_gate(lhs_il=rhs_il[0:len(remainder)], rhs_il=remainder)
-                higher_bits_comparison = divisor_any_higher_bits_nonzero[len(remainder)]
-                self.encode_and_gate(il=[lower_bit_comparison, -higher_bits_comparison], ol=quotient[step_idx])
+                lbc = self.bv_ule_gate(lhs_il=rhs_il[0:len(rem)], rhs_il=rem)
+                hbc = dnz[len(rem)]
+                self.and_gate(il=[lbc, -hbc], ol=qt[step_idx])
 
-            remainder_minus_divisor = self.encode_bv_ripple_carry_sub_gate(lhs_il=remainder, rhs_il=rhs_il[0:len(remainder)])
+            rmd = self.bv_rcs_gate(lhs_il=rem, rhs_il=rhs_il[0:len(rem)])
 
-            remainder = self.encode_bv_mux_gate(lhs_il=remainder_minus_divisor, rhs_il=remainder, select_lhs_lit=quotient[step_idx])
+            rem = self.bv_mux_gate(lhs_il=rmd, rhs_il=rem, s_lhs_lit=qt[step_idx])
 
-        rhs_is_zero = -self.encode_or_gate(il=rhs_il)
+        rhs_is_zero = -self.or_gate(il=rhs_il)
 
         if remainder_ol is not None:
-            self.encode_bv_and_gate(lhs_il=[-rhs_is_zero] * width, rhs_il=remainder, ol=remainder_ol)
+            self.bv_and_gate(lhs_il=[-rhs_is_zero] * wt, rhs_il=rem, ol=remainder_ol)
 
-        return self.encode_bv_and_gate(lhs_il=[-rhs_is_zero] * width, rhs_il=quotient, ol=ol)
+        return self.bv_and_gate(lhs_il=[-rhs_is_zero] * wt, rhs_il=qt, ol=ol)
 
-    def encode_bv_long_urem_gate(self, lhs_il, rhs_il, ol=None):
+    def bv_lur_gate(self, lhs_il, rhs_il, ol=None):
         if ol is None:
             ol = [self.add_variable() for _ in lhs_il]
         else:
             ol = [self.add_variable() if x is None else x for x in ol]
 
-        self.encode_bv_long_udiv_gate(
+        self.bv_lud_gate(
             lhs_il=lhs_il, rhs_il=rhs_il,
             remainder_ol=ol)
 
         return ol
+
+    def stg_or_gate(self, il, ol=None):
+        wt = len(il)
+
+        if wt == 0:
+            return []
+
+        if ol is None:
+            result = [self.add_variable() for _ in range(0, wt)]
+        else:
+            result = [out_lit if out_lit is not None else self.add_variable() for out_lit in ol]
+
+        self.or_gate(il=[il[-1]], ol=result[-1])
+
+        for idx in reversed(range(0, wt - 1)):
+            self.or_gate(il=[il[idx], result[idx + 1]], ol=result[idx])
+
+        return result
 
     @property
     def bits(self):
@@ -675,28 +664,3 @@ def hess_binary(n, oracle):
         if anchor == glb:
             break
     return opt
-
-
-def decode(key, folder):
-    mapping = {}
-    solution = {}
-    connection = sqlite3.connect('{}{}.db'.format(folder, key))
-    for (k, v) in connection.cursor().execute('''SELECT * FROM mapping'''):
-        mapping[k] = eval(v)
-    with open('{}{}.mod'.format(folder, key), 'r') as mod:
-        lines = mod.readlines()
-        model = ''
-        std_model = False
-        for line in lines:
-            if line.startswith('s UNSATISFIABLE') or line.startswith('UNSAT'):
-                return solution
-            if line.startswith('SAT'):
-                std_model = True
-                continue
-            if line.startswith('v ') or std_model:
-                model += ' '.join([c for c in line.replace('v', '').rstrip('\n').split(' ') if c != '']) + ' '
-        model = model.lstrip(' ').split(' ')[:-1]
-        for key, value in mapping.items():
-            if not key.startswith('_'):
-                solution[key] = int(''.join(map(str, [int(int(model[abs(bit) - 1]) > 0) for bit in value[::-1]])), 2)
-    return solution
