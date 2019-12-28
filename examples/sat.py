@@ -21,6 +21,8 @@ SOFTWARE.
 """
 
 import sys
+import functools
+import operator
 from peqnp import *
 
 

@@ -27,7 +27,7 @@ def integer(key=None, bits=None):
 
 def constant(bits=None, value=None):
     global variables
-    variables.append(csp.int(key=str(value), size=bits, value=value))
+    variables.append(csp.int(size=bits, value=value))
     return variables[-1]
 
 
@@ -35,9 +35,9 @@ def satisfy(solve=True, turbo=False, log=False, assumptions=[], cnf_path=''):
     return csp.to_sat(variables, solve=solve, turbo=turbo, log=log, assumptions=assumptions, cnf_path=cnf_path)
 
 
-def subsets(universe, k=None):
+def subsets(key=None, universe=None, k=None):
     global variables
-    bits = csp.int(size=len(universe))
+    bits = csp.int(key=key, size=len(universe))
     variables.append(bits)
     if k is not None:
         assert sum(csp.zero.iff(-bits[i], csp.one) for i in range(len(universe))) == k
@@ -102,9 +102,9 @@ def sign(arg):
     return 1 if arg >= 0 else -1
 
 
-def one_of(args):
+def one_of(key=None, args=None):
     global csp
-    bits = csp.int(size=len(args))
+    bits = csp.int(key, size=len(args))
     assert sum(csp.zero.iff(bits[i], csp.one) for i in range(len(args))) == 1
     return sum(csp.zero.iff(bits[i], args[i]) for i in range(len(args)))
 
@@ -147,6 +147,7 @@ def apply_dual(args, f):
 def all_different(args):
     global csp
     csp.apply(args, dual=lambda x, y: x != y)
+
 
 def flatten(args):
     global csp

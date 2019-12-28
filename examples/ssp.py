@@ -36,7 +36,7 @@ if __name__ == '__main__':
 
     engine(bits=t.bit_length())
 
-    bits, subset = subsets(universe)
+    bits, subset = subsets(key='bits', universe=universe)
 
     assert sum(subset) == t
 
