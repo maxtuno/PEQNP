@@ -21,10 +21,8 @@ class CSP:
         self._oo = 2 ** bits - 1
         self._deepness = deepness if deepness is not None else bits // 2
         self._number_of_clauses = 0
-        self._ready = False
         self._number_of_variables = 0
         self._number_of_clauses = 0
-        self._offset = None
         self._unitary = [-1]
         self.__0 = None
         self.__1 = None
@@ -32,9 +30,6 @@ class CSP:
         self._false = -self._true
         self._unsat = True
         self._constants = {}
-        self._hard = (1 << 32) - 1
-        self._weight = self._hard
-        self._solutions = []
         self.add_block([-self._true])
 
     @property
@@ -429,18 +424,6 @@ class CSP:
     def unsat(self):
         return self._unsat
 
-    @property
-    def hard(self):
-        return self._hard
-
-    @property
-    def weight(self):
-        return self._weight
-
-    @weight.setter
-    def weight(self, weight):
-        self._weight = str(weight)
-
     def to_sat(self, args, solve=True, turbo=False, log=False, assumptions=[], cnf_path=''):
         model = slime.solve(solve, turbo, log, assumptions, cnf_path)
         if cnf_path:
@@ -615,6 +598,13 @@ class CSP:
         return value - (1 << self._bits)
 
 
+# ///////////////////////////////////////////////////////////////////////////////
+# //        Copyright (c) 2012-2020 Oscar Riveros. all rights reserved.        //
+# //                        oscar.riveros@peqnp.science                        //
+# //                                                                           //
+# //   without any restriction, Oscar Riveros reserved rights, patents and     //
+# //  commercialization of this knowledge or derived directly from this work.  //
+# ///////////////////////////////////////////////////////////////////////////////
 def hess_sequence(n, oracle):
     xs = list(range(n))
     glb = oracle(xs)
@@ -643,6 +633,13 @@ def hess_sequence(n, oracle):
     return opt
 
 
+# ///////////////////////////////////////////////////////////////////////////////
+# //        Copyright (c) 2012-2020 Oscar Riveros. all rights reserved.        //
+# //                        oscar.riveros@peqnp.science                        //
+# //                                                                           //
+# //   without any restriction, Oscar Riveros reserved rights, patents and     //
+# //  commercialization of this knowledge or derived directly from this work.  //
+# ///////////////////////////////////////////////////////////////////////////////
 def hess_binary(n, oracle):
     xs = [False] * n
     glb = oracle(xs)
