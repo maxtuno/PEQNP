@@ -40,7 +40,7 @@ if __name__ == '__main__':
 
     assert sum(subset) == t
 
-    if satisfy(turbo=True, log=True):
+    if satisfy(turbo=True, log=True, cnf_path='ssp.cnf'):
         solution = [universe[i] for i in range(len(universe)) if bits.binary[i]]
         print(sum(solution), solution)
         print()

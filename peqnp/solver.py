@@ -445,10 +445,13 @@ class CSP:
         model = slime.solve(solve, turbo, log, assumptions, cnf_path)
         if cnf_path:
             with open(cnf_path, 'a') as file:
-                print('c {}'.format(self._map), file=file)
+                local_map = {k: v for k, v in self._map.items() if not k.startswith('_')}
+                if len(local_map) > 0:
+                    print('c {}'.format({k: v for k, v in self._map.items() if not k.startswith('_')}), file=file)
         if model:
-            with open(cnf_path, 'a') as file:
-                print('c {}'.format(model), file=file)
+            if cnf_path:
+                with open(cnf_path, 'a') as file:
+                    print('c {}'.format(model), file=file)
             for key, value in self._map.items():
                 for arg in args:
                     if isinstance(arg, Entity) and arg.key == key:
