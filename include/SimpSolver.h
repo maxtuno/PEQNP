@@ -106,7 +106,8 @@ class SimpSolver : public Solver {
     long asymm_lits;
     long eliminated_vars;
 
-  protected:
+        bool log;
+    protected:
     // Helper structures:
     //
     struct ElimLt {
@@ -167,7 +168,8 @@ class SimpSolver : public Solver {
     bool strengthenClause(CRef cr, Lit l);
     bool implied(const vec<Lit> &c);
     void relocAll(ClauseAllocator &to);
-};
+
+    };
 
 //=================================================================================================
 // Implementation of inline methods:

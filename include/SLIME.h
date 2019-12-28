@@ -27,24 +27,23 @@ void printHeader() {
 }
 #else
 void printHeader() {
-    printf("                                         \n");
-    printf("   ██████  ██▓     ██▓ ███▄ ▄███▓▓█████  \n");
-    printf(" ▒██    ▒ ▓██▒    ▓██▒▓██▒▀█▀ ██▒▓█   ▀  \n");
-    printf(" ░ ▓██▄   ▒██░    ▒██▒▓██    ▓██░▒███    \n");
-    printf("   ▒   ██▒▒██░    ░██░▒██    ▒██ ▒▓█  ▄  \n");
-    printf(" ▒██████▒▒░██████▒░██░▒██▒   ░██▒░▒████▒ \n");
-    printf(" ▒ ▒▓▒ ▒ ░░ ▒░▓  ░░▓  ░ ▒░   ░  ░░░ ▒░ ░ \n");
-    printf(" ░ ░▒  ░ ░░ ░ ▒  ░ ▒ ░░  ░      ░ ░ ░  ░ \n");
-    printf(" ░  ░  ░    ░ ░    ▒ ░░      ░      ░    \n");
-    printf("       ░      ░  ░ ░         ░      ░  ░ \n");
-    printf("                                         \n");
-    printf("        http://www.slime.science         \n");
-    printf("                                         \n");
+    printf("c                                          \n");
+    printf("c    ██████  ██▓     ██▓ ███▄ ▄███▓▓█████  \n");
+    printf("c  ▒██    ▒ ▓██▒    ▓██▒▓██▒▀█▀ ██▒▓█   ▀  \n");
+    printf("c  ░ ▓██▄   ▒██░    ▒██▒▓██    ▓██░▒███    \n");
+    printf("c    ▒   ██▒▒██░    ░██░▒██    ▒██ ▒▓█  ▄  \n");
+    printf("c  ▒██████▒▒░██████▒░██░▒██▒   ░██▒░▒████▒ \n");
+    printf("c  ▒ ▒▓▒ ▒ ░░ ▒░▓  ░░▓  ░ ▒░   ░  ░░░ ▒░ ░ \n");
+    printf("c  ░ ░▒  ░ ░░ ░ ▒  ░ ▒ ░░  ░      ░ ░ ░  ░ \n");
+    printf("c  ░  ░  ░    ░ ░    ▒ ░░      ░      ░    \n");
+    printf("c        ░      ░  ░ ░         ░      ░  ░ \n");
+    printf("c                                          \n");
+    printf("c         http://www.slime.science         \n");
+    printf("c                                          \n");
 }
 #endif
 
 PyObject *reset(PyObject *self, PyObject *args) {
-    // printHeader();
     delete S;
     S = new SimpSolver();
 
@@ -67,7 +66,7 @@ PyObject *add_clause(PyObject *self, PyObject *args) {
     n = PyList_Size(pList);
     for (i = 0; i < n; i++) {
         pItem = PyList_GetItem(pList, i);
-        int lit = PyLong_AsLong(pItem);
+        long lit = PyLong_AsLong(pItem);
         v = abs(lit) - 1;
         while (v >= S->nVars())
             S->newVar();
@@ -81,17 +80,57 @@ PyObject *add_clause(PyObject *self, PyObject *args) {
 
 PyObject *solve(PyObject *self, PyObject *args) {
 
-    bool simplify;
-    if (!PyArg_ParseTuple(args, "b", &simplify)) {
+    char *path;
+    bool simplify, log, solve;
+    lbool result;
+    PyObject *pList;
+    PyObject *pItem;
+    vec<Lit> assumptions;
+    Py_ssize_t n;
+    int i;
+
+    if (!PyArg_ParseTuple(args, "bbbOs", &solve, &simplify, &log, &pList, &path)) {
         Py_RETURN_NONE;
     }
 
-    if (simplify) {
-        S->eliminate();
+    if (log) {
+        printHeader();
+        S->log = true;
+    } else {
+        S->log = false;
     }
 
-    vec<Lit> assumptions;
-    lbool result = S->solveLimited(assumptions, false);
+    n = PyList_Size(pList);
+    for (i = 0; i < n; i++) {
+        pItem = PyList_GetItem(pList, i);
+        long lit = PyLong_AsLong(pItem);
+        assumptions.push((lit > 0) ? mkLit(v) : ~mkLit(v));
+    }
+
+    for (i = 0; i < assumptions.size(); i++) {
+        S->addClause(assumptions[i]);
+    }
+
+    assumptions.clear(true);
+
+    if (strcmp(path, "") != 0) {
+        S->toDimacs(path);
+    }
+
+    if (solve) {
+        if (simplify) {
+            S->eliminate();
+            result = S->solveLimited(assumptions, true);
+        } else {
+            result = S->solveLimited(assumptions, false);
+        }
+    } else {
+        return PyList_New(0);
+    }
+
+    if (S->log) {
+        printf("\n");
+    }
 
     if (result == l_True) {
         PyObject *modelList = PyList_New(S->nVars());

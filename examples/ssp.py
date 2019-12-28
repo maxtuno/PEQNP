@@ -20,6 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
+import sys
 from peqnp import *
 
 
@@ -39,7 +40,7 @@ if __name__ == '__main__':
 
     assert sum(subset) == t
 
-    if satisfy(turbo=True):
+    if satisfy(turbo=True, log=True):
         solution = [universe[i] for i in range(len(universe)) if bits.binary[i]]
         print(sum(solution), solution)
         print()

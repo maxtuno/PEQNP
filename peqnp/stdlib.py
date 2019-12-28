@@ -31,8 +31,8 @@ def constant(bits=None, value=None):
     return variables[-1]
 
 
-def satisfy(turbo=False):
-    return csp.to_sat(variables, solve=True, turbo=turbo)
+def satisfy(solve=True, turbo=False, log=False, assumptions=[], cnf_path=''):
+    return csp.to_sat(variables, solve=solve, turbo=turbo, log=log, assumptions=assumptions, cnf_path=cnf_path)
 
 
 def subsets(universe, k=None):
@@ -147,3 +147,7 @@ def apply_dual(args, f):
 def all_different(args):
     global csp
     csp.apply(args, dual=lambda x, y: x != y)
+
+def flatten(args):
+    global csp
+    return csp.flatten(args)

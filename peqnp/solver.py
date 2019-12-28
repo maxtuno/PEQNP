@@ -8,16 +8,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 """
 
-import functools
-import operator
-import sys
-import uuid
-
 import slime
 
 from peqnp.entity import Entity
-
-sys.setrecursionlimit(1 << 16)
 
 
 class CSP:
@@ -91,6 +84,7 @@ class CSP:
         return [self.add_variable() for _ in range(self._bits)]
 
     def create_variable(self, key=None, size=None):
+        import uuid
         if key is None:
             key = '_' + str(uuid.uuid4()).replace('-', '')
         block = self.create_block(size)
@@ -110,7 +104,6 @@ class CSP:
                 else:
                     self.add_block([block[i]])
                 n //= 2
-            self.mapping(str(value), block)
             return block
 
         return __encode(value)
@@ -448,19 +441,23 @@ class CSP:
     def weight(self, weight):
         self._weight = str(weight)
 
-    def to_sat(self, args, solve=False, turbo=False):
-        if solve:
-            model = slime.solve(turbo)
-            if model:
-                for key, value in self._map.items():
-                    for arg in args:
-                        if isinstance(arg, Entity) and arg.key == key:
-                            arg._value = self.normalize(int(''.join(map(str, [int(int(model[abs(bit) - 1]) > 0) for bit in value[::-1]])), 2))
-                self.add_block([-lit for lit in model])
-                self._unsat = False
-                return True
-            else:
-                self._unsat = False
+    def to_sat(self, args, solve=True, turbo=False, log=False, assumptions=[], cnf_path=''):
+        model = slime.solve(solve, turbo, log, assumptions, cnf_path)
+        if cnf_path:
+            with open(cnf_path, 'a') as file:
+                print('c {}'.format(self._map), file=file)
+        if model:
+            with open(cnf_path, 'a') as file:
+                print('c {}'.format(model), file=file)
+            for key, value in self._map.items():
+                for arg in args:
+                    if isinstance(arg, Entity) and arg.key == key:
+                        arg._value = self.normalize(int(''.join(map(str, [int(int(model[abs(bit) - 1]) > 0) for bit in value[::-1]])), 2))
+            self.add_block([-lit for lit in model])
+            self._unsat = False
+            return True
+        else:
+            self._unsat = False
         return False
 
     def int(self, key=None, block=None, value=None, size=None):
@@ -517,12 +514,16 @@ class CSP:
             self.element(zs[i], lst, xs[i])
 
     def factorial(self, x):
+        import functools
+        import operator
         aa = Entity(self, size=self.bits)
         assert sum([self.zero.iff(aa[i], self.one) for i in range(self.bits)]) == self.one
         assert sum([self.zero.iff(aa[i], i) for i in range(self.bits)]) == x
         return sum([self.zero.iff(aa[i], functools.reduce(operator.mul, [x - j for j in range(i)])) for i in range(1, self.bits)])
 
     def sigma(self, f, i, n):
+        import functools
+        import operator
         def __sum(xs):
             if xs:
                 return functools.reduce(operator.add, xs)
@@ -534,6 +535,8 @@ class CSP:
         return sum([self.zero.iff(aa[j], __sum([f(j) for j in range(i, j)])) for j in range(i, self.bits)])
 
     def pi(self, f, i, n):
+        import functools
+        import operator
         def __pi(xs):
             if xs:
                 return functools.reduce(operator.mul, xs)

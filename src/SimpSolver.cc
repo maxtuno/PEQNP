@@ -79,6 +79,8 @@ lbool SimpSolver::solve_(bool do_simp, bool turn_off_simp) {
     vec<Var> extra_frozen;
     lbool result = l_True;
 
+    Solver::logs = log;
+
     do_simp &= use_simplification;
 
     if (do_simp) {
@@ -216,7 +218,7 @@ bool SimpSolver::strengthenClause(CRef cr, Lit l) {
         updateElimHeap(var(l));
     }
 
-    return c.size() == 1 ? enqueue(c[0]) && propagate() == CRef_Undef : true;
+    return c.size() == 1 ? enqueue(c[0l]) && propagate() == CRef_Undef : true;
 }
 
 // Returns FALSE if clause is always satisfied ('out_clause' should not be used).
@@ -343,7 +345,7 @@ bool SimpSolver::backwardSubsumptionCheck() {
         // Check top-level assignments by creating a dummy clause and placing it in the queue:
         if (subsumption_queue.size() == 0 && bwdsub_assigns < trail.size()) {
             Lit l = trail[bwdsub_assigns++];
-            ca[bwdsub_tmpunit][0] = l;
+            ca[bwdsub_tmpunit][0l] = l;
             ca[bwdsub_tmpunit].calcAbstraction();
             subsumption_queue.insert(bwdsub_tmpunit);
         }
@@ -358,7 +360,7 @@ bool SimpSolver::backwardSubsumptionCheck() {
         assert(c.size() > 1 || value(c[0]) == l_True); // Unit-clauses should have been propagated before this point.
 
         // Find best variable to scan:
-        Var best = var(c[0]);
+        Var best = var(c[0l]);
         for (long i = 1; i < c.size(); i++)
             if (occurs[var(c[i])].size() < occurs[best].size())
                 best = var(c[i]);
@@ -606,10 +608,14 @@ bool SimpSolver::eliminate(bool turn_off_elim) {
     n_cls = nClauses();
     n_vars = nFreeVars();
 
-    // printf("c Reduced to %ld vars, %ld cls (grow=%ld)\n", n_vars, n_cls, grow);
+    if (log) {
+        printf("c Reduced to %ld vars, %ld cls (grow=%ld)\n", n_vars, n_cls, grow);
+    }
 
     if ((double)n_cls / n_vars >= 10 || n_vars < 1000 || trail.size() == 0) {
-        // printf("c No iterative elimination performed. (vars=%ld, c/v ratio=%.1f)\n", n_vars, (double)n_cls / n_vars);
+        if (log) {
+            printf("c No iterative elimination performed. (vars=%ld, c/v ratio=%.1f)\n", n_vars, (double)n_cls / n_vars);
+        }
         goto cleanup;
     }
 

@@ -60,10 +60,9 @@ namespace SLIME {
 
 class Solver {
   protected:
+    bool logs;
     long local;
     long global;
-    long cursor;
-    vec<lbool> aux;
 
   private:
     template <typename T> class MyQueue {
