@@ -32,23 +32,23 @@ namespace SLIME {
     template<class T>
     class RegionAllocator {
         T *memory;
-        long sz;
-        long cap;
-        long wasted_;
+        int sz;
+        int cap;
+        int wasted_;
 
-        void capacity(long min_cap);
+        void capacity(int min_cap);
 
     public:
         // TODO: make this a class for better type-checking?
-        typedef long Ref;
+        typedef int Ref;
         enum {
             Ref_Undef = UINT32_MAX
         };
         enum {
-            Unit_Size = sizeof(long)
+            Unit_Size = sizeof(int)
         };
 
-        explicit RegionAllocator(long start_cap = 1024 * 1024) : memory(NULL), sz(0), cap(0), wasted_(0) { capacity(start_cap); }
+        explicit RegionAllocator(int start_cap = 1024 * 1024) : memory(NULL), sz(0), cap(0), wasted_(0) { capacity(start_cap); }
 
         ~RegionAllocator() {
             if (memory != NULL)
@@ -56,13 +56,13 @@ namespace SLIME {
         }
 
 
-        long size() const { return sz; }
+        int size() const { return sz; }
 
-        long wasted() const { return wasted_; }
+        int wasted() const { return wasted_; }
 
-        Ref alloc(long size);
+        Ref alloc(int size);
 
-        void free(long size) { wasted_ += size; }
+        void free(int size) { wasted_ += size; }
 
         // Deref, Load Effective Address (LEA), Inverse of LEA (AEL):
         T &operator[](Ref r) {
@@ -105,16 +105,16 @@ namespace SLIME {
     };
 
     template<class T>
-    void RegionAllocator<T>::capacity(long min_cap) {
+    void RegionAllocator<T>::capacity(int min_cap) {
         if (cap >= min_cap) return;
 
-        long prev_cap = cap;
+        int prev_cap = cap;
         while (cap < min_cap) {
             // NOTE: Multiply by a factor (13/8) without causing overflow, then add 2 and make the
             // result even by clearing the least significant bit. The resulting sequence of capacities
             // is carefully chosen to hit a maximum capacity that is close to the '2^32-1' limit when
-            // using 'long' as indices so that as much as possible of this space can be used.
-            long delta = ((cap >> 1) + (cap >> 3) + 2) & ~1;
+            // using 'int' as indices so that as much as possible of this space can be used.
+            int delta = ((cap >> 1) + (cap >> 3) + 2) & ~1;
             cap += delta;
 
             if (cap <= prev_cap)
@@ -129,12 +129,12 @@ namespace SLIME {
 
     template<class T>
     typename RegionAllocator<T>::Ref
-    RegionAllocator<T>::alloc(long size) {
+    RegionAllocator<T>::alloc(int size) {
         // printf("ALLOC called (this = %p, size = %ld)\n", this, size); fflush(stdout);
         assert(size > 0);
         capacity(sz + size);
 
-        long prev_sz = sz;
+        int prev_sz = sz;
         sz += size;
 
         // Handle overflow:

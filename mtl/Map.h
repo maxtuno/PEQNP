@@ -31,7 +31,7 @@ namespace SLIME {
 
     template<class K>
     struct Hash {
-        long operator()(const K &k) const { return hash(k); }
+        int operator()(const K &k) const { return hash(k); }
     };
 
     template<class K>
@@ -41,7 +41,7 @@ namespace SLIME {
 
     template<class K>
     struct DeepHash {
-        long operator()(const K *k) const { return hash(*k); }
+        int operator()(const K *k) const { return hash(*k); }
     };
 
     template<class K>
@@ -49,15 +49,15 @@ namespace SLIME {
         bool operator()(const K *k1, const K *k2) const { return *k1 == *k2; }
     };
 
-    static inline long hash(long x) { return x; }
+    static inline int hash(int x) { return x; }
 
 
 //=================================================================================================
 // Some primes
 //
 
-    static const long nprimes = 25;
-    static const long primes[nprimes] = {31, 73, 151, 313, 643, 1291, 2593, 5233, 10501, 21013, 42073, 84181, 168451, 337219, 674701, 1349473, 2699299, 5398891, 10798093, 21596719, 43193641, 86387383, 172775299, 345550609, 691101253};
+    static const int nprimes = 25;
+    static const int primes[nprimes] = {31, 73, 151, 313, 643, 1291, 2593, 5233, 10501, 21013, 42073, 84181, 168451, 337219, 674701, 1349473, 2699299, 5398891, 10798093, 21596719, 43193641, 86387383, 172775299, 345550609, 691101253};
 
 //=================================================================================================
 // Hash table implementation of Maps
@@ -76,17 +76,17 @@ namespace SLIME {
         E equals;
 
         vec <Pair> *table;
-        long cap;
-        long size;
+        int cap;
+        int size;
 
         // Don't allow copying (error prone):
         Map<K, D, H, E> &operator=(Map<K, D, H, E> &other) { assert(0); }
 
         Map(Map<K, D, H, E> &other) { assert(0); }
 
-        bool checkCap(long new_size) const { return new_size > cap; }
+        bool checkCap(int new_size) const { return new_size > cap; }
 
-        long index(const K &k) const { return hash(k) % cap; }
+        int index(const K &k) const { return hash(k) % cap; }
 
         void _insert(const K &k, const D &d) {
             vec<Pair> &ps = table[index(k)];
@@ -98,16 +98,16 @@ namespace SLIME {
         void rehash() {
             const vec<Pair> *old = table;
 
-            long old_cap = cap;
-            long newsize = primes[0];
-            for (long i = 1; newsize <= cap && i < nprimes; i++)
+            int old_cap = cap;
+            int newsize = primes[0];
+            for (int i = 1; newsize <= cap && i < nprimes; i++)
                 newsize = primes[i];
 
             table = new vec<Pair>[newsize];
             cap = newsize;
 
-            for (long i = 0; i < old_cap; i++) {
-                for (long j = 0; j < old[i].size(); j++) {
+            for (int i = 0; i < old_cap; i++) {
+                for (int j = 0; j < old[i].size(); j++) {
                     _insert(old[i][j].key, old[i][j].data);
                 }
             }
@@ -131,7 +131,7 @@ namespace SLIME {
             assert(size != 0);
             const D *res = NULL;
             const vec<Pair> &ps = table[index(k)];
-            for (long i = 0; i < ps.size(); i++)
+            for (int i = 0; i < ps.size(); i++)
                 if (equals(ps[i].key, k))
                     res = &ps[i].data;
             assert(res != NULL);
@@ -143,7 +143,7 @@ namespace SLIME {
             assert(size != 0);
             D *res = NULL;
             vec<Pair> &ps = table[index(k)];
-            for (long i = 0; i < ps.size(); i++)
+            for (int i = 0; i < ps.size(); i++)
                 if (equals(ps[i].key, k))
                     res = &ps[i].data;
             assert(res != NULL);
@@ -160,7 +160,7 @@ namespace SLIME {
         bool peek(const K &k, D &d) const {
             if (size == 0) return false;
             const vec<Pair> &ps = table[index(k)];
-            for (long i = 0; i < ps.size(); i++)
+            for (int i = 0; i < ps.size(); i++)
                 if (equals(ps[i].key, k)) {
                     d = ps[i].data;
                     return true;
@@ -171,7 +171,7 @@ namespace SLIME {
         bool has(const K &k) const {
             if (size == 0) return false;
             const vec<Pair> &ps = table[index(k)];
-            for (long i = 0; i < ps.size(); i++)
+            for (int i = 0; i < ps.size(); i++)
                 if (equals(ps[i].key, k))
                     return true;
             return false;
@@ -181,7 +181,7 @@ namespace SLIME {
         void remove(const K &k) {
             assert(table != NULL);
             vec<Pair> &ps = table[index(k)];
-            long j = 0;
+            int j = 0;
             for (; j < ps.size() && !equals(ps[j].key, k); j++);
             assert(j < ps.size());
             ps[j] = ps.last();
@@ -195,9 +195,9 @@ namespace SLIME {
             table = NULL;
         }
 
-        long elems() const { return size; }
+        int elems() const { return size; }
 
-        long bucket_count() const { return cap; }
+        int bucket_count() const { return cap; }
 
         // NOTE: the hash and equality objects are not moved by this method:
         void moveTo(Map &other) {
@@ -212,7 +212,7 @@ namespace SLIME {
         }
 
         // NOTE: given a bit more time, I could make a more C++-style iterator out of this:
-        const vec <Pair> &bucket(long i) const { return table[i]; }
+        const vec <Pair> &bucket(int i) const { return table[i]; }
     };
 
 //=================================================================================================

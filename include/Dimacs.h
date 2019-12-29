@@ -32,7 +32,7 @@ namespace SLIME {
 // DIMACS Parser:
 
 template <class B, class Solver> static void readClause(B &in, Solver &S, vec<Lit> &lits) {
-    long parsed_lit, var;
+    int parsed_lit, var;
     lits.clear();
     for (;;) {
         parsed_lit = parseInt(in);
@@ -47,9 +47,9 @@ template <class B, class Solver> static void readClause(B &in, Solver &S, vec<Li
 
 template <class B, class Solver> static void parse_DIMACS_main(B &in, Solver &S) {
     vec<Lit> lits;
-    long vars = 0;
-    long clauses = 0;
-    long cnt = 0;
+    int vars = 0;
+    int clauses = 0;
+    int cnt = 0;
     for (;;) {
         skipWhitespace(in);
         if (*in == EOF)
@@ -59,7 +59,7 @@ template <class B, class Solver> static void parse_DIMACS_main(B &in, Solver &S)
                 vars = parseInt(in);
                 clauses = parseInt(in);
             } else {
-                printf("PARSE ERROR! Unexpected char: %ld\n", *in), exit(3);
+                printf("PARSE ERROR! Unexpected char: %d\n", *in), exit(3);
             }
         } else if (*in == 'c' || *in == 'p')
             skipLine(in);

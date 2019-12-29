@@ -61,18 +61,18 @@ namespace SLIME {
 class Solver {
   protected:
     bool logs;
-    long local;
-    long global;
+    int local;
+    int global;
 
   private:
     template <typename T> class MyQueue {
-        long max_sz, q_sz;
-        long ptr;
-        long sum;
+        int max_sz, q_sz;
+        int ptr;
+        int sum;
         vec<T> q;
 
       public:
-        MyQueue(long sz) : max_sz(sz), q_sz(0), ptr(0), sum(0) {
+        MyQueue(int sz) : max_sz(sz), q_sz(0), ptr(0), sum(0) {
             assert(sz > 0);
             q.growTo(sz);
         }
@@ -155,16 +155,16 @@ class Solver {
     lbool value(Lit p) const;      // The current value of a literal.
     lbool modelValue(Var x) const; // The value of a variable in the last model. The last call to solve must have been satisfiable.
     lbool modelValue(Lit p) const; // The value of a literal in the last model. The last call to solve must have been satisfiable.
-    long nAssigns() const;          // The current number of assigned literals.
-    long nClauses() const;          // The current number of original clauses.
-    long nLearnts() const;          // The current number of learnt clauses.
-    long nVars() const;             // The current number of variables.
-    long nFreeVars() const;
+    int nAssigns() const;          // The current number of assigned literals.
+    int nClauses() const;          // The current number of original clauses.
+    int nLearnts() const;          // The current number of learnt clauses.
+    int nVars() const;             // The current number of variables.
+    int nFreeVars() const;
 
     // Resource contraints:
     //
-    void setConfBudget(long x);
-    void setPropBudget(long x);
+    void setConfBudget(int x);
+    void setPropBudget(int x);
     void budgetOff();
     void interrupt();      // Trigger a (potentially asynchronous) interruption of the solver.
     void clearInterrupt(); // Clear interrupt indicator flag.
@@ -187,37 +187,37 @@ class Solver {
     double step_size;
     double step_size_dec;
     double min_step_size;
-    long timer;
+    int timer;
     double var_decay;
     double clause_decay;
     double random_var_freq;
     double random_seed;
     bool VSIDS;
-    long ccmin_mode;      // Controls conflict clause minimization (0=none, 1=basic, 2=deep).
-    long phase_saving;    // Controls the level of phase saving (0=none, 1=limited, 2=full).
+    int ccmin_mode;      // Controls conflict clause minimization (0=none, 1=basic, 2=deep).
+    int phase_saving;    // Controls the level of phase saving (0=none, 1=limited, 2=full).
     bool rnd_pol;        // Use random polarities for branching heuristics.
     bool rnd_init_act;   // Initialize variable activities with a small random value.
     double garbage_frac; // The fraction of wasted memory allowed before a garbage collection is triggered.
 
-    long restart_first;        // The initial restart limit.                                                                (default 100)
+    int restart_first;        // The initial restart limit.                                                                (default 100)
     double restart_inc;       // The factor with which the restart limit is multiplied in each restart.                    (default 1.5)
     double learntsize_factor; // The intitial limit for learnt clauses is a factor of the original clauses.                (default 1 / 3)
     double learntsize_inc;    // The limit for learnt clauses is multiplied with this factor each restart.                 (default 1.1)
 
-    long learntsize_adjust_start_confl;
+    int learntsize_adjust_start_confl;
     double learntsize_adjust_inc;
 
     // Statistics: (read-only member variable)
     //
-    long solves, starts, decisions, rnd_decisions, propagations, conflicts, conflicts_VSIDS;
-    long dec_vars, clauses_literals, learnts_literals, max_literals, tot_literals;
-    long chrono_backtrack, non_chrono_backtrack;
+    int solves, starts, decisions, rnd_decisions, propagations, conflicts, conflicts_VSIDS;
+    int dec_vars, clauses_literals, learnts_literals, max_literals, tot_literals;
+    int chrono_backtrack, non_chrono_backtrack;
 
-    vec<long> picked;
-    vec<long> conflicted;
-    vec<long> almost_conflicted;
+    vec<int> picked;
+    vec<int> conflicted;
+    vec<int> almost_conflicted;
 #ifdef ANTI_EXPLORATION
-    vec<long> canceled;
+    vec<int> canceled;
 #endif
 
     // HACK to expose propagation for Open-WBO
@@ -232,9 +232,9 @@ class Solver {
 
         newDecisionLevel();
         uncheckedEnqueue(l);
-        long a = trail.size();
+        int a = trail.size();
         CRef cr = propagate();
-        for (long i = a; i < trail.size(); i++) {
+        for (int i = a; i < trail.size(); i++) {
             implied.push(trail[i]);
         }
         cancelUntil(0);
@@ -246,9 +246,9 @@ class Solver {
     //
     struct VarData {
         CRef reason;
-        long level;
+        int level;
     };
-    static inline VarData mkVarData(CRef cr, long l) {
+    static inline VarData mkVarData(CRef cr, int l) {
         VarData d = {cr, l};
         return d;
     }
@@ -276,7 +276,7 @@ class Solver {
     struct ConflictData {
         ConflictData() : nHighestLevel(-1), bOnlyOneLitFromHighest(false) {}
 
-        long nHighestLevel;
+        int nHighestLevel;
         bool bOnlyOneLitFromHighest;
     };
 
@@ -296,26 +296,26 @@ class Solver {
     vec<char> polarity;                                      // The preferred polarity of each variable.
     vec<char> decision;                                      // Declares if a variable is eligible for selection in the decision heuristic.
     vec<Lit> trail;                                          // Assignment stack; stores all assigments made in the order they were made.
-    vec<long> trail_lim;                                      // Separator indices for different decision levels in 'trail'.
+    vec<int> trail_lim;                                      // Separator indices for different decision levels in 'trail'.
     vec<VarData> vardata;                                    // Stores reason and level for each variable.
-    long qhead;                                               // Head of queue (as index into the trail -- no more explicit propagation queue in MiniSat).
-    long simpDB_assigns;                                      // Number of top-level assignments since last execution of 'simplify()'.
-    long simpDB_props;                                    // Remaining number of propagations that must be made before next execution of 'simplify()'.
+    int qhead;                                               // Head of queue (as index into the trail -- no more explicit propagation queue in MiniSat).
+    int simpDB_assigns;                                      // Number of top-level assignments since last execution of 'simplify()'.
+    int simpDB_props;                                    // Remaining number of propagations that must be made before next execution of 'simplify()'.
     vec<Lit> assumptions;                                    // Current set of assumptions provided to solve by the user.
     Heap<VarOrderLt> order_heap_CHB,                         // A priority queue of variables ordered with respect to the variable activity.
         order_heap_VSIDS, order_heap_distance;
     bool remove_satisfied; // Indicates whether possibly inefficient linear scan for satisfied clauses should be performed in 'simplify'.
 
-    long core_lbd_cut;
+    int core_lbd_cut;
     float global_lbd_sum;
-    MyQueue<long> lbd_queue; // For computing moving averages of recent LBD values.
+    MyQueue<int> lbd_queue; // For computing moving averages of recent LBD values.
 
-    long next_T2_reduce, next_L_reduce;
+    int next_T2_reduce, next_L_reduce;
 
     ClauseAllocator ca;
 
-    long confl_to_chrono;
-    long chrono;
+    int confl_to_chrono;
+    int chrono;
 
     // Temporaries (to reduce allocation overhead). Each variable is prefixed by the method in which it is
     // used, exept 'seen' wich is used in several places.
@@ -326,17 +326,17 @@ class Solver {
     vec<Lit> add_tmp;
     vec<Lit> add_oc;
 
-    vec<long> seen2; // Mostly for efficient LBD computation. 'seen2[i]' will indicate if decision level or variable 'i' has been seen.
-    long counter;    // Simple counter for marking purpose with 'seen2'.
+    vec<int> seen2; // Mostly for efficient LBD computation. 'seen2[i]' will indicate if decision level or variable 'i' has been seen.
+    int counter;    // Simple counter for marking purpose with 'seen2'.
 
     double max_learnts;
     double learntsize_adjust_confl;
-    long learntsize_adjust_cnt;
+    int learntsize_adjust_cnt;
 
     // Resource contraints:
     //
-    long conflict_budget;    // -1 means no budget.
-    long propagation_budget; // -1 means no budget.
+    int conflict_budget;    // -1 means no budget.
+    int propagation_budget; // -1 means no budget.
     bool asynch_interrupt;
 
     // Main internal methods:
@@ -344,14 +344,14 @@ class Solver {
     void insertVarOrder(Var x);                                                     // Insert a variable in the decision order priority queue.
     Lit pickBranchLit();                                                            // Return the next decision variable.
     void newDecisionLevel();                                                        // Begins a new decision level.
-    void uncheckedEnqueue(Lit p, long level = 0, CRef from = CRef_Undef);            // Enqueue a literal. Assumes value of literal is undefined.
+    void uncheckedEnqueue(Lit p, int level = 0, CRef from = CRef_Undef);            // Enqueue a literal. Assumes value of literal is undefined.
     bool enqueue(Lit p, CRef from = CRef_Undef);                                    // Test if fact 'p' contradicts current state, enqueue otherwise.
     CRef propagate();                                                               // Perform unit propagation. Returns possibly conflicting clause.
-    void cancelUntil(long level);                                                    // Backtrack until a certain level.
-    void analyze(CRef confl, vec<Lit> &out_learnt, long &out_btlevel, long &out_lbd); // (bt = backtrack)
+    void cancelUntil(int level);                                                    // Backtrack until a certain level.
+    void analyze(CRef confl, vec<Lit> &out_learnt, int &out_btlevel, int &out_lbd); // (bt = backtrack)
         // COULD THIS BE IMPLEMENTED BY THE ORDINARIY "analyze" BY SOME REASONABLE GENERALIZATION?
-    bool litRedundant(Lit p, long abstract_levels);                             // (helper method for 'analyze()')
-    lbool search(long &nof_conflicts);                                               // Search for a given number of conflicts.
+    bool litRedundant(Lit p, int abstract_levels);                             // (helper method for 'analyze()')
+    lbool search(int &nof_conflicts);                                               // Search for a given number of conflicts.
     lbool solve_();                                                                 // Main solve method (assumptions given in 'assumptions').
     void reduceDB();                                                                // Reduce the set of learnt clauses.
     void reduceDB_Tier2();
@@ -379,25 +379,25 @@ class Solver {
 
     // Misc:
     //
-    long decisionLevel() const;           // Gives the current decisionlevel.
-    long abstractLevel(Var x) const; // Used to represent an abstraction of sets of decision levels.
+    int decisionLevel() const;           // Gives the current decisionlevel.
+    int abstractLevel(Var x) const; // Used to represent an abstraction of sets of decision levels.
     CRef reason(Var x) const;
 
     ConflictData FindConflictLevel(CRef cind);
 
   public:
-    long level(Var x) const;
+    int level(Var x) const;
 
   protected:
     double progressEstimate() const; // DELETE THIS ?? IT'S NOT VERY USEFUL ...
     bool withinBudget() const;
 
-    template <class V> long computeLBD(const V &c) {
-        long lbd = 0;
+    template <class V> int computeLBD(const V &c) {
+        int lbd = 0;
 
         counter++;
-        for (long i = 0; i < c.size(); i++) {
-            long l = level(var(c[i]));
+        for (int i = 0; i < c.size(); i++) {
+            int l = level(var(c[i]));
             if (l != 0 && seen2[l] != counter) {
                 seen2[l] = counter;
                 lbd++;
@@ -408,12 +408,12 @@ class Solver {
     }
 
 #ifdef BIN_DRUP
-    static long buf_len;
+    static int buf_len;
     static unsigned char drup_buf[];
     static unsigned char *buf_ptr;
 
     static inline void byteDRUP(Lit l) {
-        unsigned long u = 2 * (var(l) + 1) + sign(l);
+        unsigned int u = 2 * (var(l) + 1) + sign(l);
         do {
             *buf_ptr++ = (u & 0x7f) | 0x80;
             buf_len++;
@@ -426,7 +426,7 @@ class Solver {
         assert(op == 'a' || op == 'd');
         *buf_ptr++ = op;
         buf_len++;
-        for (long i = 0; i < c.size(); i++)
+        for (int i = 0; i < c.size(); i++)
             byteDRUP(c[i]);
         *buf_ptr++ = 0;
         buf_len++;
@@ -437,7 +437,7 @@ class Solver {
     static inline void binDRUP_strengthen(const Clause &c, Lit l, FILE *drup_file) {
         *buf_ptr++ = 'a';
         buf_len++;
-        for (long i = 0; i < c.size(); i++)
+        for (int i = 0; i < c.size(); i++)
             if (c[i] != l)
                 byteDRUP(c[i]);
         *buf_ptr++ = 0;
@@ -463,13 +463,13 @@ class Solver {
     // Returns a random float 0 <= x < 1. Seed must never be 0.
     static inline double drand(double &seed) {
         seed *= 1389796;
-        long q = (long)(seed / 2147483647);
+        int q = (int)(seed / 2147483647);
         seed -= (double)q * 2147483647;
         return seed / 2147483647;
     }
 
     // Returns a random integer 0 <= x < size. Seed must never be 0.
-    static inline long irand(double &seed, long size) { return (long)(drand(seed) * size); }
+    static inline int irand(double &seed, int size) { return (int)(drand(seed) * size); }
 
     // simplify
     //
@@ -479,14 +479,14 @@ class Solver {
 
         bool simplifyLearnt_core();
     bool simplifyLearnt_tier2();
-    long trailRecord;
+    int trailRecord;
 
         void cancelUntilTrailRecord();
     void simpleUncheckEnqueue(Lit p, CRef from = CRef_Undef);
     CRef simplePropagate();
-    long nbSimplifyAll;
-    long simplified_length_record, original_length_record;
-    long s_propagations;
+    int nbSimplifyAll;
+    int simplified_length_record, original_length_record;
+    int s_propagations;
 
     vec<Lit> simp_learnt_clause;
     vec<CRef> simp_reason_clause;
@@ -495,13 +495,13 @@ class Solver {
     // in redundant
     bool removed(CRef cr);
     // adjust simplifyAll occasion
-    long curSimplify;
-    long nbconfbeforesimplify;
-    long incSimplify;
+    int curSimplify;
+    int nbconfbeforesimplify;
+    int incSimplify;
 
     bool collectFirstUIP(CRef confl);
     vec<double> var_iLevel, var_iLevel_tmp;
-        vec<long> pathCs;
+        vec<int> pathCs;
 
         double var_iLevel_inc;
     vec<Lit> involved_lits;
@@ -513,7 +513,7 @@ class Solver {
 // Implementation of inline methods:
 
 inline CRef Solver::reason(Var x) const { return vardata[x].reason; }
-inline long Solver::level(Var x) const { return vardata[x].level; }
+inline int Solver::level(Var x) const { return vardata[x].level; }
 
 inline void Solver::insertVarOrder(Var x) {
     //    Heap<VarOrderLt>& order_heap = VSIDS ? order_heap_VSIDS : order_heap_CHB;
@@ -527,7 +527,7 @@ inline void Solver::varDecayActivity() { var_inc *= (1 / var_decay); }
 inline void Solver::varBumpActivity(Var v, double mult) {
     if ((activity_VSIDS[v] += var_inc * mult) > 1e100) {
         // Rescale:
-        for (long i = 0; i < nVars(); i++)
+        for (int i = 0; i < nVars(); i++)
             activity_VSIDS[i] *= 1e-100;
         var_inc *= 1e-100;
     }
@@ -541,7 +541,7 @@ inline void Solver::claDecayActivity() { cla_inc *= (1 / clause_decay); }
 inline void Solver::claBumpActivity(Clause &c) {
     if ((c.activity() += cla_inc) > 1e20) {
         // Rescale:
-        for (long i = 0; i < learnts_local.size(); i++)
+        for (int i = 0; i < learnts_local.size(); i++)
             ca[learnts_local[i]].activity() *= 1e-20;
         cla_inc *= 1e-20;
     }
@@ -582,22 +582,22 @@ inline bool Solver::addClause(Lit p, Lit q, Lit r) {
     return addClause_(add_tmp);
 }
 inline bool Solver::locked(const Clause &c) const {
-    long i = c.size() != 2 ? 0 : (value(c[0]) == l_True ? 0 : 1);
+    int i = c.size() != 2 ? 0 : (value(c[0]) == l_True ? 0 : 1);
     return value(c[i]) == l_True && reason(var(c[i])) != CRef_Undef && ca.lea(reason(var(c[i]))) == &c;
 }
 inline void Solver::newDecisionLevel() { trail_lim.push(trail.size()); }
 
-inline long Solver::decisionLevel() const { return trail_lim.size(); }
-inline long Solver::abstractLevel(Var x) const { return 1 << (level(x) & 31); }
+inline int Solver::decisionLevel() const { return trail_lim.size(); }
+inline int Solver::abstractLevel(Var x) const { return 1 << (level(x) & 31); }
 inline lbool Solver::value(Var x) const { return assigns[x]; }
 inline lbool Solver::value(Lit p) const { return assigns[var(p)] ^ sign(p); }
 inline lbool Solver::modelValue(Var x) const { return model[x]; }
 inline lbool Solver::modelValue(Lit p) const { return model[var(p)] ^ sign(p); }
-inline long Solver::nAssigns() const { return trail.size(); }
-inline long Solver::nClauses() const { return clauses.size(); }
-inline long Solver::nLearnts() const { return learnts_core.size() + learnts_tier2.size() + learnts_local.size(); }
-inline long Solver::nVars() const { return vardata.size(); }
-inline long Solver::nFreeVars() const { return (long)dec_vars - (trail_lim.size() == 0 ? trail.size() : trail_lim[0]); }
+inline int Solver::nAssigns() const { return trail.size(); }
+inline int Solver::nClauses() const { return clauses.size(); }
+inline int Solver::nLearnts() const { return learnts_core.size() + learnts_tier2.size() + learnts_local.size(); }
+inline int Solver::nVars() const { return vardata.size(); }
+inline int Solver::nFreeVars() const { return (int)dec_vars - (trail_lim.size() == 0 ? trail.size() : trail_lim[0]); }
 inline void Solver::setPolarity(Var v, bool b) { polarity[v] = b; }
 inline void Solver::setDecisionVar(Var v, bool b) {
     if (b && !decision[v])
@@ -612,12 +612,12 @@ inline void Solver::setDecisionVar(Var v, bool b) {
         order_heap_distance.insert(v);
     }
 }
-inline void Solver::setConfBudget(long x) { conflict_budget = conflicts + x; }
-inline void Solver::setPropBudget(long x) { propagation_budget = propagations + x; }
+inline void Solver::setConfBudget(int x) { conflict_budget = conflicts + x; }
+inline void Solver::setPropBudget(int x) { propagation_budget = propagations + x; }
 inline void Solver::interrupt() { asynch_interrupt = true; }
 inline void Solver::clearInterrupt() { asynch_interrupt = false; }
 inline void Solver::budgetOff() { conflict_budget = propagation_budget = -1; }
-inline bool Solver::withinBudget() const { return !asynch_interrupt && (conflict_budget < 0 || conflicts < (long)conflict_budget) && (propagation_budget < 0 || propagations < (long)propagation_budget); }
+inline bool Solver::withinBudget() const { return !asynch_interrupt && (conflict_budget < 0 || conflicts < (int)conflict_budget) && (propagation_budget < 0 || propagations < (int)propagation_budget); }
 
 // FIXME: after the introduction of asynchronous interrruptions the solve-versions that return a
 // pure bool do not give a safe interface. Either interrupts must be possible to turn off here, or

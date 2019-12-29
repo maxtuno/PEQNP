@@ -37,8 +37,8 @@ namespace SLIME {
     template<class T>
     class vec {
         T *data;
-        long sz;
-        long cap;
+        int sz;
+        int cap;
 
         // Don't allow copying (error prone):
         vec<T> &operator=(vec<T> &other) {
@@ -49,21 +49,21 @@ namespace SLIME {
         vec(vec<T> &other) { assert(0); }
 
         // Helpers for calculating next capacity:
-        static inline long imax(long x, long y) {
-            long mask = (y - x) >> (sizeof(long) * 8 - 1);
+        static inline int imax(int x, int y) {
+            int mask = (y - x) >> (sizeof(int) * 8 - 1);
             return (x & mask) + (y & (~mask));
         }
 
-        //static inline void nextCap(long& cap){ cap += ((cap >> 1) + 2) & ~1; }
-        static inline void nextCap(long &cap) { cap += ((cap >> 1) + 2) & ~1; }
+        //static inline void nextCap(int& cap){ cap += ((cap >> 1) + 2) & ~1; }
+        static inline void nextCap(int &cap) { cap += ((cap >> 1) + 2) & ~1; }
 
     public:
         // Constructors:
         vec() : data(NULL), sz(0), cap(0) {}
 
-        explicit vec(long size) : data(NULL), sz(0), cap(0) { growTo(size); }
+        explicit vec(int size) : data(NULL), sz(0), cap(0) { growTo(size); }
 
-        vec(long size, const T &pad) : data(NULL), sz(0), cap(0) { growTo(size, pad); }
+        vec(int size, const T &pad) : data(NULL), sz(0), cap(0) { growTo(size, pad); }
 
         ~vec() { clear(true); }
 
@@ -71,25 +71,25 @@ namespace SLIME {
         operator T *(void) { return data; }
 
         // Size operations:
-        long size(void) const { return sz; }
+        int size(void) const { return sz; }
 
-        void shrink(long nelems) {
+        void shrink(int nelems) {
             assert(nelems <= sz);
-            for (long i = 0; i < nelems; i++) sz--, data[sz].~T();
+            for (int i = 0; i < nelems; i++) sz--, data[sz].~T();
         }
 
-        void shrink_(long nelems) {
+        void shrink_(int nelems) {
             assert(nelems <= sz);
             sz -= nelems;
         }
 
-        long capacity(void) const { return cap; }
+        int capacity(void) const { return cap; }
 
-        void capacity(long min_cap);
+        void capacity(int min_cap);
 
-        void growTo(long size);
+        void growTo(int size);
 
-        void growTo(long size, const T &pad);
+        void growTo(int size, const T &pad);
 
         void clear(bool dealloc = false);
 
@@ -124,15 +124,15 @@ namespace SLIME {
         T &last(void) { return data[sz - 1]; }
 
         // Vector interface:
-        const T &operator[](long index) const { return data[index]; }
+        const T &operator[](int index) const { return data[index]; }
 
-        T &operator[](long index) { return data[index]; }
+        T &operator[](int index) { return data[index]; }
 
         // Duplicatation (preferred instead):
         void copyTo(vec<T> &copy) const {
             copy.clear();
             copy.growTo(sz);
-            for (long i = 0; i < sz; i++) copy[i] = data[i];
+            for (int i = 0; i < sz; i++) copy[i] = data[i];
         }
 
         void moveTo(vec<T> &dest) {
@@ -148,28 +148,28 @@ namespace SLIME {
 
 
     template<class T>
-    void vec<T>::capacity(long min_cap) {
+    void vec<T>::capacity(int min_cap) {
         if (cap >= min_cap) return;
-        long add = imax((min_cap - cap + 1) & ~1, ((cap >> 1) + 2) & ~1);   // NOTE: grow by approximately 3/2
+        int add = imax((min_cap - cap + 1) & ~1, ((cap >> 1) + 2) & ~1);   // NOTE: grow by approximately 3/2
         if ((add > INT_MAX - cap) || (((data = (T *) ::realloc(data, (cap += add) * sizeof(T))) == NULL) && errno == ENOMEM))
             throw OutOfMemoryException();
     }
 
 
     template<class T>
-    void vec<T>::growTo(long size, const T &pad) {
+    void vec<T>::growTo(int size, const T &pad) {
         if (sz >= size) return;
         capacity(size);
-        for (long i = sz; i < size; i++) data[i] = pad;
+        for (int i = sz; i < size; i++) data[i] = pad;
         sz = size;
     }
 
 
     template<class T>
-    void vec<T>::growTo(long size) {
+    void vec<T>::growTo(int size) {
         if (sz >= size) return;
         capacity(size);
-        for (long i = sz; i < size; i++) new(&data[i]) T();
+        for (int i = sz; i < size; i++) new(&data[i]) T();
         sz = size;
     }
 
@@ -177,7 +177,7 @@ namespace SLIME {
     template<class T>
     void vec<T>::clear(bool dealloc) {
         if (data != NULL) {
-            for (long i = 0; i < sz; i++) data[i].~T();
+            for (int i = 0; i < sz; i++) data[i].~T();
             sz = 0;
             if (dealloc) free(data), data = NULL, cap = 0;
         }

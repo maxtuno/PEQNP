@@ -30,8 +30,8 @@ namespace SLIME {
     template<class T>
     class Queue {
         vec<T> buf;
-        long first;
-        long end;
+        int first;
+        int end;
 
     public:
         typedef T Key;
@@ -44,15 +44,15 @@ namespace SLIME {
             first = end = 0;
         }
 
-        long size() const { return (end >= first) ? end - first : end - first + buf.size(); }
+        int size() const { return (end >= first) ? end - first : end - first + buf.size(); }
 
-        const T &operator[](long index) const {
+        const T &operator[](int index) const {
             assert(index >= 0);
             assert(index < size());
             return buf[(first + index) % buf.size()];
         }
 
-        T &operator[](long index) {
+        T &operator[](int index) {
             assert(index >= 0);
             assert(index < size());
             return buf[(first + index) % buf.size()];
@@ -75,9 +75,9 @@ namespace SLIME {
             if (first == end) {  // Resize:
                 vec<T> tmp((buf.size() * 3 + 1) >> 1);
                 //**/printf("queue alloc: %ld elems (%.1f MB)\n", tmp.size(), tmp.size() * sizeof(T) / 1000000.0);
-                long i = 0;
-                for (long j = first; j < buf.size(); j++) tmp[i++] = buf[j];
-                for (long j = 0; j < end; j++) tmp[i++] = buf[j];
+                int i = 0;
+                for (int j = first; j < buf.size(); j++) tmp[i++] = buf[j];
+                for (int j = 0; j < end; j++) tmp[i++] = buf[j];
                 first = 0;
                 end = buf.size();
                 tmp.moveTo(buf);

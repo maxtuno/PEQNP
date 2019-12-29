@@ -66,7 +66,7 @@ PyObject *add_clause(PyObject *self, PyObject *args) {
     n = PyList_Size(pList);
     for (i = 0; i < n; i++) {
         pItem = PyList_GetItem(pList, i);
-        long lit = PyLong_AsLong(pItem);
+        int lit = PyLong_AsLong(pItem);
         v = abs(lit) - 1;
         while (v >= S->nVars())
             S->newVar();
@@ -103,7 +103,7 @@ PyObject *solve(PyObject *self, PyObject *args) {
     n = PyList_Size(pList);
     for (i = 0; i < n; i++) {
         pItem = PyList_GetItem(pList, i);
-        long lit = PyLong_AsLong(pItem);
+        int lit = PyLong_AsLong(pItem);
         assumptions.push((lit > 0) ? mkLit(v) : ~mkLit(v));
     }
 

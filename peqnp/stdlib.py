@@ -35,7 +35,7 @@ def satisfy(solve=True, turbo=False, log=False, assumptions=[], cnf_path=''):
     return csp.to_sat(variables, solve=solve, turbo=turbo, log=log, assumptions=assumptions, cnf_path=cnf_path)
 
 
-def subsets(key=None, universe=None, k=None):
+def subsets(universe, k=None, key=None):
     global variables
     bits = csp.int(key=key, size=len(universe))
     variables.append(bits)
@@ -102,7 +102,7 @@ def sign(arg):
     return 1 if arg >= 0 else -1
 
 
-def one_of(key=None, args=None):
+def one_of(args, key=None):
     global csp
     bits = csp.int(key, size=len(args))
     assert sum(csp.zero.iff(bits[i], csp.one) for i in range(len(args))) == 1
@@ -152,3 +152,8 @@ def all_different(args):
 def flatten(args):
     global csp
     return csp.flatten(args)
+
+
+def oo():
+    global csp
+    return csp.oo
