@@ -1,7 +1,7 @@
 # PEQNP
 General Constrained Diophantine Equation Solver v0.1.29
 
-pip install PEQNP
+pip3 install PEQNP
 
 Documentation www.peqnp.science 
 
