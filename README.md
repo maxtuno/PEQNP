@@ -9,6 +9,8 @@ Examples https://github.com/maxtuno/PEQNP
 
 More info:
  
+Twitter Account
 https://twitter.com/maxtuno
 
-
+Youtube Channel
+https://www.youtube.com/channel/UCFlk1dUYLKtymcoMScdynNA
