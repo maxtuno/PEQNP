@@ -1,14 +1,3 @@
-"""
-///////////////////////////////////////////////////////////////////////////////
-//        Copyright (c) 2012-2020 Oscar Riveros. all rights reserved.        //
-//                        oscar.riveros@peqnp.science                        //
-//                                                                           //
-//   without any restriction, Oscar Riveros reserved rights, patents and     //
-//  commercialization of this knowledge or derived directly from this work.  //
-///////////////////////////////////////////////////////////////////////////////
-"""
-
-
 class Entity:
     def __init__(self, encoder, key=None, block=None, value=None, size=None, is_real=False):
         self._key = key

@@ -1,13 +1,3 @@
-"""
-///////////////////////////////////////////////////////////////////////////////
-//        Copyright (c) 2012-2020 Oscar Riveros. all rights reserved.        //
-//                        oscar.riveros@peqnp.science                        //
-//                                                                           //
-//   without any restriction, Oscar Riveros reserved rights, patents and     //
-//  commercialization of this knowledge or derived directly from this work.  //
-///////////////////////////////////////////////////////////////////////////////
-"""
-
 import slime
 
 from peqnp.entity import Entity
@@ -424,8 +414,8 @@ class CSP:
     def unsat(self):
         return self._unsat
 
-    def to_sat(self, args, solve=True, turbo=False, log=False, assumptions=[], cnf_path=''):
-        model = slime.solve(solve, turbo, log, assumptions, cnf_path)
+    def to_sat(self, args, solve=True, turbo=False, log=False, assumptions=[], cnf_path='', proof_path=''):
+        model = slime.solve(solve, turbo, log, assumptions, cnf_path, proof_path)
         if cnf_path:
             with open(cnf_path, 'a') as file:
                 local_map = {k: v for k, v in self._map.items() if not k.startswith('_')}

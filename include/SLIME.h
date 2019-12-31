@@ -80,7 +80,7 @@ PyObject *add_clause(PyObject *self, PyObject *args) {
 
 PyObject *solve(PyObject *self, PyObject *args) {
 
-    char *path;
+    char *path, *proof;
     bool simplify, log, solve;
     lbool result;
     PyObject *pList;
@@ -89,7 +89,7 @@ PyObject *solve(PyObject *self, PyObject *args) {
     Py_ssize_t n;
     int i;
 
-    if (!PyArg_ParseTuple(args, "bbbOs", &solve, &simplify, &log, &pList, &path)) {
+    if (!PyArg_ParseTuple(args, "bbbOss", &solve, &simplify, &log, &pList, &path, &proof)) {
         Py_RETURN_NONE;
     }
 
@@ -117,6 +117,10 @@ PyObject *solve(PyObject *self, PyObject *args) {
         S->toDimacs(path);
     }
 
+    if (strcmp(proof, "") != 0) {
+        S->drup_file = fopen(proof, "wb");
+    }
+
     if (solve) {
         if (simplify) {
             S->eliminate();
@@ -142,6 +146,12 @@ PyObject *solve(PyObject *self, PyObject *args) {
         }
         S->model.clear(true);
         return modelList;
+    }
+
+    if (strcmp(proof, "") != 0) {
+        fputc('a', S->drup_file);
+        fputc(0, S->drup_file);
+        fclose(S->drup_file);
     }
     return PyList_New(0);
 }

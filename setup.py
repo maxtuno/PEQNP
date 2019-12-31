@@ -2,9 +2,9 @@ from distutils.core import setup, Extension
 
 setup(
     name='PEQNP',
-    version='0.1.29',
+    version='0.1.30',
     packages=['peqnp'],
-    url='www.peqnp.science',
+    url='http://www.peqnp.science',
     license='copyright (c) 2012-2020 Oscar Riveros. All rights reserved.',
     author='Oscar Riveros',
     author_email='contact@peqnp.science',
