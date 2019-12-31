@@ -19,3 +19,6 @@ version 0.1.30
 - Add support for android, ARM C++ compilation.
 - Add version() function that return the current version of the system.
 - Add proof_path parameter to satisfy(), this generate the DRUP-PROOF of the problem if its is unsatisfiable.
+
+version 0.1.31
+- Fix URL on SLIME log.

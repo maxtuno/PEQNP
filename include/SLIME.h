@@ -38,7 +38,7 @@ void printHeader() {
     printf("c  ░  ░  ░    ░ ░    ▒ ░░      ░      ░    \n");
     printf("c        ░      ░  ░ ░         ░      ░  ░ \n");
     printf("c                                          \n");
-    printf("c         http://www.slime.science         \n");
+    printf("c         http://www.peqnp.science         \n");
     printf("c                                          \n");
 }
 #endif

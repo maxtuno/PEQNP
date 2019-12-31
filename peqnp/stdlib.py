@@ -24,7 +24,7 @@ def version():
     Print the current version of the system.
     :return:
     """
-    print('PEQNP - 0.1.30 - 31-12-2019')
+    print('PEQNP - 0.1.31 - 31-12-2019')
 
 
 def integer(key=None, bits=None):
