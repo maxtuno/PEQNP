@@ -14,6 +14,8 @@
 #include <SimpSolver.h>
 #include <SolverTypes.h>
 
+#define DRAT // Generate unsat proof.
+
 using namespace SLIME;
 
 SimpSolver *S;
@@ -42,6 +44,82 @@ void printHeader() {
     printf("c                                          \n");
 }
 #endif
+
+PyObject *slime4(PyObject *self, PyObject *args) {
+
+    printHeader();
+
+    char *cnf_path, *model_path, *proof_path;
+    lbool result;
+
+    if (!PyArg_ParseTuple(args, "sss", &cnf_path, &model_path, &proof_path)) {
+        Py_RETURN_NONE;
+    }
+
+    SimpSolver slime;
+    slime.log = true;
+
+#ifdef DRAT
+    slime.drup_file = fopen(proof_path, "wb");
+#endif
+
+    FILE *in = fopen(cnf_path, "r");
+    if (in == NULL) {
+        std::cout << "c ERROR! Could not open file: " << cnf_path << std::endl;
+        Py_RETURN_NONE;
+    }
+    parse_DIMACS(in, slime);
+    fclose(in);
+
+    slime.eliminate();
+
+    vec<Lit> assumptions;
+    result = slime.solveLimited(assumptions);
+
+    printf("\n");
+
+    printf(result == l_True ? "s SATISFIABLE\nv " : result == l_False ? "s UNSATISFIABLE\n" : "s UNKNOWN\n");
+    if (result == l_True) {
+        for (int i = 0; i < slime.nVars(); i++)
+            if (slime.model[i] != l_Undef) {
+                printf("%s%s%d", (i == 0) ? "" : " ", (slime.model[i] == l_True) ? "" : "-", i + 1);
+            }
+        printf(" 0\n");
+    } else {
+#ifdef DRAT
+        if (strcmp(proof_path, "") != 0) {
+            fputc('a', slime.drup_file);
+            fputc(0, slime.drup_file);
+            fclose(slime.drup_file);
+        }
+#endif
+    }
+
+    if (strcmp(model_path, "") != 0) {
+        FILE *model = fopen(model_path, "w");
+        fprintf(model, result == l_True ? "SAT\n" : result == l_False ? "UNSAT\n" : "UNKNOWN\n");
+        if (result == l_True) {
+            for (int i = 0; i < slime.nVars(); i++)
+                if (slime.model[i] != l_Undef) {
+                    fprintf(model, "%s%s%d", (i == 0) ? "" : " ", (slime.model[i] == l_True) ? "" : "-", i + 1);
+                }
+            fprintf(model, " 0\n");
+        }
+    }
+
+    if (result == l_True) {
+        PyObject *modelList = PyList_New(slime.nVars());
+        if (result == l_True) {
+            for (int i = 0; i < slime.nVars(); i++)
+                if (slime.model[i] != l_Undef) {
+                    PyList_SetItem(modelList, i, PyLong_FromLong((slime.model[i] == l_True) ? +(i + 1) : -(i + 1)));
+                }
+        }
+        return modelList;
+    }
+
+    return PyList_New(0);
+}
 
 PyObject *reset(PyObject *self, PyObject *args) {
     delete S;

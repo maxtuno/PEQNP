@@ -8,23 +8,27 @@
 
 #include "SLIME.h"
 
-static PyMethodDef module_methods[] = {{"add_clause", (PyCFunction) add_clause, METH_VARARGS,
-                                               ""
-                                               ""
-                                               ""},
-                                       {"solve",      (PyCFunction) solve,      METH_VARARGS,
-                                               ""
-                                               ""
-                                               ""},
-                                       {"reset",      (PyCFunction) reset,      METH_VARARGS,
-                                               ""
-                                               ""
-                                               ""},
+static PyMethodDef module_methods[] = {{"slime4", (PyCFunction) slime4, METH_VARARGS,
+                                        ""
+                                        ""
+                                        ""},
+                                       {"add_clause", (PyCFunction) add_clause, METH_VARARGS,
+                                        ""
+                                        ""
+                                        ""},
+                                       {"solve", (PyCFunction) solve, METH_VARARGS,
+                                        ""
+                                        ""
+                                        ""},
+                                       {"reset", (PyCFunction) reset, METH_VARARGS,
+                                        ""
+                                        ""
+                                        ""},
                                        {NULL, NULL, 0, NULL}};
 
 static struct PyModuleDef slime = {PyModuleDef_HEAD_INIT, "slime",
                                    ""
-                                   "SLIME 3 SAT Solver."
+                                   "SLIME 4 SAT Solver."
                                    "",
                                    -1, module_methods};
 

@@ -8,6 +8,14 @@ csp = None
 variables = []
 
 
+def version():
+    """
+    Print the current version of the system.
+    :return:
+    """
+    print('PEQNP - 0.1.32 - 0-1-2020')
+
+
 def engine(bits=None, deepness=None):
     """
     Initialize and reset the internal state of solver engine.
@@ -19,12 +27,16 @@ def engine(bits=None, deepness=None):
     csp = CSP(bits, deepness)
 
 
-def version():
+def slime4(cnf_path, model_path='', proof_path=''):
     """
-    Print the current version of the system.
-    :return:
+    Use directly the SLIME 4 SAT Solver.
+    :param cnf_path: The cnf file to solve.
+    :param model_path: The path to the model if SAT, optional.
+    :param proof_path: The path for the DRUP-PROOF if UNSAT, optional.
+    :return: A List with the model if SAT else an empty list.
     """
-    print('PEQNP - 0.1.31 - 31-12-2019')
+    import slime
+    return slime.slime4(cnf_path, model_path, proof_path)
 
 
 def integer(key=None, bits=None):
