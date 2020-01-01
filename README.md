@@ -1,5 +1,5 @@
 # PEQNP
-General Constrained Diophantine Equation Solver v0.1.29
+General Constrained Diophantine Equation Solver
 
     pip3 install PEQNP
 
