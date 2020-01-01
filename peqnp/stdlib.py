@@ -13,7 +13,7 @@ def version():
     Print the current version of the system.
     :return:
     """
-    print('PEQNP - 0.1.32 - 0-1-2020')
+    print('PEQNP - 0.1.33 - 0-1-2020')
 
 
 def engine(bits=None, deepness=None):
@@ -304,3 +304,17 @@ def oo():
     """
     global csp
     return csp.oo
+
+
+def element(i, data):
+    """
+    Ensure that the element i is on the data, on the position index
+    :param i: the element
+    :param data: The data
+    :return: The position of element
+    """
+    global csp, variables
+    index = integer()
+    variables.append(index)
+    csp.element(index, data, i)
+    return variables[-1]
