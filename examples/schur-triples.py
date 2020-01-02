@@ -44,6 +44,9 @@ if __name__ == '__main__':
         assert sum(switch(y, i, neg=True) for i in range(size)) == 1
         assert sum(switch(x, i, neg=True) * triplets[i] for i in range(size)) == sum(switch(y, i, neg=True) * triplets[i] for i in range(size))
 
+    assert sum(xs) + sum(ys) == constant(value=2 ** size - 1, bits=size)
+
+
     if satisfy(turbo=True, log=True):
         for x, y in zip(xs, ys):
             a, b = [triplets[i] for i in range(size) if x.binary[i]]
