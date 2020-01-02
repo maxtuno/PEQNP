@@ -10,8 +10,6 @@
 
 import random
 import sys
-import functools
-import operator
 
 from peqnp import *
 
@@ -37,7 +35,6 @@ if __name__ == '__main__':
     zs = vector(size=size // 3, bits=size)
 
     all_different(xs + ys + zs)
-    apply_dual(xs + ys + zs, lambda a, b: a & b == 0)
 
     for x, y, z in zip(xs, ys, zs):
         assert sum(switch(x, i, neg=True) for i in range(size)) == 1
