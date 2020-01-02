@@ -34,26 +34,26 @@ if __name__ == '__main__':
 
     xs = vector(size=size // 3, bits=size)
     ys = vector(size=size // 3, bits=size)
+    zs = vector(size=size // 3, bits=size)
 
-    all_different(xs)
-    all_different(ys)
+    all_different(xs + ys + zs)
+    apply_dual(xs + ys + zs, lambda a, b: a & b == 0)
 
-    apply_dual(xs, lambda a, b: a & b == 0)
-    apply_dual(ys, lambda a, b: a & b == 0)
-
-    for x, y in zip(xs, ys):
-        assert sum(switch(x, i, neg=True) for i in range(size)) == 2
+    for x, y, z in zip(xs, ys, zs):
+        assert sum(switch(x, i, neg=True) for i in range(size)) == 1
         assert sum(switch(y, i, neg=True) for i in range(size)) == 1
-        assert sum(switch(x, i, neg=True) * triplets[i] for i in range(size)) == sum(switch(y, i, neg=True) * triplets[i] for i in range(size))
-
-    assert functools.reduce(operator.and_, xs) & functools.reduce(operator.and_, ys) == constant(value=0, bits=size)
-    assert functools.reduce(operator.or_, xs) | functools.reduce(operator.or_, ys) == constant(value=2 ** size - 1, bits=size)
+        assert sum(switch(z, i, neg=True) for i in range(size)) == 1
+        assert sum(switch(x, i, neg=True) * triplets[i] for i in range(size)) + sum(switch(y, i, neg=True) * triplets[i] for i in range(size)) == sum(switch(z, i, neg=True) * triplets[i] for i in range(size))
 
     if satisfy(turbo=True, log=True):
-        for x, y in zip(xs, ys):
-            a, b = [triplets[i] for i in range(size) if x.binary[i]]
-            c, = [triplets[i] for i in range(size) if y.binary[i]]
+        aux = []
+        for x, y, z in zip(xs, ys, zs):
+            a, = [triplets[i] for i in range(size) if x.binary[i]]
+            b, = [triplets[i] for i in range(size) if y.binary[i]]
+            c, = [triplets[i] for i in range(size) if z.binary[i]]
+            aux += [a, b, c]
             print('{} == {} + {}'.format(c, a, b))
-        print(80 * '-')
+        print()
+        print('{} assigned elements of {} total elements.'.format(len(set(aux)), len(triplets)))
     else:
         print('Infeasible ...')
