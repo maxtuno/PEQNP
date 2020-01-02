@@ -46,6 +46,7 @@ if __name__ == '__main__':
         assert sum(switch(y, i, neg=True) for i in range(size)) == 1
         assert sum(switch(x, i, neg=True) * triplets[i] for i in range(size)) == sum(switch(y, i, neg=True) * triplets[i] for i in range(size))
 
+    assert functools.reduce(operator.and_, xs) & functools.reduce(operator.and_, ys) == constant(value=0, bits=size)
     assert functools.reduce(operator.or_, xs) | functools.reduce(operator.or_, ys) == constant(value=2 ** size - 1, bits=size)
 
     if satisfy(turbo=True, log=True):
