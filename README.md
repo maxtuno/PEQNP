@@ -9,7 +9,7 @@ Examples https://github.com/maxtuno/PEQNP
 
 More info:
 
-Web
+PEQNP Home
 www.peqnp.science
 
 Twitter Account
