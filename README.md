@@ -5,11 +5,12 @@ General Constrained Diophantine Equation Solver
 
     pip3 install PEQNP
 
-Documentation www.peqnp.science
-
 Examples https://github.com/maxtuno/PEQNP
 
 More info:
+
+Web
+www.peqnp.science
 
 Twitter Account
 https://twitter.com/maxtuno
