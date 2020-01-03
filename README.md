@@ -3,7 +3,9 @@ General Constrained Diophantine Equation Solver
 
 [![Downloads](https://pepy.tech/badge/peqnp)](https://pepy.tech/project/peqnp)
 
-    pip3 install PEQNP
+To install the latest version:
+
+    pip3 install PEQNP --upgrade
 
 Examples https://github.com/maxtuno/PEQNP
 
@@ -17,6 +19,9 @@ https://twitter.com/maxtuno
 
 Youtube Channel
 https://www.youtube.com/channel/UCFlk1dUYLKtymcoMScdynNA
+
+#### version 0.1.35
+- Add index function the inverse of element function, its the equivalent to vector[index] == element. 
 
 #### version 0.1.34
 - Add functions matrix_permutation, permutations, combinations

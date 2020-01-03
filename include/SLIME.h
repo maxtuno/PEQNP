@@ -28,6 +28,7 @@ void printHeader() {
     printf("                                             \n");
 }
 #else
+
 void printHeader() {
     printf("c                                          \n");
     printf("c    ██████  ██▓     ██▓ ███▄ ▄███▓▓█████  \n");
@@ -43,9 +44,10 @@ void printHeader() {
     printf("c         http://www.peqnp.science         \n");
     printf("c                                          \n");
 }
+
 #endif
 
-PyObject *slime4(PyObject *self, PyObject *args) {
+PyObject *slime4(PyObject * self, PyObject * args) {
 
     printHeader();
 
@@ -63,7 +65,7 @@ PyObject *slime4(PyObject *self, PyObject *args) {
     slime.drup_file = fopen(proof_path, "wb");
 #endif
 
-    FILE *in = fopen(cnf_path, "r");
+    FILE * in = fopen(cnf_path, "r");
     if (in == NULL) {
         std::cout << "c ERROR! Could not open file: " << cnf_path << std::endl;
         Py_RETURN_NONE;
@@ -96,7 +98,7 @@ PyObject *slime4(PyObject *self, PyObject *args) {
     }
 
     if (strcmp(model_path, "") != 0) {
-        FILE *model = fopen(model_path, "w");
+        FILE * model = fopen(model_path, "w");
         fprintf(model, result == l_True ? "SAT\n" : result == l_False ? "UNSAT\n" : "UNKNOWN\n");
         if (result == l_True) {
             for (int i = 0; i < slime.nVars(); i++)
@@ -108,7 +110,7 @@ PyObject *slime4(PyObject *self, PyObject *args) {
     }
 
     if (result == l_True) {
-        PyObject *modelList = PyList_New(slime.nVars());
+        PyObject * modelList = PyList_New(slime.nVars());
         if (result == l_True) {
             for (int i = 0; i < slime.nVars(); i++)
                 if (slime.model[i] != l_Undef) {
@@ -121,16 +123,16 @@ PyObject *slime4(PyObject *self, PyObject *args) {
     return PyList_New(0);
 }
 
-PyObject *reset(PyObject *self, PyObject *args) {
+PyObject *reset(PyObject * self, PyObject * args) {
     delete S;
     S = new SimpSolver();
 
     Py_RETURN_NONE;
 }
 
-PyObject *add_clause(PyObject *self, PyObject *args) {
-    PyObject *pList;
-    PyObject *pItem;
+PyObject *add_clause(PyObject * self, PyObject * args) {
+    PyObject * pList;
+    PyObject * pItem;
     Py_ssize_t n;
     int i;
 
@@ -156,13 +158,13 @@ PyObject *add_clause(PyObject *self, PyObject *args) {
     Py_RETURN_NONE;
 }
 
-PyObject *solve(PyObject *self, PyObject *args) {
+PyObject *solve(PyObject * self, PyObject * args) {
 
     char *path, *model_path, *proof;
     bool simplify, log, solve;
     lbool result;
-    PyObject *pList;
-    PyObject *pItem;
+    PyObject * pList;
+    PyObject * pItem;
     vec<Lit> assumptions;
     Py_ssize_t n;
     int i;
@@ -215,7 +217,7 @@ PyObject *solve(PyObject *self, PyObject *args) {
     }
 
     if (result == l_True) {
-        PyObject *modelList = PyList_New(S->nVars());
+        PyObject * modelList = PyList_New(S->nVars());
         if (result == l_True) {
             for (int i = 0; i < S->nVars(); i++)
                 if (S->model[i] != l_Undef) {
