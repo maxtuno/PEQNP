@@ -13,7 +13,7 @@ def version():
     Print the current version of the system.
     :return:
     """
-    print('PEQNP - 0.1.33 - 0-1-2020')
+    print('PEQNP - 0.1.34 - 3-1-2020')
 
 
 def engine(bits=None, deepness=None):
@@ -63,7 +63,7 @@ def constant(value=None, bits=None):
     return variables[-1]
 
 
-def satisfy(solve=True, turbo=False, log=False, assumptions=[], cnf_path='', proof_path=''):
+def satisfy(solve=True, turbo=False, log=False, assumptions=[], cnf_path='', model_path='', proof_path=''):
     """
     Find a model for the current problem.
     :param solve: This indicate if the instance can be solved or not, its use in conjunction with cnf_path.
@@ -71,10 +71,11 @@ def satisfy(solve=True, turbo=False, log=False, assumptions=[], cnf_path='', pro
     :param log: Shot the log for the SLIME SAT Solver.
     :param assumptions: A low level interrupt on the solver, this take a list with literals assumed true, and add to the hig level model.
     :param cnf_path: The path for the CNF representation of the problem, None by default and is not generated.
+    :param model_path: The path for the MODEL of the problem, None by default and is not generated.
     :param proof_path: The path for the CNF DRUP-PROOF of the problem if this is unsatisfiable, None by default and is not generated.
     :return: True if SATISFIABLE else False
     """
-    return csp.to_sat(variables, solve=solve, turbo=turbo, log=log, assumptions=assumptions, cnf_path=cnf_path, proof_path=proof_path)
+    return csp.to_sat(variables, solve=solve, turbo=turbo, log=log, assumptions=assumptions, cnf_path=cnf_path, model_path=model_path, proof_path=proof_path)
 
 
 def subsets(universe, k=None, key=None):
@@ -142,7 +143,7 @@ def matrix(key=None, bits=None, dimensions=None):
     return matrix_
 
 
-def permutations(args, n):
+def matrix_permutation(args, n):
     """
     This generate the permutations for an square matrix.
     :param args: The matrix of data.
@@ -158,6 +159,36 @@ def permutations(args, n):
         csp.indexing(xs, ys, csp.flatten(args))
     else:
         csp.indexing(xs, ys, args)
+    return xs, ys
+
+
+def permutations(lst, n):
+    """
+    Entangle all permutations of size n for the vector lst.
+    :param lst: The list to entangle.
+    :param n: The size of entanglement.
+    :return: (indexes, values)
+    """
+    xs = vector(size=n)
+    ys = vector(size=n)
+    for i in range(n):
+        assert element(ys[i], lst) == xs[i]
+    apply_single(xs, lambda a: a < n)
+    apply_dual(xs, lambda a, b: a != b)
+    return xs, ys
+
+
+def combinations(lst, n):
+    """
+    Entangle all combinations of size n for the vector lst.
+    :param lst: The list to entangle.
+    :param n: The size of entanglement.
+    :return: (indexes, values)
+    """
+    xs = vector(size=n)
+    ys = vector(size=n)
+    for i in range(n):
+        assert element(ys[i], lst) == xs[i]
     return xs, ys
 
 

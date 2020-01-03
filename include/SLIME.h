@@ -158,7 +158,7 @@ PyObject *add_clause(PyObject *self, PyObject *args) {
 
 PyObject *solve(PyObject *self, PyObject *args) {
 
-    char *path, *proof;
+    char *path, *model_path, *proof;
     bool simplify, log, solve;
     lbool result;
     PyObject *pList;
@@ -167,7 +167,7 @@ PyObject *solve(PyObject *self, PyObject *args) {
     Py_ssize_t n;
     int i;
 
-    if (!PyArg_ParseTuple(args, "bbbOss", &solve, &simplify, &log, &pList, &path, &proof)) {
+    if (!PyArg_ParseTuple(args, "bbbOsss", &solve, &simplify, &log, &pList, &path, &model_path, &proof)) {
         Py_RETURN_NONE;
     }
 
@@ -222,7 +222,22 @@ PyObject *solve(PyObject *self, PyObject *args) {
                     PyList_SetItem(modelList, i, PyLong_FromLong((S->model[i] == l_True) ? +(i + 1) : -(i + 1)));
                 }
         }
+
+        if (strcmp(model_path, "") != 0) {
+            FILE * model = fopen(model_path, "w");
+            fprintf(model, result == l_True ? "SAT\n" : result == l_False ? "UNSAT\n" : "UNKNOWN\n");
+            if (result == l_True) {
+                for (int i = 0; i < S->nVars(); i++)
+                    if (S->model[i] != l_Undef) {
+                        fprintf(model, "%s%s%d", (i == 0) ? "" : " ", (S->model[i] == l_True) ? "" : "-", i + 1);
+                    }
+                fprintf(model, " 0\n");
+            }
+            fclose(model);
+        }
+
         S->model.clear(true);
+
         return modelList;
     }
 

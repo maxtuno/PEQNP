@@ -30,27 +30,13 @@ if __name__ == '__main__':
 
     engine(bits=max(triplets).bit_length())
 
-    xs = vector(size=size // 3, bits=size)
-    ys = vector(size=size // 3, bits=size)
-    zs = vector(size=size // 3, bits=size)
+    xs, ys = permutations(triplets, size)
 
-    all_different(xs + ys + zs)
-
-    for x, y, z in zip(xs, ys, zs):
-        assert sum(switch(x, i, neg=True) for i in range(size)) == 1
-        assert sum(switch(y, i, neg=True) for i in range(size)) == 1
-        assert sum(switch(z, i, neg=True) for i in range(size)) == 1
-        assert sum(switch(x, i, neg=True) * triplets[i] for i in range(size)) + sum(switch(y, i, neg=True) * triplets[i] for i in range(size)) == sum(switch(z, i, neg=True) * triplets[i] for i in range(size))
+    for i in range(0, size, 3):
+        assert ys[i] + ys[i + 1] == ys[i + 2]
 
     if satisfy(turbo=True, log=True):
-        aux = []
-        for x, y, z in zip(xs, ys, zs):
-            a, = [triplets[i] for i in range(size) if x.binary[i]]
-            b, = [triplets[i] for i in range(size) if y.binary[i]]
-            c, = [triplets[i] for i in range(size) if z.binary[i]]
-            aux += [a, b, c]
-            print('{} == {} + {}'.format(c, a, b))
-        print()
-        print('{} assigned elements of {} total elements.'.format(len(set(aux)), len(triplets)))
+        for i in range(0, size, 3):
+            print('{} == {} + {}'.format(ys[i + 2], ys[i], ys[i + 1]))
     else:
         print('Infeasible ...')
