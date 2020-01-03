@@ -58,7 +58,7 @@ if __name__ == '__main__':
         for slot in slots:
             assert sum(switch(slot, i) * elements[i] for i in range(len(elements))) <= capacity
 
-        if satisfy(turbo=True):
+        if satisfy(turbo=True, log=True):
             # save the solution
             print('Solution for {} bins...'.format(bins))
             # the binary location of each element on slots

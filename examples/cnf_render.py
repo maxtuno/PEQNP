@@ -2,15 +2,12 @@ from peqnp import *
 
 if __name__ == '__main__':
 
-    engine(2)
+    engine(4)
 
-    x = integer(key='x')
-    y = integer(key='y')
+    q = integer(key='p')
+    p = integer(key='q')
 
-    assert x <= 10
-    assert y <= 10
+    assert p + q == 1
 
-    assert x * y == 6
-
-    if satisfy(solve=False, turbo=True, log=True, assumptions=[-1], cnf_path='test.cnf'):
-        print(x)
+    if satisfy(solve=True, turbo=True, log=True, assumptions=[], cnf_path='test.cnf'):
+        print(p, q)

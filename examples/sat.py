@@ -21,8 +21,7 @@ SOFTWARE.
 """
 
 import sys
-import functools
-import operator
+
 from peqnp import *
 
 
@@ -42,15 +41,15 @@ if __name__ == '__main__':
 
     n, m, cnf = load_data(sys.argv[1])
 
-    engine(bits=2)
+    engine(bits=n.bit_length())
 
-    x = integer(bits=n)
+    bits = integer(key='bits', bits=n)
 
     for cls in cnf:
-        assert functools.reduce(operator.ior, (switch(x, abs(lit) - 1, neg=lit > 0) for lit in cls)) != 0
+        assert sum(switch(bits, abs(lit) - 1, neg=lit > 0) for lit in cls) != 0
 
-    if satisfy(turbo=True):
+    if satisfy(solve=False, log=True, turbo=True, cnf_path='sat.cnf', assumptions=[-1]):
         print('SAT')
-        print(' '.join(map(str, [(i + 1) if b else -(i + 1) for i, b in enumerate(x.binary)])) + ' 0')
+        print(' '.join(map(str, [(i + 1) if b else -(i + 1) for i, b in enumerate(bits.binary)])) + ' 0')
     else:
         print('UNSAT')
