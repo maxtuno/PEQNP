@@ -1,6 +1,8 @@
 # PEQNP
 General Constrained Diophantine Equation Solver
 
+[![Downloads](https://pepy.tech/badge/peqnp)](https://pepy.tech/project/peqnp)
+
     pip3 install PEQNP
 
 Documentation www.peqnp.science
