@@ -18,11 +18,13 @@ SOFTWARE.
 """
 
 import sys
+
 from peqnp import *
 
 glb = 0
 
 
+# The oracle for the problem, this count the satisfied clauses from the current assignment
 def oracle(seq):
     global glb
     trail = [+(i + 1) if bit else -(i + 1) for i, bit in enumerate(seq)]
@@ -40,6 +42,13 @@ def oracle(seq):
 
 if __name__ == '__main__':
 
+    if len(sys.argv) == 1 or sys.argv[1] == '--help':
+        print('Approximate the max-sat problem')
+        print('Usage   : python3 maxsat.py <cnf>')
+        print('Example : python3 maxsat test.cnf')
+        exit(0)
+
+    # Load the instance
     n, m, cnf = 0, 0, []
     with open(sys.argv[1], 'r') as cnf_file:
         lines = cnf_file.readlines()
@@ -49,8 +58,10 @@ if __name__ == '__main__':
             else:
                 cnf.append(list(map(int, line.rstrip('\n')[:-2].split(' '))))
 
+    # Call hess algorithm to get a approximate solution
     seq = hess_binary(n, oracle=oracle)
 
+    # if the total clauses satisfied is equal to all clauses the problem is solved.
     if m == oracle(seq):
         print('s OPTIMUM FOUND')
     else:

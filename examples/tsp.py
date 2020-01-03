@@ -17,9 +17,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
+import sys
+
 import matplotlib.pyplot as plt
 import numpy
-
 from peqnp import *
 
 glb = numpy.inf
@@ -35,7 +36,14 @@ def oracle(seq):
 
 
 if __name__ == '__main__':
-    n = 100
+
+    if len(sys.argv) == 1 or sys.argv[1] == '--help':
+        print('Approximate the TSP problem')
+        print('Usage   : python3 tsp.py <size>')
+        print('Example : python3 tsp.py 100')
+        exit(0)
+
+    n = int(sys.argv[1])
 
     data = numpy.random.logistic(size=(n, 2))
 

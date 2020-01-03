@@ -15,6 +15,13 @@ from peqnp import *
 
 # ref: https://cstheory.stackexchange.com/questions/16253/list-of-strongly-np-hard-problems-with-numerical-data
 if __name__ == '__main__':
+
+    if len(sys.argv) == 1 or sys.argv[1] == '--help':
+        print('Solve Schur Triples Problem')
+        print('Usage   : python3 schur-triples.py <bits> <size>')
+        print('Example : python3 schur-triples.py 7 10')
+        exit(0)
+
     bits = int(sys.argv[1])
     size = 3 * int(sys.argv[2])
 

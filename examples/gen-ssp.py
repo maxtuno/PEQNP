@@ -24,6 +24,13 @@ import random
 import sys
 
 if __name__ == '__main__':
+
+    if len(sys.argv) == 1 or sys.argv[1] == '--help':
+        print('Generate an instances of sum subset problem to use with ssp.py')
+        print('Usage   : python3 gen-bpp.py <capacity> <size>')
+        print('Example : python3 gen-bpp.py 50 100')
+        exit(0)
+
     bits = int(sys.argv[1])
     size = int(sys.argv[2])
 

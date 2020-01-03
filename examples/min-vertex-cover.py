@@ -18,6 +18,7 @@ SOFTWARE.
 """
 
 import sys
+
 from peqnp import *
 
 
@@ -36,19 +37,34 @@ def load_file(file_name):
 
 if __name__ == '__main__':
 
+    if len(sys.argv) == 1 or sys.argv[1] == '--help':
+        print('Solve the min-vertex cover problem')
+        print('Usage   : python3 k-vertex-cover.py <instance>')
+        print('Example : python3 k-vertex-cover.py data.clq')
+        exit(0)
+
+    # Get the nxn-matrix and dimension, and the size of the cover.
     n, matrix, vertex = load_file(sys.argv[1])
 
+    # Search for the min vertex cover
     opt = n
     while True:
+        # Ensure the problem can be represented
         engine(bits=n.bit_length())
 
+        # An integer with n-bits to store the indexes for the cover
         index = integer(bits=n)
 
+        # This entangled the all possible covers
         for i, j in matrix:
             assert switch(index, vertex.index(i), neg=True) + switch(index, vertex.index(j), neg=True) >= 1
 
+        # Ensure the cover has size k
         assert sum(switch(index, vertex.index(i), neg=True) for i in vertex) < opt
 
+        # Get the first solution with turbo
+        # very fast but destructive, this force a SLIME 4 SAT Solver do a full simplification,
+        # only one solution is possible, because the internal structure of the problem is destroyed
         if satisfy(turbo=True):
             opt = sum(index.binary)
             print('p size {}'.format(opt))

@@ -27,6 +27,12 @@ from peqnp import *
 
 if __name__ == '__main__':
 
+    if len(sys.argv) == 1 or sys.argv[1] == '--help':
+        print('Solve the bin packing problem, generate instances with gen-bpp.py')
+        print('Usage   : python3 bin-packing.py <instance>')
+        print('Example : python3 bin-packing.py bpp.txt')
+        exit(0)
+
     # load instance
     elements = []
     with open(sys.argv[1], 'r') as file:
@@ -58,7 +64,10 @@ if __name__ == '__main__':
         for slot in slots:
             assert sum(switch(slot, i) * elements[i] for i in range(len(elements))) <= capacity
 
-        if satisfy(turbo=True, log=True):
+        # Get the first solution with turbo
+        # very fast but destructive, this force a SLIME 4 SAT Solver do a full simplification,
+        # only one solution is possible, because the internal structure of the problem is destroyed
+        if satisfy(turbo=True):
             # save the solution
             print('Solution for {} bins...'.format(bins))
             # the binary location of each element on slots

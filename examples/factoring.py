@@ -21,20 +21,34 @@ SOFTWARE.
 """
 
 import sys
+
 from peqnp import *
 
 if __name__ == '__main__':
 
+    if len(sys.argv) == 1 or sys.argv[1] == '--help':
+        print('Usage   : python3 factoring.py rsa-number')
+        print('Example : python3 factoring.py 3007')
+        exit(0)
+
+    # The number to factoring.
     rsa = int(sys.argv[1])
 
+    # Ensure that the problem can be fully represented.
     engine(bits=rsa.bit_length())
 
+    # The two factors.
     p, q = integer(), integer()
 
+    # The main constraint
     assert p * q == rsa
 
+    # Discard the trivial cases and symmetries.
     assert 1 < p < q < rsa
 
+    # Get the first solution with turbo
+    # very fast but destructive, this force a SLIME 4 SAT Solver do a full simplification,
+    # only one solution is possible, because the internal structure of the problem is destroyed
     if satisfy(turbo=True):
         print(p, q)
     else:

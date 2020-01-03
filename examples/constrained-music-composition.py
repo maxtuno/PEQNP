@@ -19,8 +19,8 @@ SOFTWARE.
 
 # video:  https://youtu.be/9RZa90ZTu1c
 
-from peqnp import *
 from music21 import *
+from peqnp import *
 
 
 # https://stackoverflow.com/questions/312443/how-do-you-split-a-list-into-evenly-sized-chunks

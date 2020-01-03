@@ -21,26 +21,41 @@ SOFTWARE.
 """
 
 import sys
+
 import numpy as np
 from peqnp import *
 
 if __name__ == '__main__':
 
+    if len(sys.argv) == 1 or sys.argv[1] == '--help':
+        print('Solve the undirected hamiltonian cycle problem')
+        print('Usage   : python3 hcp.py <adjacent-matrix-dimension>')
+        print('Example : python3 hcp.py 10')
+        exit(0)
+
+    # The dimension of the nxn adjacent-matrix for the graph
     n = int(sys.argv[1])
 
-    np.random.seed(n)
-
+    # Generate a 01 matrix
     matrix = np.random.randint(0, 2, size=(n, n))
+    # Put 0s on diagonal
     matrix -= np.identity(n, dtype=int) * np.diagonal(matrix)
 
+    # show thw matrix
     print(matrix)
 
-    engine(2 * n.bit_length())
+    # Ensure that the problem can be full represented on the system.
+    engine((n ** 2).bit_length())
 
-    indexes, elements = permutations((1 - matrix).tolist(), n)
+    # Entangle all possible paths changing 0 <-> 1 i.e. 0 if edge exist 1 if not.
+    indexes, elements = matrix_permutation((1 - matrix).tolist(), n)
 
+    # The path is full, (all elements are joined).
     assert sum(elements) == 0
 
+    # Get the first solution with turbo
+    # very fast but destructive, this force a SLIME 4 SAT Solver do a full simplification,
+    # only one solution is possible, because the internal structure of the problem is destroyed
     if satisfy(turbo=True):
         for i in indexes:
             for j in indexes:

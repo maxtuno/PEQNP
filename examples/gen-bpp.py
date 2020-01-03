@@ -20,14 +20,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-import sys
 import random
+import sys
 
 if __name__ == '__main__':
 
     seed = 0
 
     random.seed(seed)
+
+    if len(sys.argv) == 1 or sys.argv[1] == '--help':
+        print('Generate an instances of bin packing to use with bin-packing.py')
+        print('Usage   : python3 gen-bpp.py <capacity> <size>')
+        print('Example : python3 gen-bpp.py 50 100')
+        exit(0)
 
     capacity = int(sys.argv[1])
     size = int(sys.argv[1])

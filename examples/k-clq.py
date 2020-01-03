@@ -21,6 +21,7 @@ SOFTWARE.
 """
 
 import sys
+
 from peqnp import *
 
 
@@ -38,20 +39,35 @@ def load_file(file_name):
 
 if __name__ == '__main__':
 
+    if len(sys.argv) == 1 or sys.argv[1] == '--help':
+        print('Solve the k-clique problem')
+        print('Usage   : python3 k-clq.py <instance> <size>')
+        print('Example : python3 k-clq.py data.clq 10')
+        exit(0)
+
+    # Get the adjacent matrix and the dimension for the graph
     n, matrix = load_file(sys.argv[1])
+    # Ths size of the clique to search
     size = int(sys.argv[2])
 
+    # Ensure the problem can be represented
     engine(bits=size.bit_length())
 
+    # Declare an integer of n-bits
     bits = integer(bits=n)
 
+    # The bits integer have "size"-active bits, i.e, the clique has "size"-elements
     assert sum(switch(bits, i) for i in range(n)) == size
 
+    # This entangle all elements that are joined together
     for i in range(n - 1):
         for j in range(i + 1, n):
             if (i, j) not in matrix and (j, i) not in matrix:
                 assert switch(bits, i) + switch(bits, j) <= 1
 
+    # Get the first solution with turbo
+    # very fast but destructive, this force a SLIME 4 SAT Solver do a full simplification,
+    # only one solution is possible, because the internal structure of the problem is destroyed
     if satisfy(turbo=True):
         print(size)
         print(' '.join([str(i) for i in range(n) if not bits.binary[i]]))

@@ -21,6 +21,7 @@ SOFTWARE.
 """
 
 import sys
+
 from peqnp import *
 
 
@@ -32,6 +33,13 @@ def load_instance(file_name):
 
 if __name__ == '__main__':
 
+    if len(sys.argv) == 1 or sys.argv[1] == '--help':
+        print('Solve the Sum Subset Problem')
+        print('Usage   : python3 ssp.py <instance>')
+        print('Example : python3 ssp.py data.txt')
+        print('Extreme : python3 ssp.py pub.txt (take long time but solve)')
+        exit(0)
+
     t, universe = load_instance(sys.argv[1])
 
     engine(bits=t.bit_length())
@@ -40,7 +48,7 @@ if __name__ == '__main__':
 
     assert sum(subset) == t
 
-    if satisfy(turbo=True, log=True):
+    if satisfy(turbo=True, log=True, cnf_path='ssp.cnf'):
         solution = [universe[i] for i in range(len(universe)) if bits.binary[i]]
         print(sum(solution), solution)
         print()

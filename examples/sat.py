@@ -20,6 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
+import functools
+import operator
 import sys
 
 from peqnp import *
@@ -39,17 +41,23 @@ def load_data(file_name):
 
 if __name__ == '__main__':
 
+    if len(sys.argv) == 1 or sys.argv[1] == '--help':
+        print('Solve SAT problem (re-encoded)')
+        print('Usage   : python3 sat.py <cnf>')
+        print('Example : python3 sat.py test.cnf')
+        exit(0)
+
     n, m, cnf = load_data(sys.argv[1])
 
-    engine(bits=n.bit_length())
+    engine(bits=2)
 
-    bits = integer(key='bits', bits=n)
+    x = integer(bits=n)
 
     for cls in cnf:
-        assert sum(switch(bits, abs(lit) - 1, neg=lit > 0) for lit in cls) != 0
+        assert functools.reduce(operator.ior, (switch(x, abs(lit) - 1, neg=lit > 0) for lit in cls)) != 0
 
-    if satisfy(solve=False, log=True, turbo=True, cnf_path='sat.cnf', assumptions=[-1]):
+    if satisfy(turbo=True):
         print('SAT')
-        print(' '.join(map(str, [(i + 1) if b else -(i + 1) for i, b in enumerate(bits.binary)])) + ' 0')
+        print(' '.join(map(str, [(i + 1) if b else -(i + 1) for i, b in enumerate(x.binary)])) + ' 0')
     else:
         print('UNSAT')
