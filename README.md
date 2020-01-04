@@ -20,6 +20,9 @@ https://twitter.com/maxtuno
 Youtube Channel
 https://www.youtube.com/channel/UCFlk1dUYLKtymcoMScdynNA
 
+#### version 0.1.36
+- Add beta support for Gaussian Integers, and related examples.
+
 #### version 0.1.35
 - Add index function the inverse of element function, its the equivalent to vector[index] == element.
 - Add matrix equation example.

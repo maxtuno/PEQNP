@@ -1,7 +1,29 @@
 """
+///////////////////////////////////////////////////////////////////////////////
+//        Copyright (c) 2012-2020 Oscar Riveros. all rights reserved.        //
+//                        oscar.riveros@peqnp.science                        //
+//                                                                           //
+//   without any restriction, Oscar Riveros reserved rights, patents and     //
+//  commercialization of this knowledge or derived directly from this work.  //
+///////////////////////////////////////////////////////////////////////////////
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+"""
+
+"""
 The standard high level library for the PEQNP system.
 """
 
+from .gaussian import Gaussian
 from .solver import *
 
 csp = None
@@ -13,7 +35,7 @@ def version():
     Print the current version of the system.
     :return:
     """
-    print('PEQNP - 0.1.35 - 3-1-2020')
+    print('PEQNP - 0.1.36 - 4-1-2020')
 
 
 def engine(bits=None, deepness=None):
@@ -328,6 +350,10 @@ def flatten(args):
     return csp.flatten(args)
 
 
+def bits():
+    return csp.bits
+
+
 def oo():
     """
     The infinite for rhe system, the maximal value for the current engine.
@@ -363,3 +389,13 @@ def index(idx, data):
     variables.append(i)
     csp.element(idx, data, i)
     return variables[-1]
+
+
+def gaussian(x, y):
+    """
+    Create a gaussian from (x+yj).
+    :param x: real
+    :param y: imaginary
+    :return: (x+yj)
+    """
+    return Gaussian(x, y)
