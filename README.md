@@ -21,7 +21,8 @@ Youtube Channel
 https://www.youtube.com/channel/UCFlk1dUYLKtymcoMScdynNA
 
 #### version 0.1.35
-- Add index function the inverse of element function, its the equivalent to vector[index] == element. 
+- Add index function the inverse of element function, its the equivalent to vector[index] == element.
+- Add matrix equation example.
 
 #### version 0.1.34
 - Add functions matrix_permutation, permutations, combinations
