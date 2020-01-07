@@ -435,7 +435,9 @@ class CSP:
     def unsat(self):
         return self._unsat
 
-    def to_sat(self, args, solve=True, turbo=False, log=False, assumptions=[], cnf_path='', model_path='', proof_path=''):
+    def to_sat(self, args, solve=True, turbo=False, log=False, assumptions=None, cnf_path='', model_path='', proof_path='', normalize=False):
+        if assumptions is None:
+            assumptions = []
         model = slime.solve(solve, turbo, log, assumptions, cnf_path, model_path, proof_path)
         if cnf_path:
             with open(cnf_path, 'a') as file:
@@ -449,7 +451,7 @@ class CSP:
             for key, value in self._map.items():
                 for arg in args:
                     if isinstance(arg, Entity) and arg.key == key:
-                        arg._value = self.normalize(int(''.join(map(str, [int(int(model[abs(bit) - 1]) > 0) for bit in value[::-1]])), 2))
+                        arg._value = self.normalize(int(''.join(map(str, [int(int(model[abs(bit) - 1]) > 0) for bit in value[::-1]])), 2), normalize=normalize)
             self.add_block([-lit for lit in model])
             self._unsat = False
             return True
@@ -602,7 +604,9 @@ class CSP:
                 for j in range(i + 1, len(xs)):
                     dual(i, j, xs[i], xs[j])
 
-    def normalize(self, value):
+    def normalize(self, value, normalize):
+        if normalize and abs(value).bit_length() > self.bits - 1:
+            return self.negative(value)
         return value
 
     def negative(self, value):

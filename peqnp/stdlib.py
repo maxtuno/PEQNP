@@ -35,7 +35,7 @@ def version():
     Print the current version of the system.
     :return:
     """
-    print('PEQNP - 0.1.37 - 4-1-2020')
+    print('PEQNP - 0.1.38 - 7-1-2020')
 
 
 def engine(bits=None, deepness=None):
@@ -85,7 +85,7 @@ def constant(value=None, bits=None):
     return variables[-1]
 
 
-def satisfy(solve=True, turbo=False, log=False, assumptions=[], cnf_path='', model_path='', proof_path=''):
+def satisfy(solve=True, turbo=False, log=False, assumptions=[], cnf_path='', model_path='', proof_path='', normalize=False):
     """
     Find a model for the current problem.
     :param solve: This indicate if the instance can be solved or not, its use in conjunction with cnf_path.
@@ -95,9 +95,10 @@ def satisfy(solve=True, turbo=False, log=False, assumptions=[], cnf_path='', mod
     :param cnf_path: The path for the CNF representation of the problem, None by default and is not generated.
     :param model_path: The path for the MODEL of the problem, None by default and is not generated.
     :param proof_path: The path for the CNF DRUP-PROOF of the problem if this is unsatisfiable, None by default and is not generated.
+    :param normalize: Indicate to the system that normalize integers from [2 ** (bits - 1), 2 ** bits - 1].
     :return: True if SATISFIABLE else False
     """
-    return csp.to_sat(variables, solve=solve, turbo=turbo, log=log, assumptions=assumptions, cnf_path=cnf_path, model_path=model_path, proof_path=proof_path)
+    return csp.to_sat(variables, solve=solve, turbo=turbo, log=log, assumptions=assumptions, cnf_path=cnf_path, model_path=model_path, proof_path=proof_path, normalize=normalize)
 
 
 def subsets(universe, k=None, key=None):

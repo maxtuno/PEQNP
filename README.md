@@ -20,6 +20,9 @@ https://twitter.com/maxtuno
 Youtube Channel
 https://www.youtube.com/channel/UCFlk1dUYLKtymcoMScdynNA
 
+#### version 0.1.38
+- Add normalize parameter to satisfy, this normalize integers from [2 ** (bits - 1), 2 ** bits - 1] and add a related example.
+
 #### version 0.1.37
 - Add beta support for Gaussian Integers, and related examples.
 

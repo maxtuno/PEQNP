@@ -181,8 +181,7 @@ class Entity:
     def __neg__(self):
         if self.value is not None:
             return -self.value
-        self._block[-1] = -self._block[-1]
-        return self
+        return self._encoder.zero - self
 
     def __abs__(self):
         if self.value is not None:
