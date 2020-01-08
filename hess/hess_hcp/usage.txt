@@ -1,0 +1,5 @@
+# Approximate the Hamiltonian Path Problem
+# ./hess_cvrp <cvrp-instance>
+
+./hess_max2sat data.txt
+python3 plot.py
