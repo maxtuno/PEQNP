@@ -9,7 +9,7 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/hess/cvrpt)
 add_subdirectory(${PROJECT_SOURCE_DIR}/hess/hess_hcp)
 add_subdirectory(${PROJECT_SOURCE_DIR}/hess/hess_max2sat)
 
-include_directories(. include /Library/Frameworks/Python.framework/Versions/3.8/include/python3.8)
+include_directories(. include)
 
 set(CMAKE_CXX_FLAGS "-std=c++98 -O3 -D NDEBUG -D __STDC_LIMIT_MACROS -D __STDC_FORMAT_MACROS -D LOG") # -static
 
