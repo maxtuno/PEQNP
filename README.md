@@ -3,7 +3,7 @@ General Constrained Diophantine Equation Solver
 # HESS 
 Hyper Expoential Space Sorting an Universal Black Box Optimizer
 # DEIDOS COVENANT 
-A extremely fast algorithm to get all solutions of a Sum Subset Problem.
+A extremely fast algorithm to get all solutions of a Sum Subset Problem. (with 3sort Algorithm)
 
 [![Downloads](https://pepy.tech/badge/peqnp)](https://pepy.tech/project/peqnp)
 
