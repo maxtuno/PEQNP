@@ -21,7 +21,7 @@ Youtube Channel
 https://www.youtube.com/channel/UCFlk1dUYLKtymcoMScdynNA
 
 #### 1-8-2020
-- Add the HESS folder with NATIVE and variate implementations of the HESS algorithm to solve (approximate) MAXSAT, HCP, CVRP. 
+- Add the HESS folder with NATIVE and variate implementations of the HESS algorithm to solve (approximate) MAXSAT, HCP, CVRP and the Hyper Loop Algorthm. 
 - SLIME4 is now compile on this project.
 
 #### version 0.1.38
