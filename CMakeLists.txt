@@ -8,6 +8,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
 add_subdirectory(${PROJECT_SOURCE_DIR}/hess/cvrpt)
 add_subdirectory(${PROJECT_SOURCE_DIR}/hess/hess_hcp)
 add_subdirectory(${PROJECT_SOURCE_DIR}/hess/hess_max2sat)
+add_subdirectory(${PROJECT_SOURCE_DIR}/deidos)
 
 include_directories(. include)
 
