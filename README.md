@@ -22,7 +22,7 @@ https://www.youtube.com/channel/UCFlk1dUYLKtymcoMScdynNA
 
 #### 1-8-2020
 - Add the HESS folder with NATIVE and variate implementations of the HESS algorithm to solve (approximate) MAXSAT, HCP, CVRP. 
-- SLIME4 is now compilable on this project.
+- SLIME4 is now compile on this project.
 
 #### version 0.1.38
 - Add normalize parameter to satisfy, this normalize integers from [2 ** (bits - 1), 2 ** bits - 1] and add a related example.
