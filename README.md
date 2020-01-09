@@ -4,6 +4,8 @@ General Constrained Diophantine Equation Solver
 Hyper Expoential Space Sorting an Universal Black Box Optimizer
 # DEIDOS COVENANT 
 A extremely fast algorithm to get all solutions of a Sum Subset Problem. (with 3sort Algorithm)
+# SLIME 4
+A Free World Class High Performance SAT Solver
 
 [![Downloads](https://pepy.tech/badge/peqnp)](https://pepy.tech/project/peqnp)
 
