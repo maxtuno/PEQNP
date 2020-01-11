@@ -94,7 +94,7 @@ if __name__ == '__main__':
     # https://www.kaggle.com/trolukovich/nutritional-values-for-common-foods-and-products
     ds = pd.read_csv('nutrition.csv')
 
-    # SELECT IDs FROM TOP(1000) NUTRITION
+    # SELECT IDs FROM TOP(100) NUTRITION
     # WHERE
     # sum(CALORIES) is MINIMAL AND
     # sum(CHOLESTEROL) is MINIMAL AND
