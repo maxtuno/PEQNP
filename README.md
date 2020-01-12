@@ -15,6 +15,7 @@ To install the latest version:
     
 Longest Common Pattern Example (Longest Common Sequence with Permutations):
 
+    import numpy as np
     from peqnp import *
     
     m, n = 7, 15
