@@ -245,21 +245,21 @@ def oo():
     """
 
 
-def element(i, data):
+def element(item, data):
     """
-    Ensure that the element i is on the data, on the position index.
-    :param i: the element
+    Ensure that the element item is on the data, on the position index.
+    :param item: The element
     :param data: The data
-    :return: The position of element
+    :return: The position index of element
     """
 
 
 def index(idx, data):
     """
-    Ensure that the element i is on the data, on the position index.
-    :param i: the element
+    Ensure that the element is on the data, on the position index.
+    :param idx: The index
     :param data: The data
-    :return: The position of element
+    :return: The element at position index
     """
 
 
