@@ -60,7 +60,7 @@ static int opt_phase_saving = 2;
 static bool opt_rnd_init_act = false;
 static int opt_restart_first = 100;
 static double opt_restart_inc = 2;
-static double opt_garbage_frac = 0.20;
+static double opt_garbage_frac = 0.25;
 static int opt_chrono = 100;
 static int opt_conf_to_chrono = 4000;
 
@@ -1706,45 +1706,49 @@ lbool Solver::solve_() {
 //
 // FIXME: this needs to be rewritten completely.
 
-static Var mapVar(Var x, vec<Var> &map, Var &max) {
-    if (map.size() <= x || map[x] == -1) {
-        map.growTo(x + 1, -1);
+static Var mapVar(Var x, vec<Var>& map, Var& max)
+{
+    if (map.size() <= x || map[x] == -1){
+        map.growTo(x+1, -1);
         map[x] = max++;
     }
     return map[x];
 }
 
-void Solver::toDimacs(FILE *f, Clause &c, vec<Var> &map, Var &max) {
-    if (satisfied(c))
-        return;
+
+void Solver::toDimacs(FILE* f, Clause& c, vec<Var>& map, Var& max)
+{
+    if (satisfied(c)) return;
 
     for (int i = 0; i < c.size(); i++)
         if (value(c[i]) != l_False)
-            fprintf(f, "%s%d ", sign(c[i]) ? "-" : "", mapVar(var(c[i]), map, max) + 1);
+            fprintf(f, "%s%d ", sign(c[i]) ? "-" : "", mapVar(var(c[i]), map, max)+1);
     fprintf(f, "0\n");
 }
 
-void Solver::toDimacs(const char *file, const vec<Lit> &assumps) {
-    FILE *f = fopen(file, "wr");
+
+void Solver::toDimacs(const char *file, const vec<Lit>& assumps)
+{
+    FILE* f = fopen(file, "wr");
     if (f == NULL)
         fprintf(stderr, "could not open file %s\n", file), exit(1);
     toDimacs(f, assumps);
     fclose(f);
 }
 
-void Solver::toDimacs(FILE *f, const vec<Lit> &assumps) {
+
+void Solver::toDimacs(FILE* f, const vec<Lit>& assumps)
+{
     fprintf(f, "c PEQNP - www.peqnp.science\n");
     fprintf(f, "c contact@peqnp.science\n");
-    fprintf(f, "c pip install PEQNP\n");
+    fprintf(f, "c pip3 install PEQNP --upgrade\n");
 
     // Handle case when solver is in contradictory state:
-    if (!ok) {
+    if (!ok){
         fprintf(f, "p cnf 1 2\n1 0\n-1 0\n");
-        return;
-    }
+        return; }
 
-    vec<Var> map;
-    Var max = 0;
+    vec<Var> map; Var max = 0;
 
     // Cannot use removeClauses here because it is not safe
     // to deallocate them at this point. Could be improved.
@@ -1754,21 +1758,21 @@ void Solver::toDimacs(FILE *f, const vec<Lit> &assumps) {
             cnt++;
 
     for (int i = 0; i < clauses.size(); i++)
-        if (!satisfied(ca[clauses[i]])) {
-            Clause &c = ca[clauses[i]];
+        if (!satisfied(ca[clauses[i]])){
+            Clause& c = ca[clauses[i]];
             for (int j = 0; j < c.size(); j++)
                 if (value(c[j]) != l_False)
                     mapVar(var(c[j]), map, max);
         }
 
     // Assumptions are added as unit clauses:
-    cnt += assumptions.size();
+    cnt += assumps.size();
 
     fprintf(f, "p cnf %d %d\n", max, cnt);
 
-    for (int i = 0; i < assumptions.size(); i++) {
-        assert(value(assumptions[i]) != l_False);
-        fprintf(f, "%s%d 0\n", sign(assumptions[i]) ? "-" : "", mapVar(var(assumptions[i]), map, max) + 1);
+    for (int i = 0; i < assumps.size(); i++){
+        assert(value(assumps[i]) != l_False);
+        fprintf(f, "%s%d 0\n", sign(assumps[i]) ? "-" : "", mapVar(var(assumps[i]), map, max)+1);
     }
 
     for (int i = 0; i < clauses.size(); i++)

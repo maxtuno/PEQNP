@@ -51,7 +51,7 @@ if __name__ == '__main__':
     bins = math.ceil(sum(elements) / capacity)
     while True:
 
-        engine(bits=capacity.bit_length())
+        engine(bits=capacity.bit_length() + 1)
 
         # an array of "bins"-size elements and of "len(elements)"-bits
         slots = vector(bits=len(elements), size=bins)

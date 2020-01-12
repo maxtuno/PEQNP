@@ -26,6 +26,8 @@ from peqnp.entity import Entity
 
 class CSP:
     def __init__(self, bits=None, deepness=None):
+        import sys
+        sys.setrecursionlimit(1 << 16)
         slime.reset()
         self._map = {}
         self._bits = bits
@@ -441,9 +443,7 @@ class CSP:
         model = slime.solve(solve, turbo, log, assumptions, cnf_path, model_path, proof_path)
         if cnf_path:
             with open(cnf_path, 'a') as file:
-                local_map = {k: v for k, v in self._map.items() if not k.startswith('_')}
-                if len(local_map) > 0:
-                    print('c {}'.format({k: v for k, v in self._map.items() if not k.startswith('_')}), file=file)
+                print('c {}'.format(self._map), file=file)
         if model:
             if cnf_path:
                 with open(cnf_path, 'a') as file:
@@ -523,6 +523,7 @@ class CSP:
     def sigma(self, f, i, n):
         import functools
         import operator
+
         def __sum(xs):
             if xs:
                 return functools.reduce(operator.add, xs)
@@ -536,6 +537,7 @@ class CSP:
     def pi(self, f, i, n):
         import functools
         import operator
+
         def __pi(xs):
             if xs:
                 return functools.reduce(operator.mul, xs)

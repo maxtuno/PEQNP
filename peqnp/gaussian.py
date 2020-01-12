@@ -75,7 +75,7 @@ class Gaussian:
         return '({}+{}j)'.format(self.real, self.imag)
 
     def __complex__(self):
-        return complex('({}+{}j)'.format(self.real, self.imag))
+        return complex(int(self.real), int(self.imag))
 
     def conjugate(self):
         return Gaussian(self.real, -self.imag)

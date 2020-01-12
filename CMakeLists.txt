@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(slime)
+project(PEQNP)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)

@@ -187,11 +187,11 @@ PyObject *solve(PyObject * self, PyObject * args) {
         assumptions.push((lit > 0) ? mkLit(v) : ~mkLit(v));
     }
 
+    assumptions.clear(true);
+
     for (i = 0; i < assumptions.size(); i++) {
         S->addClause(assumptions[i]);
     }
-
-    assumptions.clear(true);
 
     if (strcmp(path, "") != 0) {
         S->toDimacs(path);
