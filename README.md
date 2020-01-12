@@ -130,7 +130,7 @@ https://www.facebook.com/PEQNP-104747814228901
 - Fix some bugs on gaussian integers, and add Gaussian Factorization example.
 - Fix some edge condition bugs.
 - Add several examples more.
-- Add simple documentation or the STDLIB.
+- Add simple documentation for the STDLIB.
 
 #### 1-8-2020
 - Add the HESS folder with NATIVE and variate implementations of the HESS algorithm to solve (approximate) MAXSAT, HCP, CVRP and the Hyper Loop Algorithm. 
