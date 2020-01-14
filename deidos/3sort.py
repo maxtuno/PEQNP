@@ -23,7 +23,7 @@ def list_3sort(lst):
     """
     The 3Sort Algorithm
 
-    Type.                : Sorting Algorithm
+    Type                 : Sorting Algorithm
     Time Complexity      : O(floor(n^2/4))
     Spatial Complexity   : O(1)
     Author               : Oscar Riveros from www.peqnp.science
