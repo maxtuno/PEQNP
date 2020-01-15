@@ -1,5 +1,4 @@
 site_name: PEQNP
-site_dir: site
 
 extra_javascript:
   - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML
@@ -8,4 +7,4 @@ extra_javascript:
 
 
 markdown_extensions:
-  - mdx_math
+  - math
