@@ -1,6 +1,8 @@
 # NP-Complete Problems
 
-## Satisfiability
+NP-complete problem, any of a class of computational problems for which no efficient solution algorithm has been found. Many significant computer-science problems belong to this class—e.g., the traveling salesman problem, satisfiability problems, and graph-covering problems.
+
+# Satisfiability
 
 Study of boolean functions generally is concerned with the set of truth assignments (assignments of 0 or 1 to each of the variables) that make the function true.
 
@@ -60,7 +62,7 @@ SAT
 -1 2 -3 4 5 -6 7 8 -9 -10 0
 ```
 
-### SLIME 4 SAT Solver
+With SLIME 4 SAT Solver
 
 ```python
 from peqnp import *
@@ -70,7 +72,7 @@ print(slime4('sat.cnf', 'sat.mod'))
 print(slime4('unsat.cnf', 'unsat.mod', 'unsat.proof'))
 ```
 
-## 0-1 Integer Programming
+# 0-1 Integer Programming
 
 Input: Integer matrix \(C\) and integer vector \(d\)
 
@@ -129,7 +131,7 @@ else:
 [108 92 122 45 79 136 12 181 54 178]
 ``` 
 
-## Clique
+# Clique
 
 Input: Graph \(G\), positive integer \(k\)
 
@@ -174,7 +176,7 @@ else:
 0 1 2
 ```
 
-## The Sum Subset Problem
+# The Sum Subset Problem
 
 ```python
 from peqnp import *
