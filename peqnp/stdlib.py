@@ -24,6 +24,7 @@ The standard high level library for the PEQNP system.
 """
 
 from .gaussian import Gaussian
+from .rational import Rational
 from .solver import *
 
 csp = None
@@ -35,14 +36,14 @@ def version():
     Print the current version of the system.
     :return:
     """
-    print('PEQNP - 0.1.39 - 12-1-2020')
+    print('PEQNP - 0.1.40 - 15-1-2020')
 
 
 def engine(bits=None, deepness=None):
     """
     Initialize and reset the internal state of solver engine.
     :param bits: The size 2 ** bits - 1 of solving space.
-    :param deepness: The scope for the exponential variables bits / 2 by default.
+    :param deepness: The scope for the exponential variables bits / 4 by default.
     :return:
     """
     global csp
@@ -85,7 +86,7 @@ def constant(value=None, bits=None):
     return variables[-1]
 
 
-def satisfy(solve=True, turbo=False, log=False, assumptions=[], cnf_path='', model_path='', proof_path='', normalize=False):
+def satisfy(solve=True, turbo=False, log=False, assumptions=None, cnf_path='', model_path='', proof_path='', normalize=False):
     """
     Find a model for the current problem.
     :param solve: This indicate if the instance can be solved or not, its use in conjunction with cnf_path.
@@ -101,20 +102,20 @@ def satisfy(solve=True, turbo=False, log=False, assumptions=[], cnf_path='', mod
     return csp.to_sat(variables, solve=solve, turbo=turbo, log=log, assumptions=assumptions, cnf_path=cnf_path, model_path=model_path, proof_path=proof_path, normalize=normalize)
 
 
-def subsets(universe, k=None, key=None):
+def subsets(lst, k=None, key=None):
     """
     Generate all subsets for an specific universe of data.
-    :param universe: The universe of data.
+    :param lst: The universe of data.
     :param k: The cardinality of the subsets.
     :param key: The name os the binary representation of subsets.
     :return: (binary representation of subsets, the generic subset representation)
     """
     global variables
-    bits = csp.int(key=key, size=len(universe))
+    bits = csp.int(key=key, size=len(lst))
     variables.append(bits)
     if k is not None:
-        assert sum(csp.zero.iff(-bits[i], csp.one) for i in range(len(universe))) == k
-    subset_ = [csp.zero.iff(-bits[i], universe[i]) for i in range(len(universe))]
+        assert sum(csp.zero.iff(-bits[i], csp.one) for i in range(len(lst))) == k
+    subset_ = [csp.zero.iff(-bits[i], lst[i]) for i in range(len(lst))]
     variables += subset_
     return bits, subset_
 
@@ -139,7 +140,7 @@ def vector(key=None, bits=None, size=None):
     :param key: The generic name for the array this appear indexed on cnf.
     :param bits: The bit size for each integer.
     :param size: The size of the vector.
-    :return: An instance of Vector.
+    :return: An instance of vector.
     """
     global csp, variables
     array_ = csp.array(key=key, size=bits, dimension=size)
@@ -166,10 +167,10 @@ def matrix(key=None, bits=None, dimensions=None):
     return matrix_
 
 
-def matrix_permutation(args, n):
+def matrix_permutation(lst, n):
     """
     This generate the permutations for an square matrix.
-    :param args: The matrix of data.
+    :param lst: The flattened matrix of data, i.e. a vector.
     :param n: The dimension for the square nxn-matrix.
     :return: An tuple with (index for the elements, the elements that represent the indexes)
     """
@@ -178,10 +179,7 @@ def matrix_permutation(args, n):
     ys = vector(size=n)
     csp.apply(xs, single=lambda x: x < n)
     csp.apply(xs, dual=lambda a, b: a != b)
-    if isinstance(args[0], list):
-        csp.indexing(xs, ys, csp.flatten(args))
-    else:
-        csp.indexing(xs, ys, args)
+    csp.indexing(xs, ys, lst)
     return xs, ys
 
 
@@ -215,58 +213,54 @@ def combinations(lst, n):
     return xs, ys
 
 
-def all_binaries(args):
+def all_binaries(lst):
     """
-    This say thay, the vector or matrix of integer are all binaries.
-    :param args: The matrix or vector of integers.
+    This say that, the vector of integer are all binaries.
+    :param lst: The vector of integers.
     :return:
     """
     global csp
-    if isinstance(args[0], list):
-        csp.apply(csp.flatten(args), single=lambda arg: arg <= 1)
-    else:
-        csp.apply(args, single=lambda arg: arg <= 1)
+    csp.apply(lst, single=lambda arg: arg <= 1)
 
 
-def switch(arg, ith, neg=False):
+def switch(x, ith, neg=False):
     """
     This conditionally flip the internal bit for an integer.
-    :param arg: The integer.
+    :param x: The integer.
     :param ith: Indicate the ith bit.
     :param neg: indicate if the condition is inverted.
     :return: 0 if the uth bit for the argument collapse to true else return 1, if neg is active exchange 1 by 0.
     """
     global csp
-    return csp.zero.iff(-arg[ith] if neg else arg[ith], csp.one)
+    return csp.zero.iff(-x[ith] if neg else x[ith], csp.one)
 
 
-def one_of(args, key=None):
+def one_of(lst):
     """
     This indicate that at least one of the instruction on the array is active for the current problem.
-    :param args: A list of instructions.
-    :param key: The name for the bits relative to vector that are active on the operation.
+    :param lst: A list of instructions.
     :return: The entangled structure.
     """
     global csp
-    bits = csp.int(key, size=len(args))
-    assert sum(csp.zero.iff(bits[i], csp.one) for i in range(len(args))) == 1
-    return sum(csp.zero.iff(bits[i], args[i]) for i in range(len(args)))
+    bits = csp.int(size=len(lst))
+    assert sum(csp.zero.iff(bits[i], csp.one) for i in range(len(lst))) == 1
+    return sum(csp.zero.iff(bits[i], lst[i]) for i in range(len(lst)))
 
 
-def factorial(arg):
+def factorial(x):
     """
     The factorial for the integer.
-    :param arg: The integer.
+    :param x: The integer.
     :return: The factorial.
     """
     global csp
-    return csp.factorial(arg)
+    return csp.factorial(x)
 
 
 def sigma(f, i, n):
     """
-    The Sum for i to n, for the lambda function f,
-    :param f: A lambda function with an standard int parameter.
+    The Sum for i to n, for the lambda f f,
+    :param f: A lambda f with an standard int parameter.
     :param i: The start for the Sum, an standard int.
     :param n: The integer that represent the end of the Sum.
     :return: The entangled structure.
@@ -277,8 +271,8 @@ def sigma(f, i, n):
 
 def pi(f, i, n):
     """
-    The Pi for i to n, for the lambda function f,
-    :param f: A lambda function with an standard int parameter.
+    The Pi for i to n, for the lambda f f,
+    :param f: A lambda f with an standard int parameter.
     :param i: The start for the Pi, an standard int.
     :param n: The integer that represent the end of the Pi.
     :return: The entangled structure.
@@ -290,8 +284,8 @@ def pi(f, i, n):
 def dot(xs, ys):
     """
     The dot product of two compatible Vectors.
-    :param xs: The fist Vector.
-    :param ys: The second Vector.
+    :param xs: The fist vector.
+    :param ys: The second vector.
     :return: The dot product.
     """
     global csp
@@ -301,34 +295,34 @@ def dot(xs, ys):
 def mul(xs, ys):
     """
     The elementwise product of two Vectors.
-    :param xs: The fist Vector.
-    :param ys: The second Vector.
+    :param xs: The fist vector.
+    :param ys: The second vector.
     :return: The product.
     """
     global csp
     return csp.mul(xs, ys)
 
 
-def apply_single(args, f):
+def apply_single(lst, f):
     """
-    A sequential operation over a Vector.
-    :param args: the Vector.
-    :param f: The lambda function of one integer variable.
+    A sequential operation over a vector.
+    :param lst: The vector.
+    :param f: The lambda f of one integer variable.
     :return: The entangled structure.
     """
     global csp
-    csp.apply(args, single=f)
+    csp.apply(lst, single=f)
 
 
-def apply_dual(args, f):
+def apply_dual(lst, f):
     """
-    A cross operation over a Vector.
-    :param args: the Vector.
-    :param f: The lambda function of two integer variables.
+    A cross operation over a vector.
+    :param lst: The vector.
+    :param f: The lambda f of two integer variables.
     :return: The entangled structure.
     """
     global csp
-    csp.apply(args, dual=f)
+    csp.apply(lst, dual=f)
 
 
 def all_different(args):
@@ -341,20 +335,20 @@ def all_different(args):
     csp.apply(args, dual=lambda x, y: x != y)
 
 
-def flatten(args):
+def flatten(mtx):
     """
     Flatten a matrix into list.
-    :param args: The matrix.
+    :param mtx: The matrix.
     :return: The entangled structure.
     """
     global csp
-    return csp.flatten(args)
+    return csp.flatten(mtx)
 
 
 def bits():
     """
     The current bits for the engine.
-    :return: the bits
+    :return: The bits
     """
     return csp.bits
 
@@ -368,37 +362,37 @@ def oo():
     return csp.oo
 
 
-def element(i, data):
+def element(item, data):
     """
     Ensure that the element i is on the data, on the position index.
-    :param i: the element
+    :param item: The element
     :param data: The data
     :return: The position of element
     """
     global csp, variables
-    index = integer()
-    variables.append(index)
-    csp.element(index, data, i)
+    ith = integer()
+    variables.append(ith)
+    csp.element(ith, data, item)
     return variables[-1]
 
 
-def index(idx, data):
+def index(ith, data):
     """
     Ensure that the element i is on the data, on the position index.
-    :param i: the element
+    :param ith: The element
     :param data: The data
     :return: The position of element
     """
     global csp, variables
-    i = integer()
-    variables.append(i)
-    csp.element(idx, data, i)
+    item = integer()
+    variables.append(item)
+    csp.element(ith, data, item)
     return variables[-1]
 
 
 def gaussian(x, y):
     """
-    Create a gaussian from (x+yj).
+    Create a gaussian integer from (x+yj).
     :param x: real
     :param y: imaginary
     :return: (x+yj)
@@ -406,12 +400,22 @@ def gaussian(x, y):
     return Gaussian(x, y)
 
 
+def rational(x, y):
+    """
+    Create a rational x / y.
+    :param x: numerator
+    :param y: denominator
+    :return: x / y
+    """
+    return Rational(x, y)
+
+
 def at_most_k(x, k):
     """
     At most k bits can be activated for this integer.
-    :param x: an integer.
+    :param x: An integer.
     :param k: k elements
-    :return: the encoded variable
+    :return: The encoded variable
     """
     global csp, variables
     return csp.at_most_k(x, k)
@@ -420,8 +424,8 @@ def at_most_k(x, k):
 def sqrt(x):
     """
     Define x as a perfect square.
-    :param x: the integer
-    :return: the square of this integer.
+    :param x: The integer
+    :return: The square of this integer.
     """
     global csp, variables
     return csp.sqrt(x)

@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
+from math import nan
+
 
 class Entity:
     def __init__(self, encoder, key=None, block=None, value=None, size=None, is_real=False):
@@ -121,8 +123,13 @@ class Entity:
                 return other
 
     def __truediv__(self, other):
+        if isinstance(other, Entity):
+            assert other != 0
         if self.value is not None:
             if isinstance(other, Entity) and other.value is not None:
+                if other.value == 0:
+                    from math import nan
+                    return nan
                 return self.value / other.value
         output_block = self._encoder.create_block()
         if isinstance(other, Entity):
@@ -296,14 +303,14 @@ class Entity:
 
         return __encode(self.value)
 
-    def __str__(self):
-        return str(self.value)
-
     def __repr__(self):
         return str(self.value)
 
+    def __str__(self):
+        return str(self.__repr__())
+
     def __int__(self):
-        return int(self.value)
+        return int(self.__repr__())
 
     def __float__(self):
-        return float(self.value)
+        return float(self.__repr__())

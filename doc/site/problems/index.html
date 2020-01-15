@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>NP-Complete Problems - PEQNP</title>
+        <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <script src="../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+
+                <!-- Collapsed navigation -->
+                <div class="navbar-header">
+                    <!-- Expander button -->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="..">PEQNP</a>
+                </div>
+
+                <!-- Expanded navigation -->
+                <div class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li >
+                                <a href="..">The PEQNP System</a>
+                            </li>
+                            <li >
+                                <a href="../diophantine/">Diophantine Equations</a>
+                            </li>
+                            <li class="active">
+                                <a href="./">NP-Complete Problems</a>
+                            </li>
+                            <li >
+                                <a href="../stdlib/">The standard high level library</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li >
+                                <a rel="next" href="../diophantine/">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li >
+                                <a rel="prev" href="../stdlib/">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#np-complete-problems">NP-Complete Problems</a></li>
+            <li><a href="#satisfiability">Satisfiability</a></li>
+            <li><a href="#0-1-integer-programming">0-1 Integer Programming</a></li>
+            <li><a href="#clique">Clique</a></li>
+            <li><a href="#the-sum-subset-problem">The Sum Subset Problem</a></li>
+        <li class="main "><a href="#vertex-cover">Vertex Cover</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="np-complete-problems">NP-Complete Problems</h1>
+<h2 id="satisfiability">Satisfiability</h2>
+<p>Study of boolean functions generally is concerned with the set of truth assignments (assignments of 0 or 1 to each of the variables) that make the function true.</p>
+<pre><code class="python">import functools
+import operator
+
+from peqnp import *  
+
+n, m, cnf = 10, 24, [[9, -5, 10, -6, 3],
+                     [6, 8],
+                     [8, 4],
+                     [-10, 5],
+                     [-9, 8],
+                     [-9, -3],
+                     [-2, 5],
+                     [6, 4],
+                     [-2, -1],
+                     [7, -2],
+                     [-9, 4],
+                     [-1, -10],
+                     [-3, 4],
+                     [7, 5],
+                     [6, -3],
+                     [-10, 7],
+                     [-1, 7],
+                     [8, -3],
+                     [-2, -10],
+                     [-1, 5],
+                     [-7, 1, 9, -6, 3],
+                     [-9, 6],
+                     [-8, 10, -5, -4, 2],
+                     [-4, -7, 1, -8, 2]]
+
+# Initialize the engine with 2 bits 
+engine(bits=2)
+
+# Declare an integer of n-bits, each ith-bits is one ith-literal on the model.
+x = integer(bits=n)
+
+# For each clause ensure that that one of the lierals are true.
+for cls in cnf:
+    assert functools.reduce(operator.or_, (switch(x, abs(lit) - 1, neg=lit &gt; 0) for lit in cls)) &gt; 0
+
+# Get only one solution or UNSAT.
+# The turbo parameter, say to SLIME4 SAT Solver, that make a full simplification, 
+# then the internal structure of the problem is destroyed is more fast for one solution problems.
+if satisfy(turbo=True):
+    print('SAT')
+    print(' '.join(map(str, [(i + 1) if b else -(i + 1) for i, b in enumerate(x.binary)])) + ' 0')
+else:
+    print('UNSAT')
+</code></pre>
+
+<pre><code class="python">SAT
+-1 2 -3 4 5 -6 7 8 -9 -10 0
+</code></pre>
+
+<h3 id="slime-4-sat-solver">SLIME 4 SAT Solver</h3>
+<pre><code class="python">from peqnp import *
+
+print(slime4('instance.cnf'))
+print(slime4('sat.cnf', 'sat.mod'))
+print(slime4('unsat.cnf', 'unsat.mod', 'unsat.proof'))
+</code></pre>
+
+<h2 id="0-1-integer-programming">0-1 Integer Programming</h2>
+<p>Input: Integer matrix <script type="math/tex">C</script> and integer vector <script type="math/tex">d</script>
+</p>
+<p>Property: There exist a 0-1 vector <script type="math/tex">x</script> sich that <script type="math/tex">Cx=d</script>.</p>
+<pre><code class="python">import numpy as np
+from peqnp import *
+
+# the dimensions of the matrix
+n, m = 10, 5
+
+# The matrix
+cc = np.random.randint(0, 100, size=(n, m))
+# Ensure that solution exist (for gen some interesting example)
+d = np.dot(cc, np.random.randint(0, 2, size=(m,)))
+
+print(cc)
+print(d)
+
+# Setup the engine with the bits of the sum of all values of the matrix, this ensure that the entire problem is well represented represented on the system.
+engine(bits=int(np.sum(cc)).bit_length())
+
+# Declare a m-sized vector
+xs = vector(size=m)
+
+# All element of the vector are binaries, i.e. 0 or 1
+all_binaries(xs)
+
+# The main constrain for the problem (there is a one of the Karp's 21 NP-complete problems https://people.eecs.berkeley.edu/~luca/cs172/karp.pdf)
+assert (np.dot(cc, xs) == d).all()
+
+# Get the first solution with turbo
+# very fast but destructive, this force a SLIME 4 SAT Solver do a full simplification,
+# only one solution is possible, because the internal structure of the problem is destroyed
+if satisfy(turbo=True):
+    print(xs)
+    print(np.dot(cc, xs))
+else:
+    print('Infeasible...')
+</code></pre>
+
+<pre><code class="python">[[72 36 46 70 22]
+ [57 35 37 99 60]
+ [35 87 81 48 74]
+ [12 33  8 73 89]
+ [28 51 12 62 91]
+ [71 65 69 87  2]
+ [ 4  8 23 58 84]
+ [93 88 71 50 78]
+ [34 20 57  0 24]
+ [83 95 37 61 50]]
+[108  92 122  45  79 136  12 181  54 178]
+[1, 1, 0, 0, 0]
+[108 92 122 45 79 136 12 181 54 178]
+</code></pre>
+
+<h2 id="clique">Clique</h2>
+<p>Input: Graph <script type="math/tex">G</script>, positive integer <script type="math/tex">k</script>
+</p>
+<p>Property: <script type="math/tex">G</script> has a set of mutually adjacent nodes.</p>
+<pre><code class="python">from peqnp import *
+
+# Ths size of the clique to search
+k = 3
+
+# Get the graph and the dimension for the graph
+n, matrix = 5, [(1, 0), (0, 2), (1, 4), (2, 1), (4, 2), (3, 2)]
+
+# Ensure the problem can be represented
+engine(bits=k.bit_length())
+
+# Declare an integer of n-bits
+bits = integer(bits=n)
+
+# The bits integer have &quot;size&quot;-active bits, i.e, the clique has &quot;size&quot;-elements
+assert sum(switch(bits, i) for i in range(n)) == k
+
+# This entangle all elements that are joined together
+for i in range(n - 1):
+    for j in range(i + 1, n):
+        if (i, j) not in matrix and (j, i) not in matrix:
+            assert switch(bits, i) + switch(bits, j) &lt;= 1
+
+# Get the first solution with turbo
+# very fast but destructive, this force a SLIME 4 SAT Solver do a full simplification,
+# only one solution is possible, because the internal structure of the problem is destroyed
+if satisfy(turbo=True):
+    print(k)
+    print(' '.join([str(i) for i in range(n) if not bits.binary[i]]))
+else:
+    print('Infeasible ...')
+</code></pre>
+
+<pre><code class="python">3
+0 1 2
+</code></pre>
+
+<h2 id="the-sum-subset-problem">The Sum Subset Problem</h2>
+<pre><code class="python">from peqnp import *
+
+# Get the target and data 
+t, universe = 12, [2, 3, 5, 7, 11]
+
+# Declare an engine with same bits of the target.
+engine(bits=t.bit_length())
+
+# Get all possible subsets for the data
+bits, subset = subsets(universe)
+
+# Ensure that this subset sum the target.
+assert sum(subset) == t
+
+# Solve
+if satisfy(turbo=True):
+    solution = [universe[i] for i in range(len(universe)) if bits.binary[i]]
+    print(sum(solution), solution)
+else:
+    print('Infeasible ...')
+</code></pre>
+
+<pre><code class="python">12 [5, 7]
+</code></pre>
+
+<h1 id="vertex-cover">Vertex Cover</h1>
+<pre><code class="python">from peqnp import *
+
+# Get the graph and dimension, and the size of the cover.
+n, graph, vertex, k = 5, [(1, 0), (0, 2), (1, 4), (2, 1), (4, 2), (3, 2)], [0, 1, 2, 3, 4], 3
+
+# Ensure the problem can be represented
+engine(bits=n.bit_length())
+
+# An integer with n-bits to store the indexes for the cover
+index = integer(bits=n)
+
+# This entangled the all possible covers
+for i, j in graph:
+    assert switch(index, vertex.index(i), neg=True) + switch(index, vertex.index(j), neg=True) &gt;= 1
+
+# Ensure the cover has size k
+assert sum(switch(index, vertex.index(i), neg=True) for i in vertex) == k
+
+# Get the first solution with turbo
+# very fast but destructive, this force a SLIME 4 SAT Solver do a full simplification,
+# only one solution is possible, because the internal structure of the problem is destroyed
+if satisfy(turbo=True):
+    opt = sum(index.binary)
+    print('p size {}'.format(opt))
+    print(' '.join([str(vertex[i]) for i in range(n) if index.binary[i]]))
+    print()
+else:
+    print('Infeasible ...')
+</code></pre>
+
+<pre><code>p size 3
+1 2 4
+</code></pre></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" defer></script>
+        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.17.1/build/styles/default.min.css" defer></script>
+        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.17.1/build/highlight.min.js" defer></script>
+        <script src="../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

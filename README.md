@@ -124,6 +124,10 @@ https://www.youtube.com/channel/UCFlk1dUYLKtymcoMScdynNA
 Facebook Page
 https://www.facebook.com/PEQNP-104747814228901
 
+#### version 0.1.40
+- Add beta support for rational numbers
+- Add documentation
+
 #### version 0.1.39
 - Add performance improvement on solving.
 - Add at_most_k, sqrt functions.

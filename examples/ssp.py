@@ -44,11 +44,11 @@ if __name__ == '__main__':
 
     engine(bits=t.bit_length())
 
-    bits, subset = subsets(key='bits', universe=universe)
+    bits, subset = subsets(universe)
 
     assert sum(subset) == t
 
-    if satisfy(turbo=True, log=True, cnf_path='ssp.cnf'):
+    if satisfy(turbo=True):
         solution = [universe[i] for i in range(len(universe)) if bits.binary[i]]
         print(sum(solution), solution)
         print()

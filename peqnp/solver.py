@@ -32,7 +32,7 @@ class CSP:
         self._map = {}
         self._bits = bits
         self._oo = 2 ** bits - 1
-        self._deepness = deepness if deepness is not None else bits // 2
+        self._deepness = deepness if deepness is not None else bits // 4
         self._number_of_clauses = 0
         self._number_of_variables = 0
         self._number_of_clauses = 0
