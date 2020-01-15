@@ -25,7 +25,7 @@ while satisfy(normalize=True):
 3 ** 3 - 3 + 1, 5 ** 2
 ```
 
-### Let be \(x, y \in \mathbb{R}\) solve \(x^3 + xy = y^2\)
+### Let be \(x, y \in \mathbb{Q}\) solve \(x^3 + xy = y^2\)
 
 ```python
 from peqnp import *
