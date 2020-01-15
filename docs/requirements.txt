@@ -1,1 +1,1 @@
-python-markdown-math==0.6
+python-markdown-math==0.6 --upgrade

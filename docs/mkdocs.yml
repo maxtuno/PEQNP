@@ -7,4 +7,4 @@ extra_javascript:
 
 
 markdown_extensions:
-  - math
+  - mdx_math
