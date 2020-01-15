@@ -33,10 +33,10 @@ while satisfy():
 ```
 output:
 ```python
-    3007 1
-    31 97
-    1 3007
-    97 31
+3007 1
+31 97
+1 3007
+97 31
 ```
 
 # Native Operations
@@ -49,7 +49,7 @@ On PEQNP all elements are integers and relations on this integers, this relation
 
 ## Integers
 
-All integers live on \(\mathbb{N}_{2^{bits} - 1}\), all integers, are always positives, i.e. for two integer \(x, y\) the operation, \(x - y\) take all possibilities such that \(x - y >= 0\).         
+All integers live on \(\mathbb{N}_{2^{bits} - 1}\) and always positives, i.e. for two integer \(x, y\) the operation, \(x - y\) take all possibilities such that \(x - y >= 0\).         
 
 ## The Mantra
 
