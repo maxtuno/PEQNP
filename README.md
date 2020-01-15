@@ -124,6 +124,9 @@ https://www.youtube.com/channel/UCFlk1dUYLKtymcoMScdynNA
 Facebook Page
 https://www.facebook.com/PEQNP-104747814228901
 
+Documentation
+https://readthedocs.org/projects/peqnp
+
 #### version 0.1.40
 - Add beta support for rational numbers
 - Add documentation
