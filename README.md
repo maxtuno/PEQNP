@@ -127,7 +127,7 @@ https://www.facebook.com/PEQNP-104747814228901
 Documentation
 https://peqnp.readthedocs.io
 
-#### version 0.1.40
+#### version 0.1.41
 - Add beta support for rational numbers
 - Add documentation
 

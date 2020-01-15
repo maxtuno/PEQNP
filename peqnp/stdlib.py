@@ -36,7 +36,7 @@ def version():
     Print the current version of the system.
     :return:
     """
-    print('PEQNP - 0.1.40 - 15-1-2020')
+    print('PEQNP - 0.1.41 - 15-1-2020')
 
 
 def engine(bits=None, deepness=None):
