@@ -3,7 +3,7 @@ version: 0.1.40
 
 # Build documentation with MkDocs
 mkdocs:
-  configuration: mkdocs.yml
+  configuration: doc/mkdocs.yml
 
 # Optionally build your docs in additional formats such as PDF and ePub
 formats: all
