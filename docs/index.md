@@ -45,7 +45,7 @@ On PEQNP all elements are integers and relations on this integers, this relation
 
 ## Supported Operations
 
-+, -, *, /, **, %, &, |, ^, ==, =, <, <=, >, >=, <<, >>. 
++, -, *, /, **, %, &, |, ^, ==, =, <, <=, >, >=.
 
 ## Integers
 

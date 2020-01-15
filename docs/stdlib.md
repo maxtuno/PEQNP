@@ -1,4 +1,4 @@
-# The standard high level library
+# The Standard High Level Library
 
 ```python
     def version():
