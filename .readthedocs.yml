@@ -1,5 +1,5 @@
 # Required
-version: 0.1.40
+version: 2
 
 # Build documentation with MkDocs
 mkdocs:
