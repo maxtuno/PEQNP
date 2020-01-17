@@ -30,7 +30,7 @@ Schur Triples problem: (Strong NP-Complete):
     from peqnp import *
     
     bits = 7
-    size = 3 * 3
+    size = 3 * 10
     
     triplets = []
     while len(triplets) < size:
