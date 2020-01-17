@@ -54,7 +54,7 @@ if __name__ == '__main__':
     x = integer(bits=n)
 
     for cls in cnf:
-        assert functools.reduce(operator.ior, (switch(x, abs(lit) - 1, neg=lit > 0) for lit in cls)) != 0
+        assert functools.reduce(operator.ior, (switch(x, abs(lit) - 1, neg=lit > 0) for lit in cls)) > 0
 
     if satisfy(turbo=True):
         print('SAT')
