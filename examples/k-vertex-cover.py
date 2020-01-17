@@ -1,13 +1,16 @@
 """
-copyright (c) 2012-2020 PEQNP. all rights reserved. contact@peqnp.science
+Copyright (c) 2012-2020 PEQNP. all rights reserved. contact@peqnp.science
+
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
+
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -39,11 +42,11 @@ if __name__ == '__main__':
 
     if len(sys.argv) == 1 or sys.argv[1] == '--help':
         print('Solve the k-vertex cover problem')
-        print('Usage   : python3 k-vertex-cover.py <instance> <cover-size>')
-        print('Example : python3 k-vertex-cover.py data.clq')
+        print('Usage   : python3 k-vertex-cover.py <instance> <cover-bits>')
+        print('Example : python3 k-vertex-cover.py data.clq 3')
         exit(0)
 
-    # Get the nxn-matrix and dimension, and the size of the cover.
+    # Get the nxn-matrix and dimension, and the bits of the cover.
     (n, matrix, vertex), k = load_file(sys.argv[1]), int(sys.argv[2])
 
     # Ensure the problem can be represented
@@ -54,9 +57,9 @@ if __name__ == '__main__':
 
     # This entangled the all possible covers
     for i, j in matrix:
-        assert switch(index, vertex.index(i), neg=True) + switch(index, vertex.index(j), neg=True) >= 1
+        assert switch(index, vertex.index(i), neg=True) + switch(index, vertex.index(j), neg=True) <= 1
 
-    # Ensure the cover has size k
+    # Ensure the cover has bits k
     assert sum(switch(index, vertex.index(i), neg=True) for i in vertex) == k
 
     # Get the first solution with turbo
@@ -64,7 +67,7 @@ if __name__ == '__main__':
     # only one solution is possible, because the internal structure of the problem is destroyed
     if satisfy(turbo=True, log=True):
         opt = sum(index.binary)
-        print('p size {}'.format(opt))
+        print('p bits {}'.format(opt))
         print(' '.join([str(vertex[i]) for i in range(n) if index.binary[i]]))
         print()
     else:

@@ -31,18 +31,24 @@ csp = None
 variables = []
 
 
+def check_engine():
+    if csp is None:
+        print('The PEQNP System is not initialized...')
+        exit(0)
+
+
 def version():
     """
     Print the current version of the system.
     :return:
     """
-    print('PEQNP - 0.1.41 - 15-1-2020')
+    print('PEQNP - 0.2.0 - 17-1-2020')
 
 
 def engine(bits=None, deepness=None):
     """
     Initialize and reset the internal state of solver engine.
-    :param bits: The size 2 ** bits - 1 of solving space.
+    :param bits: The bits 2 ** bits - 1 of solving space.
     :param deepness: The scope for the exponential variables bits / 4 by default.
     :return:
     """
@@ -64,24 +70,27 @@ def slime4(cnf_path, model_path='', proof_path=''):
 
 def integer(key=None, bits=None):
     """
-    Correspond to an integer of name key, and size bits.
+    Correspond to an integer of name key, and bits bits.
     :param key: The name of variable, appear on CNF when cnf_path is setting on satisfy().
-    :param bits: The bits size of the integer.
+    :param bits: The bits of the integer.
     :return: An instance of Integer.
     """
     global variables
+    check_engine()
     variables.append(csp.int(key=key, size=bits))
+    assert 0 <= variables[-1] <= oo()
     return variables[-1]
 
 
 def constant(value=None, bits=None):
     """
-    Correspond to an constant of value with size bits.
-    :param bits: The bits size of the constant.
+    Correspond to an constant of value with bits bits.
+    :param bits: The bits bits of the constant.
     :param value: The value that represent the constant.
     :return: An instance of Constant.
     """
     global variables
+    check_engine()
     variables.append(csp.int(size=bits, value=value))
     return variables[-1]
 
@@ -111,6 +120,7 @@ def subsets(lst, k=None, key=None):
     :return: (binary representation of subsets, the generic subset representation)
     """
     global variables
+    check_engine()
     bits = csp.int(key=key, size=len(lst))
     variables.append(bits)
     if k is not None:
@@ -124,11 +134,12 @@ def subset(data, k, empty=None):
     """
     An operative structure (like integer ot constant) that represent a subset of at most k elements.
     :param data: The data for the subsets.
-    :param k: The maximal size for subsets.
+    :param k: The maximal bits for subsets.
     :param empty: The empty element, 0, by default.
     :return: An instance of Subset.
     """
     global csp, variables
+    check_engine()
     subset_ = csp.subset(k, data, empty)
     variables += subset_
     return subset_
@@ -138,11 +149,12 @@ def vector(key=None, bits=None, size=None):
     """
     A vector of integers.
     :param key: The generic name for the array this appear indexed on cnf.
-    :param bits: The bit size for each integer.
-    :param size: The size of the vector.
+    :param bits: The bit bits for each integer.
+    :param size: The bits of the vector.
     :return: An instance of vector.
     """
     global csp, variables
+    check_engine()
     array_ = csp.array(key=key, size=bits, dimension=size)
     variables += array_
     return array_
@@ -152,11 +164,12 @@ def matrix(key=None, bits=None, dimensions=None):
     """
     A matrix of integers.
     :param key: The generic name for the array this appear indexed on cnf.
-    :param bits: The bit size for each integer.
+    :param bits: The bit bits for each integer.
     :param dimensions: An tuple with the dimensions for the array (n, m).
     :return: An instance of Matrix.
     """
     global variables
+    check_engine()
     matrix_ = []
     for i in range(dimensions[0]):
         row = []
@@ -175,6 +188,7 @@ def matrix_permutation(lst, n):
     :return: An tuple with (index for the elements, the elements that represent the indexes)
     """
     global csp, variables
+    check_engine()
     xs = vector(size=n)
     ys = vector(size=n)
     csp.apply(xs, single=lambda x: x < n)
@@ -185,11 +199,12 @@ def matrix_permutation(lst, n):
 
 def permutations(lst, n):
     """
-    Entangle all permutations of size n for the vector lst.
+    Entangle all permutations of bits n for the vector lst.
     :param lst: The list to entangle.
-    :param n: The size of entanglement.
+    :param n: The bits of entanglement.
     :return: (indexes, values)
     """
+    check_engine()
     xs = vector(size=n)
     ys = vector(size=n)
     for i in range(n):
@@ -201,11 +216,12 @@ def permutations(lst, n):
 
 def combinations(lst, n):
     """
-    Entangle all combinations of size n for the vector lst.
+    Entangle all combinations of bits n for the vector lst.
     :param lst: The list to entangle.
-    :param n: The size of entanglement.
+    :param n: The bits of entanglement.
     :return: (indexes, values)
     """
+    check_engine()
     xs = vector(size=n)
     ys = vector(size=n)
     for i in range(n):
@@ -219,6 +235,7 @@ def all_binaries(lst):
     :param lst: The vector of integers.
     :return:
     """
+    check_engine()
     global csp
     csp.apply(lst, single=lambda arg: arg <= 1)
 
@@ -232,6 +249,7 @@ def switch(x, ith, neg=False):
     :return: 0 if the uth bit for the argument collapse to true else return 1, if neg is active exchange 1 by 0.
     """
     global csp
+    check_engine()
     return csp.zero.iff(-x[ith] if neg else x[ith], csp.one)
 
 
@@ -242,6 +260,7 @@ def one_of(lst):
     :return: The entangled structure.
     """
     global csp
+    check_engine()
     bits = csp.int(size=len(lst))
     assert sum(csp.zero.iff(bits[i], csp.one) for i in range(len(lst))) == 1
     return sum(csp.zero.iff(bits[i], lst[i]) for i in range(len(lst)))
@@ -254,6 +273,7 @@ def factorial(x):
     :return: The factorial.
     """
     global csp
+    check_engine()
     return csp.factorial(x)
 
 
@@ -266,6 +286,7 @@ def sigma(f, i, n):
     :return: The entangled structure.
     """
     global csp
+    check_engine()
     return csp.sigma(f, i, n)
 
 
@@ -278,6 +299,7 @@ def pi(f, i, n):
     :return: The entangled structure.
     """
     global csp
+    check_engine()
     return csp.pi(f, i, n)
 
 
@@ -289,6 +311,7 @@ def dot(xs, ys):
     :return: The dot product.
     """
     global csp
+    check_engine()
     return csp.dot(xs, ys)
 
 
@@ -300,6 +323,7 @@ def mul(xs, ys):
     :return: The product.
     """
     global csp
+    check_engine()
     return csp.mul(xs, ys)
 
 
@@ -311,6 +335,7 @@ def apply_single(lst, f):
     :return: The entangled structure.
     """
     global csp
+    check_engine()
     csp.apply(lst, single=f)
 
 
@@ -322,6 +347,7 @@ def apply_dual(lst, f):
     :return: The entangled structure.
     """
     global csp
+    check_engine()
     csp.apply(lst, dual=f)
 
 
@@ -332,6 +358,7 @@ def all_different(args):
     :return:
     """
     global csp
+    check_engine()
     csp.apply(args, dual=lambda x, y: x != y)
 
 
@@ -342,6 +369,7 @@ def flatten(mtx):
     :return: The entangled structure.
     """
     global csp
+    check_engine()
     return csp.flatten(mtx)
 
 
@@ -350,6 +378,7 @@ def bits():
     The current bits for the engine.
     :return: The bits
     """
+    check_engine()
     return csp.bits
 
 
@@ -359,6 +388,7 @@ def oo():
     :return: 2 ** bits - 1
     """
     global csp
+    check_engine()
     return csp.oo
 
 
@@ -370,6 +400,7 @@ def element(item, data):
     :return: The position of element
     """
     global csp, variables
+    check_engine()
     ith = integer()
     variables.append(ith)
     csp.element(ith, data, item)
@@ -384,6 +415,7 @@ def index(ith, data):
     :return: The position of element
     """
     global csp, variables
+    check_engine()
     item = integer()
     variables.append(item)
     csp.element(ith, data, item)
@@ -397,6 +429,7 @@ def gaussian(x, y):
     :param y: imaginary
     :return: (x+yj)
     """
+    check_engine()
     return Gaussian(x, y)
 
 
@@ -407,6 +440,7 @@ def rational(x, y):
     :param y: denominator
     :return: x / y
     """
+    check_engine()
     return Rational(x, y)
 
 
@@ -418,6 +452,7 @@ def at_most_k(x, k):
     :return: The encoded variable
     """
     global csp, variables
+    check_engine()
     return csp.at_most_k(x, k)
 
 
@@ -428,4 +463,5 @@ def sqrt(x):
     :return: The square of this integer.
     """
     global csp, variables
+    check_engine()
     return csp.sqrt(x)

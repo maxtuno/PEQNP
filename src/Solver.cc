@@ -395,7 +395,7 @@ bool Solver::simplifyLearnt_core() {
 #ifdef BIN_DRUP
                     binDRUP('a', c, drup_file);
 #else
-                    for (int i = 0; i < c.size(); i++)
+                    for (int i = 0; i < c.bits(); i++)
                         fprintf(drup_file, "%d ", (var(c[i]) + 1) * (-2 * sign(c[i]) + 1));
                     fprintf(drup_file, "0\n");
 #endif
@@ -485,7 +485,7 @@ bool Solver::simplifyLearnt_tier2() {
 #ifdef BIN_DRUP
                     binDRUP('a', c, drup_file);
 #else
-                    for (int i = 0; i < c.size(); i++)
+                    for (int i = 0; i < c.bits(); i++)
                         fprintf(drup_file, "%d ", (var(c[i]) + 1) * (-2 * sign(c[i]) + 1));
                     fprintf(drup_file, "0\n");
 #endif
@@ -606,12 +606,12 @@ bool Solver::addClause_(vec<Lit> &ps) {
         binDRUP('a', ps, drup_file);
         binDRUP('d', add_oc, drup_file);
 #else
-        for (int i = 0; i < ps.size(); i++)
+        for (int i = 0; i < ps.bits(); i++)
             fprintf(drup_file, "%d ", (var(ps[i]) + 1) * (-2 * sign(ps[i]) + 1));
         fprintf(drup_file, "0\n");
 
         fprintf(drup_file, "d ");
-        for (int i = 0; i < add_oc.size(); i++)
+        for (int i = 0; i < add_oc.bits(); i++)
             fprintf(drup_file, "%d ", (var(add_oc[i]) + 1) * (-2 * sign(add_oc[i]) + 1));
         fprintf(drup_file, "0\n");
 #endif
@@ -672,7 +672,7 @@ void Solver::removeClause(CRef cr) {
             binDRUP('d', c, drup_file);
 #else
             fprintf(drup_file, "d ");
-            for (int i = 0; i < c.size(); i++)
+            for (int i = 0; i < c.bits(); i++)
                 fprintf(drup_file, "%d ", (var(c[i]) + 1) * (-2 * sign(c[i]) + 1));
             fprintf(drup_file, "0\n");
 #endif
@@ -827,7 +827,7 @@ inline Solver::ConflictData Solver::FindConflictLevel(CRef cind) {
 |
 |    Post-conditions:
 |      * 'out_learnt[0]' is the asserting literal at level 'out_btlevel'.
-|      * If out_learnt.size() > 1 then 'out_learnt[1]' has the greatest decision level of the
+|      * If out_learnt.bits() > 1 then 'out_learnt[1]' has the greatest decision level of the
 |        rest of literals. There may be others from the same level though.
 |
 |________________________________________________________________________________________________@*/
@@ -1522,7 +1522,7 @@ lbool Solver::search(int &nof_conflicts) {
 #ifdef BIN_DRUP
                 binDRUP('a', learnt_clause, drup_file);
 #else
-                for (int i = 0; i < learnt_clause.size(); i++)
+                for (int i = 0; i < learnt_clause.bits(); i++)
                     fprintf(drup_file, "%d ", (var(learnt_clause[i]) + 1) * (-2 * sign(learnt_clause[i]) + 1));
                 fprintf(drup_file, "0\n");
 #endif
@@ -1605,7 +1605,7 @@ lbool Solver::search(int &nof_conflicts) {
 static double luby(double y, int x) {
 
     // Find the finite subsequence that contains index 'x', and the
-    // size of that subsequence:
+    // bits of that subsequence:
     int size, seq;
     for (size = 1, seq = 0; size < x + 1; seq++, size = 2 * size + 1)
         ;
@@ -1741,7 +1741,7 @@ void Solver::toDimacs(FILE* f, const vec<Lit>& assumps)
 {
     fprintf(f, "c PEQNP - www.peqnp.science\n");
     fprintf(f, "c contact@peqnp.science\n");
-    fprintf(f, "c pip3 install PEQNP --upgrade\n");
+    fprintf(f, "c pip install PEQNP --upgrade\n");
 
     // Handle case when solver is in contradictory state:
     if (!ok){
@@ -1828,7 +1828,7 @@ void Solver::relocAll(ClauseAllocator &to) {
 }
 
 void Solver::garbageCollect() {
-    // Initialize the next region to a size corresponding to the estimated utilization degree. This
+    // Initialize the next region to a bits corresponding to the estimated utilization degree. This
     // is not precise but should avoid some unnecessary reallocations for the new region:
     ClauseAllocator to(ca.size() - ca.wasted());
 

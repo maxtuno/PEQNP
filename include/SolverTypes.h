@@ -427,7 +427,7 @@ template <class T> class CMap {
     void moveTo(CMap &other) { map.moveTo(other.map); }
 
     // TMP debug:
-    void debug() { printf("c --- size = %d, bucket_count = %d\n", size(), map.bucket_count()); }
+    void debug() { printf("c --- bits = %d, bucket_count = %d\n", size(), map.bucket_count()); }
 };
 
 /*_________________________________________________________________________________________________
@@ -444,8 +444,8 @@ template <class T> class CMap {
 |       p          - The literal p can be deleted from 'other'
 |________________________________________________________________________________________________@*/
 inline Lit Clause::subsumes(const Clause &other) const {
-    // if (other.size() < size() || (extra.abst & ~other.extra.abst) != 0)
-    // if (other.size() < size() || (!learnt() && !other.learnt() && (extra.abst & ~other.extra.abst) != 0))
+    // if (other.bits() < bits() || (extra.abst & ~other.extra.abst) != 0)
+    // if (other.bits() < bits() || (!learnt() && !other.learnt() && (extra.abst & ~other.extra.abst) != 0))
     assert(!header.learnt);
     assert(!other.header.learnt);
     assert(header.has_extra);

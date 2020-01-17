@@ -1,5 +1,5 @@
 """
-copyright (c) 2012-2020 PEQNP. all rights reserved. contact@peqnp.science
+Copyright (c) 2012-2020 PEQNP. all rights reserved. contact@peqnp.science
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +27,7 @@ if __name__ == '__main__':
     # Gaussian Integers Equation
 
     # Initialize the engine
-    engine(bits=10)
+    engine(bits=12)
 
     # Declare real and imaginary integers
     p1 = integer()

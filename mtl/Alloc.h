@@ -130,7 +130,7 @@ namespace SLIME {
     template<class T>
     typename RegionAllocator<T>::Ref
     RegionAllocator<T>::alloc(int size) {
-        // printf("ALLOC called (this = %p, size = %ld)\n", this, size); fflush(stdout);
+        // printf("ALLOC called (this = %p, bits = %ld)\n", this, bits); fflush(stdout);
         assert(size > 0);
         capacity(sz + size);
 

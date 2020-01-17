@@ -33,7 +33,7 @@ class Gaussian:
         return True
 
     def __ne__(self, other):
-        bit = Entity(self.real._encoder, size=2)
+        bit = Entity(self.real.encoder, bits=2)
         assert (self.real - other.real).iff(bit[0], self.imag - other.imag) != 0
         return True
 
@@ -57,10 +57,10 @@ class Gaussian:
 
     def __pow__(self, power, modulo=None):
         if isinstance(power, Entity):
-            slots = Entity(power._encoder, size=power._encoder.deepness)
-            assert sum([power._encoder.zero.iff(slots[i], 1) for i in range(power._encoder.deepness)]) == 1
-            assert sum([power._encoder.zero.iff(slots[i], i) for i in range(power._encoder.deepness)]) == power
-            return sum([Gaussian(power._encoder.zero.iff(slots[i], 1), 0) * (self ** i) for i in range(power._encoder.deepness)])
+            slots = Entity(power.encoder, bits=power.encoder.deep)
+            assert sum([power.encoder.zero.iff(slots[i], 1) for i in range(power.encoder.deep)]) == 1
+            assert sum([power.encoder.zero.iff(slots[i], i) for i in range(power.encoder.deep)]) == power
+            return sum([Gaussian(power.encoder.zero.iff(slots[i], 1), 0) * (self ** i) for i in range(power.encoder.deep)])
         else:
             other = self
             for _ in range(power - 1):
@@ -68,7 +68,7 @@ class Gaussian:
             return other
 
     def __abs__(self):
-        return Gaussian(self.real._encoder.sqrt(self.real ** 2 + self.imag ** 2), 0)
+        return Gaussian(self.real.encoder.sqrt(self.real ** 2 + self.imag ** 2), 0)
 
     def __str__(self):
         return '({}+{}j)'.format(self.real, self.imag)

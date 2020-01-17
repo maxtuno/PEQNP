@@ -10,7 +10,7 @@
     def engine(bits=None, deepness=None):
         """
         Initialize and reset the internal state of solver engine.
-        :param bits: The size \(2^{bits} - 1\) of solving space.
+        :param bits: The bits \(2^{bits} - 1\) of solving space.
         :param deepness: The scope for the exponential variables \(bits / 4\) by default.
         :return:
         """
@@ -26,16 +26,16 @@
     
     def integer(key=None, bits=None):
         """
-        Correspond to an integer of name key, and size bits.
+        Correspond to an integer of name key, and bits bits.
         :param key: The name of variable, appear on CNF when cnf_path is setting on satisfy().
-        :param bits: The bits size of the integer.
+        :param bits: The bits of the integer.
         :return: An instance of Integer.
         """
     
     def constant(value=None, bits=None):
         """
-        Correspond to an constant of value with size bits.
-        :param bits: The bits size of the constant.
+        Correspond to an constant of value with bits bits.
+        :param bits: The bits bits of the constant.
         :param value: The value that represent the constant.
         :return: An instance of Constant.
         """
@@ -67,7 +67,7 @@
         """
         An operative structure (like integer ot constant) that represent a subset of at most k elements.
         :param data: The data for the subsets.
-        :param k: The maximal size for subsets.
+        :param k: The maximal bits for subsets.
         :param empty: The empty element, 0, by default.
         :return: An instance of Subset.
         """
@@ -76,8 +76,8 @@
         """
         A vector of integers.
         :param key: The generic name for the array this appear indexed on cnf.
-        :param bits: The bit size for each integer.
-        :param size: The size of the vector.
+        :param bits: The bit bits for each integer.
+        :param size: The bits of the vector.
         :return: An instance of vector.
         """
     
@@ -85,7 +85,7 @@
         """
         A matrix of integers.
         :param key: The generic name for the array this appear indexed on cnf.
-        :param bits: The bit size for each integer.
+        :param bits: The bit bits for each integer.
         :param dimensions: An tuple with the dimensions for the array (n, m).
         :return: An instance of Matrix.
         """
@@ -100,17 +100,17 @@
     
     def permutations(lst, n):
         """
-        Entangle all permutations of size n for the vector lst.
+        Entangle all permutations of bits n for the vector lst.
         :param lst: The list to entangle.
-        :param n: The size of entanglement.
+        :param n: The bits of entanglement.
         :return: (indexes, values)
         """
     
     def combinations(lst, n):
         """
-        Entangle all combinations of size n for the vector lst.
+        Entangle all combinations of bits n for the vector lst.
         :param lst: The list to entangle.
-        :param n: The size of entanglement.
+        :param n: The bits of entanglement.
         :return: (indexes, values)
         """
     

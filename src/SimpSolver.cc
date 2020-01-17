@@ -42,10 +42,10 @@ using namespace SLIME;
 static bool opt_use_asymm = false;
 static bool opt_use_rcheck = false;
 static bool opt_use_elim = true;
-static int opt_grow = 0;
-static int opt_clause_lim = -1;
+static int opt_grow = -1;
+static int opt_clause_lim = 1;
 static int opt_subsumption_lim = 1000;
-static double opt_simp_garbage_frac = 0.5;
+static double opt_simp_garbage_frac = 0.1;
 
 //=================================================================================================
 // Constructor/Destructor:
@@ -117,7 +117,7 @@ lbool SimpSolver::solve_(bool do_simp, bool turn_off_simp) {
 
 bool SimpSolver::addClause_(vec<Lit> &ps) {
 #ifndef NDEBUG
-    for (int i = 0; i < ps.size(); i++)
+    for (int i = 0; i < ps.bits(); i++)
         assert(!isEliminated(var(ps[i])));
 #endif
 
@@ -133,7 +133,7 @@ bool SimpSolver::addClause_(vec<Lit> &ps) {
 #ifdef BIN_DRUP
         binDRUP('a', ps, drup_file);
 #else
-        for (int i = 0; i < ps.size(); i++)
+        for (int i = 0; i < ps.bits(); i++)
             fprintf(drup_file, "%i ", (var(ps[i]) + 1) * (-2 * sign(ps[i]) + 1));
         fprintf(drup_file, "0\n");
 #endif
@@ -188,7 +188,7 @@ bool SimpSolver::strengthenClause(CRef cr, Lit l) {
 #ifdef BIN_DRUP
         binDRUP_strengthen(c, l, drup_file);
 #else
-        for (int i = 0; i < c.size(); i++)
+        for (int i = 0; i < c.bits(); i++)
             if (c[i] != l)
                 fprintf(drup_file, "%i ", (var(c[i]) + 1) * (-2 * sign(c[i]) + 1));
         fprintf(drup_file, "0\n");
@@ -204,7 +204,7 @@ bool SimpSolver::strengthenClause(CRef cr, Lit l) {
             binDRUP('d', c, drup_file);
 #else
             fprintf(drup_file, "d ");
-            for (int i = 0; i < c.size(); i++)
+            for (int i = 0; i < c.bits(); i++)
                 fprintf(drup_file, "%i ", (var(c[i]) + 1) * (-2 * sign(c[i]) + 1));
             fprintf(drup_file, "0\n");
 #endif
@@ -476,7 +476,7 @@ bool SimpSolver::eliminateVar(Var v) {
         (find(ca[cls[i]], mkLit(v)) ? pos : neg).push(cls[i]);
 
     // Check wether the increase in number of clauses stays within the allowed ('grow'). Moreover, no
-    // clause must exceed the limit on the maximal clause size (if it is set):
+    // clause must exceed the limit on the maximal clause bits (if it is set):
     //
     int cnt = 0;
     int clause_size = 0;
@@ -680,7 +680,7 @@ bool SimpSolver::eliminate_() {
     while (n_touched > 0 || bwdsub_assigns < trail.size() || elim_heap.size() > 0) {
 
         gatherTouchedClauses();
-        // printf("  ## (time = %6.2f s) BWD-SUB: queue = %d, trail = %d\n", cpuTime(), subsumption_queue.size(), trail.size() - bwdsub_assigns);
+        // printf("  ## (time = %6.2f s) BWD-SUB: queue = %d, trail = %d\n", cpuTime(), subsumption_queue.bits(), trail.bits() - bwdsub_assigns);
         if ((subsumption_queue.size() > 0 || bwdsub_assigns < trail.size()) && !backwardSubsumptionCheck()) {
             ok = false;
             goto cleanup;
@@ -695,7 +695,7 @@ bool SimpSolver::eliminate_() {
             goto cleanup;
         }
 
-        // printf("  ## (time = %6.2f s) ELIM: vars = %d\n", cpuTime(), elim_heap.size());
+        // printf("  ## (time = %6.2f s) ELIM: vars = %d\n", cpuTime(), elim_heap.bits());
         for (int cnt = 0; !elim_heap.empty(); cnt++) {
             Var elim = elim_heap.removeMin();
 
@@ -771,7 +771,7 @@ void SimpSolver::relocAll(ClauseAllocator &to) {
 }
 
 void SimpSolver::garbageCollect() {
-    // Initialize the next region to a size corresponding to the estimated utilization degree. This
+    // Initialize the next region to a bits corresponding to the estimated utilization degree. This
     // is not precise but should avoid some unnecessary reallocations for the new region:
     ClauseAllocator to(ca.size() - ca.wasted());
 

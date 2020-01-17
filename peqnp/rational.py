@@ -90,10 +90,10 @@ class Rational:
 
     def __pow__(self, power, modulo=None):
         if isinstance(power, Entity):
-            slots = Entity(power._encoder, size=power._encoder.deepness)
-            assert sum([power._encoder.zero.iff(slots[i], 1) for i in range(power._encoder.deepness)]) == 1
-            assert sum([power._encoder.zero.iff(slots[i], i) for i in range(power._encoder.deepness)]) == power
-            return sum([(self ** i) * power._encoder.zero.iff(slots[i], 1) for i in range(power._encoder.deepness)])
+            slots = Entity(power.encoder, bits=power.encoder.deep)
+            assert sum([power.encoder.zero.iff(slots[i], 1) for i in range(power.encoder.deep)]) == 1
+            assert sum([power.encoder.zero.iff(slots[i], i) for i in range(power.encoder.deep)]) == power
+            return sum([(self ** i) * power.encoder.zero.iff(slots[i], 1) for i in range(power.encoder.deep)])
         else:
             other = self
             for _ in range(power - 1):

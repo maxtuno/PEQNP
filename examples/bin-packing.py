@@ -1,5 +1,5 @@
 """
-copyright (c) 2012-2020 PEQNP. all rights reserved. contact@peqnp.science
+Copyright (c) 2012-2020 PEQNP. all rights reserved. contact@peqnp.science
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -37,13 +37,13 @@ if __name__ == '__main__':
     elements = []
     with open(sys.argv[1], 'r') as file:
         lines = file.readlines()
-        # first line is size
+        # first line is bits
         size = int(lines[0])
         del lines[0]
         # second line is capacity
         capacity = int(lines[0])
         del lines[0]
-        # next the "size" elements
+        # next the "bits" elements
         for i in range(size):
             elements.append(int(lines[i]))
 
@@ -53,7 +53,7 @@ if __name__ == '__main__':
 
         engine(bits=capacity.bit_length() + 1)
 
-        # an array of "bins"-size elements and of "len(elements)"-bits
+        # an array of "bins"-bits elements and of "len(elements)"-bits
         slots = vector(bits=len(elements), size=bins)
 
         # only one assignment for element

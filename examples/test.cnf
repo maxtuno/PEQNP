@@ -1,6 +1,6 @@
 c PEQNP - www.peqnp.science
 c contact@peqnp.science
-c pip install PEQNP
+c pip install PEQNP --upgrade
 p cnf 10 23
 -1 -2 0
 -3 -4 0

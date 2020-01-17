@@ -25,62 +25,47 @@ from peqnp.entity import Entity
 
 
 class CSP:
-    def __init__(self, bits=None, deepness=None):
+    def __init__(self, bits=None, deep=None):
         import sys
         sys.setrecursionlimit(1 << 16)
         slime.reset()
-        self._map = {}
-        self._bits = bits
-        self._oo = 2 ** bits - 1
-        self._deepness = deepness if deepness is not None else bits // 4
-        self._number_of_clauses = 0
-        self._number_of_variables = 0
-        self._number_of_clauses = 0
-        self._unitary = [-1]
+        self.map = {}
+        self.bits = bits
+        self.oo = 2 ** bits - 1
+        self.deep = deep if deep is not None else bits // 4
+        self.number_of_clauses = 0
+        self.number_of_variables = 0
         self.__0 = None
         self.__1 = None
-        self._true = self.add_variable()
-        self._false = -self._true
-        self._unsat = True
-        self._constants = {}
-        self.add_block([-self._true])
-
-    @property
-    def true(self):
-        return self._true
-
-    @property
-    def false(self):
-        return self._false
+        self.true = self.add_variable()
+        self.false = -self.true
+        self.unsat = True
+        self.constants = {}
+        self.add_block([-self.true])
 
     @property
     def zero(self):
         if self.__0 is None:
-            self.__0 = self.int()
-            assert self.__0 == 0
+            self.__0 = self.int(value=0)
         return self.__0
 
     @property
     def one(self):
         if self.__1 is None:
-            self.__1 = self.int()
-            assert self.__1 == 1
+            self.__1 = self.int(value=1)
         return self.__1
 
-    @property
-    def oo(self):
-        return self._oo
-
     def add_variable(self, ):
-        self._number_of_variables += 1
-        return self._number_of_variables
+        self.number_of_variables += 1
+        return self.number_of_variables
 
-    def add_block(self, clause):
+    @staticmethod
+    def add_block(clause):
         slime.add_clause(sorted(set(clause), key=abs))
         return clause
 
     def mapping(self, key, value):
-        self._map[key] = value
+        self.map[key] = value
         return {key: value}
 
     def constraint(self, args):
@@ -89,7 +74,7 @@ class CSP:
     def create_block(self, size=None):
         if size:
             return [self.add_variable() for _ in range(size)]
-        return [self.add_variable() for _ in range(self._bits)]
+        return [self.add_variable() for _ in range(self.bits)]
 
     def create_variable(self, key=None, size=None):
         import uuid
@@ -102,11 +87,11 @@ class CSP:
 
     def create_constant(self, value):
         def __encode(n):
-            if n in self._constants.keys():
-                return self._constants[n]
-            self._constants[n] = self.create_block()
-            block = self._constants[n]
-            for i in range(self._bits):
+            if n in self.constants.keys():
+                return self.constants[n]
+            self.constants[n] = self.create_block()
+            block = self.constants[n]
+            for i in range(self.bits):
                 if n % 2 == 0:
                     self.add_block([-block[i]])
                 else:
@@ -200,7 +185,8 @@ class CSP:
 
         return ol
 
-    def gate_vector(self, bge, lhs_il, rhs_il, ol=None):
+    @staticmethod
+    def gate_vector(bge, lhs_il, rhs_il, ol=None):
         if ol is None:
             ol = [None] * len(lhs_il)
 
@@ -421,46 +407,30 @@ class CSP:
 
         return result
 
-    @property
-    def bits(self):
-        return self._bits
-
-    @property
-    def deepness(self):
-        return self._deepness
-
-    @deepness.setter
-    def deepness(self, value):
-        self._deepness = value
-
-    @property
-    def unsat(self):
-        return self._unsat
-
     def to_sat(self, args, solve=True, turbo=False, log=False, assumptions=None, cnf_path='', model_path='', proof_path='', normalize=False):
         if assumptions is None:
             assumptions = []
         model = slime.solve(solve, turbo, log, assumptions, cnf_path, model_path, proof_path)
         if cnf_path:
             with open(cnf_path, 'a') as file:
-                print('c {}'.format(self._map), file=file)
+                print('c {}'.format(self.map), file=file)
         if model:
             if cnf_path:
                 with open(cnf_path, 'a') as file:
                     print('c {}'.format(model), file=file)
-            for key, value in self._map.items():
+            for key, value in self.map.items():
                 for arg in args:
                     if isinstance(arg, Entity) and arg.key == key:
-                        arg._value = self.normalize(int(''.join(map(str, [int(int(model[abs(bit) - 1]) > 0) for bit in value[::-1]])), 2), normalize=normalize)
+                        arg.value = self.normalize(int(''.join(map(str, [int(int(model[abs(bit) - 1]) > 0) for bit in value[::-1]])), 2), normalize=normalize)
             self.add_block([-lit for lit in model])
-            self._unsat = False
+            self.unsat = False
             return True
         else:
-            self._unsat = False
+            self.unsat = False
         return False
 
     def int(self, key=None, block=None, value=None, size=None):
-        return Entity(self, key=key, block=block, value=value, size=size)
+        return Entity(self, key=key, block=block, value=value, bits=size)
 
     def array(self, dimension, size=None, key=None):
         if size is not None:
@@ -515,7 +485,7 @@ class CSP:
     def factorial(self, x):
         import functools
         import operator
-        aa = Entity(self, size=self.bits)
+        aa = Entity(self, bits=self.bits)
         assert sum([self.zero.iff(aa[i], self.one) for i in range(self.bits)]) == self.one
         assert sum([self.zero.iff(aa[i], i) for i in range(self.bits)]) == x
         return sum([self.zero.iff(aa[i], functools.reduce(operator.mul, [x - j for j in range(i)])) for i in range(1, self.bits)])
@@ -529,7 +499,7 @@ class CSP:
                 return functools.reduce(operator.add, xs)
             return self.zero
 
-        aa = Entity(self, size=self.bits)
+        aa = Entity(self, bits=self.bits)
         assert sum([self.zero.iff(aa[j], self.one) for j in range(self.bits)]) == self.one
         assert sum([self.zero.iff(aa[j], j) for j in range(self.bits)]) == n + self.one
         return sum([self.zero.iff(aa[j], __sum([f(j) for j in range(i, j)])) for j in range(i, self.bits)])
@@ -543,7 +513,7 @@ class CSP:
                 return functools.reduce(operator.mul, xs)
             return self.one
 
-        aa = Entity(self, size=self.bits)
+        aa = Entity(self, bits=self.bits)
         assert sum([self.zero.iff(aa[j], self.one) for j in range(self.bits)]) == self.one
         assert sum([self.zero.iff(aa[j], j) for j in range(self.bits)]) == n + self.one
         return sum([self.zero.iff(aa[j], __pi([f(j) for j in range(i, j)])) for j in range(i, self.bits)])
@@ -555,9 +525,9 @@ class CSP:
 
     def at_most_k(self, x, k):
         k += 1
-        self.add_block([-lit for lit in x._block])
+        self.add_block([-lit for lit in x.block])
         import itertools
-        for sub in itertools.combinations(x._block, k):
+        for sub in itertools.combinations(x.block, k):
             self.add_block(sub)
         return x
 
@@ -612,7 +582,7 @@ class CSP:
         return value
 
     def negative(self, value):
-        return value - (1 << self._bits)
+        return value - (1 << self.bits)
 
 
 # ///////////////////////////////////////////////////////////////////////////////

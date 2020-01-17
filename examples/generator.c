@@ -7,7 +7,7 @@
 /* Parameters of the graph */
 
 #define prob 0.5  /* edge probability for the random part of the graph */
-#define alpha 0.5 /* determines size l of largest clique (l = n^alpha) */
+#define alpha 0.5 /* determines bits l of largest clique (l = n^alpha) */
 
 #include <math.h>
 #include <stdio.h>
@@ -76,7 +76,7 @@ void write_graph_DIMACS(char *file) {
         exit(10);
     }
 
-    fprintf(fp, "c This graph contains a clique of size %d\n", cl_size);
+    fprintf(fp, "c This graph contains a clique of bits %d\n", cl_size);
     fprintf(fp, "p edge %d %d\n", nr_vert, nr_edges);
     for (i = 1; i < nr_vert; i++) {
         for (j = 0; j < i; j++)

@@ -1,13 +1,16 @@
 """
-copyright (c) 2012-2020 PEQNP. all rights reserved. contact@peqnp.science
+Copyright (c) 2012-2020 PEQNP. all rights reserved. contact@peqnp.science
+
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
+
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -31,7 +34,7 @@ def np_complete_query(cols, withs, count, size):
     :param cols: Name of the cols, the fist is the IDs (for identification only)
     :param withs: Optimality conditions, for the example <, > (min, max)
     :param count: The total numbers of rows to get
-    :param size: The size of the sample set (data base) more data need more ram, take car with this.
+    :param size: The bits of the sample set (data base) more data need more ram, take car with this.
     :return: The selected ids
     """
     qs = ds[cols][:size]
@@ -48,7 +51,7 @@ def np_complete_query(cols, withs, count, size):
 
         engine(max_data_bits)
 
-        # An "size" bits integer, each bit its a row on the table.
+        # An "bits" bits integer, each bit its a row on the table.
         select = integer(bits=size)
 
         for col, cmd in zip(cols, withs):

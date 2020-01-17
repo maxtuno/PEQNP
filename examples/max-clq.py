@@ -1,5 +1,5 @@
 """
-copyright (c) 2012-2020 PEQNP. all rights reserved. contact@peqnp.science
+Copyright (c) 2012-2020 PEQNP. all rights reserved. contact@peqnp.science
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -57,7 +57,7 @@ if __name__ == '__main__':
         # Declare an integer of n-bits
         bits = integer(bits=n)
 
-        # The bits integer have "size"-active bits, i.e, the clique has "size"-elements
+        # The bits integer have "bits"-active bits, i.e, the clique has "bits"-elements
         assert sum(switch(bits, i) for i in range(n)) == size
 
         # This entangle all elements that are joined together

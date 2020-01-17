@@ -1,5 +1,5 @@
 """
-copyright (c) 2012-2020 PEQNP. all rights reserved. contact@peqnp.science
+Copyright (c) 2012-2020 PEQNP. all rights reserved. contact@peqnp.science
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -48,7 +48,7 @@ if __name__ == '__main__':
     engine((n ** 2).bit_length())
 
     # Entangle all possible paths changing 0 <-> 1 i.e. 0 if edge exist 1 if not.
-    indexes, elements = matrix_permutation((1 - matrix).tolist(), n)
+    indexes, elements = matrix_permutation((1 - matrix).flatten(), n)
 
     # The path is full, (all elements are joined).
     assert sum(elements) == 0

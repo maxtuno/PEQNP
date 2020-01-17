@@ -464,7 +464,7 @@ class Solver {
         return seed / 2147483647;
     }
 
-    // Returns a random integer 0 <= x < size. Seed must never be 0.
+    // Returns a random integer 0 <= x < bits. Seed must never be 0.
     static inline int irand(double &seed, int size) { return (int)(drand(seed) * size); }
 
     // simplify

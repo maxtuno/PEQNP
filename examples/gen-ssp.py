@@ -1,5 +1,5 @@
 """
-copyright (c) 2012-2020 PEQNP. all rights reserved. contact@peqnp.science
+Copyright (c) 2012-2020 PEQNP. all rights reserved. contact@peqnp.science
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +27,7 @@ if __name__ == '__main__':
 
     if len(sys.argv) == 1 or sys.argv[1] == '--help':
         print('Generate an instances of sum subset problem to use with ssp.py')
-        print('Usage   : python3 gen-bpp.py <capacity> <size>')
+        print('Usage   : python3 gen-bpp.py <capacity> <bits>')
         print('Example : python3 gen-bpp.py 50 100')
         exit(0)
 

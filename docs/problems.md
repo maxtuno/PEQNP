@@ -140,7 +140,7 @@ Property: \(G\) has a set of mutually adjacent nodes.
 ```python
 from peqnp import *
 
-# Ths size of the clique to search
+# Ths bits of the clique to search
 k = 3
 
 # Get the graph and the dimension for the graph
@@ -152,7 +152,7 @@ engine(bits=k.bit_length())
 # Declare an integer of n-bits
 bits = integer(bits=n)
 
-# The bits integer have "size"-active bits, i.e, the clique has "size"-elements
+# The bits integer have "bits"-active bits, i.e, the clique has "bits"-elements
 assert sum(switch(bits, i) for i in range(n)) == k
 
 # This entangle all elements that are joined together
@@ -210,7 +210,7 @@ else:
 ```python
 from peqnp import *
 
-# Get the graph and dimension, and the size of the cover.
+# Get the graph and dimension, and the bits of the cover.
 n, graph, vertex, k = 5, [(1, 0), (0, 2), (1, 4), (2, 1), (4, 2), (3, 2)], [0, 1, 2, 3, 4], 3
 
 # Ensure the problem can be represented
@@ -223,7 +223,7 @@ index = integer(bits=n)
 for i, j in graph:
     assert switch(index, vertex.index(i), neg=True) + switch(index, vertex.index(j), neg=True) >= 1
 
-# Ensure the cover has size k
+# Ensure the cover has bits k
 assert sum(switch(index, vertex.index(i), neg=True) for i in vertex) == k
 
 # Get the first solution with turbo
@@ -231,7 +231,7 @@ assert sum(switch(index, vertex.index(i), neg=True) for i in vertex) == k
 # only one solution is possible, because the internal structure of the problem is destroyed
 if satisfy(turbo=True):
     opt = sum(index.binary)
-    print('p size {}'.format(opt))
+    print('p bits {}'.format(opt))
     print(' '.join([str(vertex[i]) for i in range(n) if index.binary[i]]))
     print()
 else:
@@ -240,5 +240,5 @@ else:
 
 ```
 p size 3
-1 2 4
+0 3 4
 ```

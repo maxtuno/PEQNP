@@ -79,7 +79,7 @@ if __name__ == '__main__':
 
     if len(sys.argv) == 1 or sys.argv[1] == '--help':
         print('Solve the n-queens-completion problem')
-        print('Usage   : python3 n-queens-completion.py <table-size> <placed-queens>')
+        print('Usage   : python3 n-queens-completion.py <table-bits> <placed-queens>')
         print('Example : python3 n-queens-completion.py 100 50')
         exit(0)
 
