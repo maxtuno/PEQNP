@@ -21,7 +21,7 @@ To install the latest version:
 
     pip install PEQNP --upgrade
     
-Schur Triples problem: (Strong NP-Complete):
+Schur Triples Problem: (Strong NP-Complete):
 
     # ref: https://cstheory.stackexchange.com/questions/16253/list-of-strongly-np-hard-problems-with-numerical-data
     
