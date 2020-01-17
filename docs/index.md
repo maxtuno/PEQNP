@@ -9,7 +9,7 @@ The PEQNP System its a automatic CNF encoder and SAT Solver for General Constrai
 # Installation
 
 ```python
-pip3 install PEQNP --upgrade
+pip install PEQNP --upgrade
 ```
 
 A simple example its the factorization of RSA numbers.
@@ -45,7 +45,7 @@ On PEQNP all elements are integers and relations on this integers, this relation
 
 ## Supported Operations
 
-\(+, -, *, /, **, pow_mod, %, &, |, ^, ==, =, <, <=, >, >=)\.
+\(+, -, *, /, \*\*, pow_mod, %, &, |, ^, ==, =, <, <=, >, >=)\.
 
 ## Integers
 
