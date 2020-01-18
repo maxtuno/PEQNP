@@ -8,6 +8,8 @@ The PEQNP System its a automatic CNF encoder and SAT Solver for General Constrai
 
 # Installation
 
+[![Downloads](https://pepy.tech/badge/peqnp)](https://pepy.tech/project/peqnp)
+
 ```python
 pip install PEQNP --upgrade
 ```
