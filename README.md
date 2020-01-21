@@ -21,7 +21,7 @@ To install the latest version:
 
     pip install PEQNP --upgrade
     
-Schur Triples problem: (Strong NP-Complete):
+Schur Triples Problem: (Strong NP-Complete):
 
     # ref: https://cstheory.stackexchange.com/questions/16253/list-of-strongly-np-hard-problems-with-numerical-data
     
@@ -30,7 +30,7 @@ Schur Triples problem: (Strong NP-Complete):
     from peqnp import *
     
     bits = 7
-    size = 3 * 3
+    size = 3 * 10
     
     triplets = []
     while len(triplets) < size:
