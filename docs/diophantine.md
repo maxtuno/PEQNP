@@ -1,4 +1,4 @@
-# Diophantine Equations
+# Diophantine
 
 ### Let be \(x, y \in \mathbb{N}\) sl \(x^3 - x + 1 = y^2\)
 
