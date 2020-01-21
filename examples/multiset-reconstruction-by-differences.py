@@ -57,7 +57,7 @@ if __name__ == '__main__':
             assert x[i] <= x[i + 1]
             assert index(i, diffs) == x[i + 1] - x[i]
 
-        # Solve the problem for only one solution, according to the paper are two equivalents.
+        # Solve the problem for only one solution.
         if satisfy(turbo=True):
             o = [abs(x[i + 1] - x[i]) for i in range(n - 1)]
             c = 100 * len(set(map(int, x)).intersection(set(original))) / len(set(original))
