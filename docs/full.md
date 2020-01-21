@@ -1,4 +1,4 @@
-# Examples with Full System
+# Full System
 
 The PEQNP System include the HESS algorithm, that is a Universal Black Box Optimizer, the Diophantine and MIP Solvers.
 
