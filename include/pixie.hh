@@ -26,22 +26,22 @@ namespace peqnp::science {
         std::deque<bool> ints;
 
         std::tuple<unsigned int, unsigned int> sv() const {
-            auto s_cnt = 0, a_cnt = 0;
+            auto st = 0, at = 0;
             for (unsigned int i = 0; i < ec; ++i) {
                 if (cc[i] == C::E) {
-                    ++a_cnt;
+                    ++at;
                 } else {
-                    ++s_cnt;
+                    ++st;
                     if ((rr[i] < 0.0 && cc[i] == C::L) || (rr[i] >= 0.0 && cc[i] == C::G)) {
-                        ++a_cnt;
+                        ++at;
                     }
                 }
             }
-            return std::make_tuple(s_cnt, a_cnt);
+            return std::make_tuple(st, at);
         }
 
-        simplex<R> mt(const unsigned int s_cnt, const unsigned int a_cnt) const {
-            simplex<R> sm(vc, ec, s_cnt, a_cnt);
+        simplex<R> mt(const unsigned int st, const unsigned int at) const {
+            simplex<R> sm(vc, ec, st, at);
             auto idx = vc + 1;
             for (unsigned int i = 0; i < ec; ++i) {
                 sm.table[i][0] = rr[i];
@@ -71,7 +71,7 @@ namespace peqnp::science {
                     ++idx;
                 }
             }
-            if (a_cnt == 0) {
+            if (at == 0) {
                 for (unsigned int i = 0; i < vc; ++i) {
                     sm.table[ec][i + 1] = -obj[i];
                 }
@@ -79,7 +79,7 @@ namespace peqnp::science {
                 for (unsigned int i = 0; i < ec; ++i) {
                     if (!sm.flags[i])
                         continue;
-                    for (unsigned int j = 0; j <= vc + s_cnt; ++j) {
+                    for (unsigned int j = 0; j <= vc + st; ++j) {
                         sm.table[ec][j] -= sm.table[i][j];
                     }
                 }
@@ -87,8 +87,8 @@ namespace peqnp::science {
             return sm;
         }
 
-        void cz(const unsigned int &s_cnt, simplex<R> &sm) const noexcept {
-            for (unsigned int j = 0; j <= vc + s_cnt; ++j) {
+        void cz(const unsigned int &st, simplex<R> &sm) const noexcept {
+            for (unsigned int j = 0; j <= vc + st; ++j) {
                 sm.table[ec][j] = 0.0;
                 if (1 <= j && j <= vc) {
                     sm.table[ec][j] = -obj[j - 1];
@@ -96,7 +96,7 @@ namespace peqnp::science {
                 for (unsigned int i = 0; i < ec; ++i) {
                     if (sm.idx[i] < vc) {
                         sm.table[ec][j] += obj[sm.idx[i]] * sm.table[i][j];
-                    } else if (sm.idx[i] < vc + s_cnt) {
+                    } else if (sm.idx[i] < vc + st) {
 
                     } else {
                         sm.table[ec][j] += (-1.0) * sm.table[i][j];
