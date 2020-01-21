@@ -62,7 +62,7 @@ if __name__ == '__main__':
         ini = time.time()
 
         # Empirical bits necessarily to solve the problem.
-        engine(sum(diffs).bit_length() + 1)
+        engine(2 * sum(diffs).bit_length())
 
         x = vector(size=n)
 
