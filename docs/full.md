@@ -4,7 +4,7 @@ The PEQNP System include the HESS algorithm, that is a Universal Black Box Optim
 
 # The \(m,n)\-optimal priority problem.
 
-Input: Given a \(P\), \(Q\), \(M\) and \(m\), a lis of priorities (or probabilities), a list of profits (positives and negatives) and an matrix of costs of size \(n\), \(n\), \(n, n\).
+Input: Given a \(P\), \(Q\), \(M\) and \(m\), a lis of priorities (or probabilities), a list of profits (positives and negatives) and an matrix of costs of size \(n\), \(n\), \(nxn\).
 
 Output: Select the sequence of \(m\) elements that make the probability maximal, the profit maximal, and the distance minimal.
 
