@@ -214,7 +214,7 @@ from peqnp import *
 n, graph, vertex, k = 5, [(1, 0), (0, 2), (1, 4), (2, 1), (4, 2), (3, 2)], [0, 1, 2, 3, 4], 3
 
 # Ensure the problem can be represented
-engine(bits=n.bit_length())
+engine(bits=n.bit_length() + 1)
 
 # An integer with n-bits to store the indexes for the cover
 index = integer(bits=n)

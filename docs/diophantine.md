@@ -1,6 +1,6 @@
 # Diophantine Equations
 
-### Let be \(x, y \in \mathbb{N}\) solve \(x^3 - x + 1 = y^2\)
+### Let be \(x, y \in \mathbb{N}\) sl \(x^3 - x + 1 = y^2\)
 
 ```python
 from peqnp import *
@@ -25,7 +25,7 @@ while satisfy(normalize=True):
 3 ** 3 - 3 + 1, 5 ** 2
 ```
 
-### Let be \(x, y \in \mathbb{Q}\) solve \(x^3 + xy = y^2\)
+### Let be \(x, y \in \mathbb{Q}\) sl \(x^3 + xy = y^2\)
 
 ```python
 from peqnp import *
@@ -58,7 +58,7 @@ while satisfy(normalize=True):
 (2 / 1) ** 3 + (2 / 1) * (4 / 1), (4 / 1) ** 2
 ```
 
-### Let be \(x, y \in \mathbb{C}\) solve \(x^3 + x + 1 = y^2\)
+### Let be \(x, y \in \mathbb{C}\) sl \(x^3 + x + 1 = y^2\)
 
 ```python
 from peqnp import *

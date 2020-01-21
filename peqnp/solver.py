@@ -20,18 +20,22 @@ SOFTWARE.
 """
 
 import slime
+import pixie
 
 from peqnp.entity import Entity
 
 
 class CSP:
     def __init__(self, bits=None, deep=None):
+        slime.reset()
+        pixie.reset()
         import sys
         sys.setrecursionlimit(1 << 16)
-        slime.reset()
+        self.mips = []
+        self.variables = []
         self.map = {}
         self.bits = bits
-        self.oo = 2 ** bits - 1
+        self.oo = 2 ** bits - 2
         self.deep = deep if deep is not None else bits // 4
         self.number_of_clauses = 0
         self.number_of_variables = 0
@@ -39,9 +43,45 @@ class CSP:
         self.__1 = None
         self.true = self.add_variable()
         self.false = -self.true
-        self.unsat = True
         self.constants = {}
         self.add_block([-self.true])
+
+    def add_constraint(self, l, c, r):
+        ll = len(self.mips) * [0]
+        for v in l:
+            ll[v.idx] = self.mips[v.idx].value
+            self.mips[v.idx].value = 1
+            self.mips[v.idx].constraint.clear()
+            self.mips[v.idx].constraint.append(v)
+        pixie.add_constraint(ll, c, r)
+        if isinstance(r, Entity):
+            r.value = 1
+            r.constraint.clear()
+            r.constraint.append(v)
+
+    @staticmethod
+    def set_integer_condition(c):
+        pixie.set_integer_condition(c)
+
+    @staticmethod
+    def show_lp():
+        pixie.show_lp()
+
+    def maximize(self, objective):
+        ll = len(self.mips) * [0]
+        for v in objective.constraint:
+            ll[v.idx] = self.mips[v.idx].value
+        pixie.add_objective(ll)
+        mips = pixie.maximize()
+        return pixie.optimal(), mips
+
+    def minimize(self, objective):
+        ll = len(self.mips) * [0]
+        for v in objective.constraint:
+            ll[v.idx] = self.mips[v.idx].value
+        pixie.add_objective([-d for d in ll])
+        mips = pixie.minimize()
+        return -pixie.optimal(), mips
 
     @property
     def zero(self):
@@ -423,14 +463,11 @@ class CSP:
                     if isinstance(arg, Entity) and arg.key == key:
                         arg.value = self.normalize(int(''.join(map(str, [int(int(model[abs(bit) - 1]) > 0) for bit in value[::-1]])), 2), normalize=normalize)
             self.add_block([-lit for lit in model])
-            self.unsat = False
             return True
-        else:
-            self.unsat = False
         return False
 
-    def int(self, key=None, block=None, value=None, size=None):
-        return Entity(self, key=key, block=block, value=value, bits=size)
+    def int(self, key=None, block=None, value=None, size=None, is_mip=False, is_real=False, idx=None):
+        return Entity(self, key=key, block=block, value=value, bits=size, is_mip=is_mip, is_real=is_real, idx=idx)
 
     def array(self, dimension, size=None, key=None):
         if size is not None:
@@ -584,73 +621,3 @@ class CSP:
     def negative(self, value):
         return value - (1 << self.bits)
 
-
-# ///////////////////////////////////////////////////////////////////////////////
-# //        Copyright (c) 2012-2020 Oscar Riveros. all rights reserved.        //
-# //                        oscar.riveros@peqnp.science                        //
-# //                                                                           //
-# //   without any restriction, Oscar Riveros reserved rights, patents and     //
-# //  commercialization of this knowledge or derived directly from this work.  //
-# ///////////////////////////////////////////////////////////////////////////////
-def hess_sequence(n, oracle):
-    xs = list(range(n))
-    glb = oracle(xs)
-    opt = xs[:]
-
-    def __inv(a, b, xs):
-        i, j = min(a, b), max(a, b)
-        while i < j:
-            xs[i], xs[j] = xs[j], xs[i]
-            i += 1
-            j -= 1
-
-    while True:
-        anchor = glb
-        for i in range(len(xs)):
-            for j in range(len(xs)):
-                __inv(i, j, xs)
-                loc = oracle(xs)
-                if loc < glb:
-                    glb = loc
-                    opt = xs[:]
-                elif loc > glb:
-                    __inv(i, j, xs)
-        if anchor == glb:
-            break
-    return opt
-
-
-# ///////////////////////////////////////////////////////////////////////////////
-# //        Copyright (c) 2012-2020 Oscar Riveros. all rights reserved.        //
-# //                        oscar.riveros@peqnp.science                        //
-# //                                                                           //
-# //   without any restriction, Oscar Riveros reserved rights, patents and     //
-# //  commercialization of this knowledge or derived directly from this work.  //
-# ///////////////////////////////////////////////////////////////////////////////
-def hess_binary(n, oracle):
-    xs = [False] * n
-    glb = oracle(xs)
-    opt = xs[:]
-
-    def __inv(i, j, xs):
-        if xs[i] == xs[j]:
-            xs[i] = not xs[j]
-        else:
-            aux = xs[i]
-            xs[i] = not xs[j]
-            xs[j] = aux
-
-    while True:
-        anchor = glb
-        for i in range(len(xs)):
-            for j in range(len(xs)):
-                __inv(i, j, xs)
-                loc = oracle(xs)
-                if loc < glb:
-                    glb = loc
-                    opt = xs[:]
-                elif loc > glb:
-                    __inv(i, j, xs)
-        if anchor == glb:
-            break
-    return opt

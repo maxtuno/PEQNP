@@ -166,3 +166,17 @@ if __name__ == '__main__':
         print(x, y, z)
         if x.value ^ y.value != z.value:
             raise Exception('BUG!')
+
+    print(80 * '-')
+    print(' << ')
+    print(80 * '-')
+
+    engine(bits)
+    x = integer()
+    y = integer()
+    z = integer()
+    assert x << y == z
+    while satisfy():
+        print(x, y, z)
+        if x.value << y.value != z.value:
+            raise Exception('BUG!')

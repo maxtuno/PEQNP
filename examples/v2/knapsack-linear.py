@@ -20,37 +20,29 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-import sys
-
+import random
 from peqnp import *
 
-
-def load_instance(file_name):
-    with open(file_name, 'r') as file:
-        lines = file.readlines()
-        return int(lines[0]), list(map(int, lines[1:]))
-
-
 if __name__ == '__main__':
+    n = 10
 
-    if len(sys.argv) == 1 or sys.argv[1] == '--help':
-        print('Solve the Sum Subset Problem')
-        print('Usage   : python3 ssp.py <instance>')
-        print('Example : python3 ssp.py data.txt')
-        print('Extreme : python3 ssp.py pub.txt (take long time but solve)')
-        exit(0)
+    values = [random.random() for _ in range(n)]
+    profit = [random.random() for _ in range(n)]
 
-    t, universe = load_instance(sys.argv[1])
+    capacity = sum(random.sample(values, k=n // 2))
 
-    engine(bits=t.bit_length())
+    engine()
 
-    bits, subset = subsets(universe)
+    selects = vector(is_mip=True, size=n)
 
-    assert sum(subset) == t
+    apply_single(selects, lambda x: x <= 1)
 
-    if satisfy(turbo=True):
-        solution = [universe[i] for i in range(len(universe)) if bits.binary[i]]
-        print(sum(solution), solution)
-        print()
-    else:
-        print('Infeasible ...')
+    assert dot(values, selects) <= capacity
+
+    opt = maximize(dot(profit, selects))
+
+    slots = list(map(int, selects))
+
+    print('PROFIT  : {} vs {}'.format(dot(profit, slots), opt))
+    print('VALUES  : {} <= {}'.format(dot(values, slots), capacity))
+    print('SELECT  : {}'.format(slots))

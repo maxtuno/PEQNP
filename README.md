@@ -91,6 +91,9 @@ https://www.facebook.com/PEQNP-104747814228901
 Documentation
 https://peqnp.readthedocs.io
 
+### version 0.2.2
+- Add beta support for Mixed Integer Programming
+
 #### version 0.2.0
 - A considerable improvement on performance.
 - Fix several edge conditions bugs.
@@ -110,7 +113,7 @@ https://peqnp.readthedocs.io
 - Add simple documentation for the STDLIB.
 
 #### 1-8-2020
-- Add the HESS folder with NATIVE and variate implementations of the HESS algorithm to solve (approximate) MAXSAT, HCP, CVRP and the Hyper Loop Algorithm. 
+- Add the HESS folder with NATIVE and variate implementations of the HESS algorithm to sl (approximate) MAXSAT, HCP, CVRP and the Hyper Loop Algorithm. 
 - SLIME4 is now compile on this project.
 - Add DEIDOS COVENANT Algorithm, to get all solutions of a Sum Subset Problem.
 - Add the longest common pattern (permutation) problem example.

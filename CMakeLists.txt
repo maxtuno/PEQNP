@@ -12,7 +12,7 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/deidos)
 
 include_directories(. include)
 
-set(CMAKE_CXX_FLAGS "-std=c++98 -O3 -D NDEBUG -D __STDC_LIMIT_MACROS -D __STDC_FORMAT_MACROS -D LOG") # -static
+set(CMAKE_CXX_FLAGS "-std=c++98 -O3 -D NDEBUG -D __STDC_LIMIT_MACROS -D __STDC_FORMAT_MACROS -D LOG -static")
 
 add_executable(slime_cli
         src/Main.cc

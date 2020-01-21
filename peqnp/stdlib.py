@@ -25,10 +25,10 @@ The standard high level library for the PEQNP system.
 
 from .gaussian import Gaussian
 from .rational import Rational
+from .linear import Linear
 from .solver import *
 
 csp = None
-variables = []
 
 
 def check_engine():
@@ -42,18 +42,21 @@ def version():
     Print the current version of the system.
     :return:
     """
-    print('PEQNP - 0.2.0 - 17-1-2020')
+    print('PEQNP - 0.2.2 - 21-1-2020')
 
 
-def engine(bits=None, deepness=None):
+def engine(bits=None, deep=None):
     """
     Initialize and reset the internal state of solver engine.
     :param bits: The bits 2 ** bits - 1 of solving space.
-    :param deepness: The scope for the exponential variables bits / 4 by default.
+    :param deep: The scope for the exponential variables bits / 4 by default.
     :return:
     """
     global csp
-    csp = CSP(bits, deepness)
+    if bits is None:
+        csp = CSP(0, deep)
+    else:
+        csp = CSP(bits, deep)
 
 
 def slime4(cnf_path, model_path='', proof_path=''):
@@ -75,11 +78,11 @@ def integer(key=None, bits=None):
     :param bits: The bits of the integer.
     :return: An instance of Integer.
     """
-    global variables
+    global csp
     check_engine()
-    variables.append(csp.int(key=key, size=bits))
-    assert 0 <= variables[-1] <= oo()
-    return variables[-1]
+    csp.variables.append(csp.int(key=key, size=bits))
+    assert 0 <= csp.variables[-1] <= oo()
+    return csp.variables[-1]
 
 
 def constant(value=None, bits=None):
@@ -89,10 +92,10 @@ def constant(value=None, bits=None):
     :param value: The value that represent the constant.
     :return: An instance of Constant.
     """
-    global variables
+    global csp
     check_engine()
-    variables.append(csp.int(size=bits, value=value))
-    return variables[-1]
+    csp.variables.append(csp.int(size=bits, value=value))
+    return csp.variables[-1]
 
 
 def satisfy(solve=True, turbo=False, log=False, assumptions=None, cnf_path='', model_path='', proof_path='', normalize=False):
@@ -108,7 +111,7 @@ def satisfy(solve=True, turbo=False, log=False, assumptions=None, cnf_path='', m
     :param normalize: Indicate to the system that normalize integers from [2 ** (bits - 1), 2 ** bits - 1].
     :return: True if SATISFIABLE else False
     """
-    return csp.to_sat(variables, solve=solve, turbo=turbo, log=log, assumptions=assumptions, cnf_path=cnf_path, model_path=model_path, proof_path=proof_path, normalize=normalize)
+    return csp.to_sat(csp.variables, solve=solve, turbo=turbo, log=log, assumptions=assumptions, cnf_path=cnf_path, model_path=model_path, proof_path=proof_path, normalize=normalize)
 
 
 def subsets(lst, k=None, key=None):
@@ -119,14 +122,14 @@ def subsets(lst, k=None, key=None):
     :param key: The name os the binary representation of subsets.
     :return: (binary representation of subsets, the generic subset representation)
     """
-    global variables
+    global csp
     check_engine()
     bits = csp.int(key=key, size=len(lst))
-    variables.append(bits)
+    csp.variables.append(bits)
     if k is not None:
         assert sum(csp.zero.iff(-bits[i], csp.one) for i in range(len(lst))) == k
     subset_ = [csp.zero.iff(-bits[i], lst[i]) for i in range(len(lst))]
-    variables += subset_
+    csp.variables += subset_
     return bits, subset_
 
 
@@ -138,44 +141,59 @@ def subset(data, k, empty=None):
     :param empty: The empty element, 0, by default.
     :return: An instance of Subset.
     """
-    global csp, variables
+    global csp
     check_engine()
     subset_ = csp.subset(k, data, empty)
-    variables += subset_
+    csp.variables += subset_
     return subset_
 
 
-def vector(key=None, bits=None, size=None):
+def vector(key=None, bits=None, size=None, is_mip=False, is_real=False):
     """
     A vector of integers.
     :param key: The generic name for the array this appear indexed on cnf.
     :param bits: The bit bits for each integer.
     :param size: The bits of the vector.
+    :param is_mip: Indicate of is a MIP vector.
+    :param is_real: Indicate of is a MIP vector and is real or int.
     :return: An instance of vector.
     """
-    global csp, variables
+    global csp
     check_engine()
-    array_ = csp.array(key=key, size=bits, dimension=size)
-    variables += array_
+    if is_mip:
+        lns = []
+        for _ in range(size):
+            lns.append(linear(is_real=is_real))
+        return lns
+    else:
+        array_ = csp.array(key=key, size=bits, dimension=size)
+        csp.variables += array_
     return array_
 
 
-def matrix(key=None, bits=None, dimensions=None):
+def matrix(key=None, bits=None, dimensions=None, is_mip=False, is_real=False):
     """
     A matrix of integers.
     :param key: The generic name for the array this appear indexed on cnf.
     :param bits: The bit bits for each integer.
     :param dimensions: An tuple with the dimensions for the array (n, m).
+    :param is_mip: Indicate of is a MIP vector.
+    :param is_real: Indicate of is a MIP vector and is real or int.
     :return: An instance of Matrix.
     """
-    global variables
+    global csp
     check_engine()
     matrix_ = []
     for i in range(dimensions[0]):
         row = []
+        lns = []
         for j in range(dimensions[1]):
-            variables.append(integer(key='{}_{}_{}'.format(key, i, j) if key is not None else key, bits=bits))
-            row.append(variables[-1])
+            if is_mip:
+                lns.append(linear(is_real=is_real))
+                row.append(lns[-1])
+            else:
+                csp.variables.append(integer(key='{}_{}_{}'.format(key, i, j) if key is not None else key, bits=bits))
+                row.append(csp.variables[-1])
         matrix_.append(row)
     return matrix_
 
@@ -187,7 +205,7 @@ def matrix_permutation(lst, n):
     :param n: The dimension for the square nxn-matrix.
     :return: An tuple with (index for the elements, the elements that represent the indexes)
     """
-    global csp, variables
+    global csp
     check_engine()
     xs = vector(size=n)
     ys = vector(size=n)
@@ -399,12 +417,12 @@ def element(item, data):
     :param data: The data
     :return: The position of element
     """
-    global csp, variables
+    global csp
     check_engine()
     ith = integer()
-    variables.append(ith)
+    csp.variables.append(ith)
     csp.element(ith, data, item)
-    return variables[-1]
+    return csp.variables[-1]
 
 
 def index(ith, data):
@@ -414,12 +432,12 @@ def index(ith, data):
     :param data: The data
     :return: The position of element
     """
-    global csp, variables
+    global csp
     check_engine()
     item = integer()
-    variables.append(item)
+    csp.variables.append(item)
     csp.element(ith, data, item)
-    return variables[-1]
+    return csp.variables[-1]
 
 
 def gaussian(x, y):
@@ -451,7 +469,7 @@ def at_most_k(x, k):
     :param k: k elements
     :return: The encoded variable
     """
-    global csp, variables
+    global csp
     check_engine()
     return csp.at_most_k(x, k)
 
@@ -462,6 +480,156 @@ def sqrt(x):
     :param x: The integer
     :return: The square of this integer.
     """
-    global csp, variables
+    global csp
     check_engine()
     return csp.sqrt(x)
+
+
+def linear(is_real=False):
+    """
+    Create a linear variable.
+    :param is_real: If true, the variable is a real number if not an integer.
+    :return: The new variable.
+    """
+    global csp
+    check_engine()
+    csp.mips.append(Linear(csp, len(csp.mips), is_real=is_real))
+    return csp.mips[-1]
+
+
+def maximize(objective):
+    """
+    Maximize the objective, according to the current linear constrains.
+    :param objective: An standard linear expression.
+    :return: the values of the model in order of variable creation.
+    """
+    global csp
+    ints = []
+    for var in csp.mips:
+        if var.is_real:
+            ints.append(0)
+        else:
+            ints.append(1)
+    csp.set_integer_condition(ints)
+    opt, result = csp.maximize(objective)
+    for v, r in zip(csp.mips, result):
+        if not v.is_real:
+            v.value = int(r)
+        else:
+            v.value = r
+    return opt
+
+
+def minimize(objective):
+    """
+    Minimize the objective, according to the current linear constrains.
+    :param objective: An standard linear expression.
+    :return: the values of the model in order of variable creation.
+    """
+    global csp
+    ints = []
+    for var in csp.mips:
+        if var.is_real:
+            ints.append(0)
+        else:
+            ints.append(1)
+    csp.set_integer_condition(ints)
+    opt, result = csp.minimize(objective)
+    for v, r in zip(csp.mips, result):
+        if not v.is_real:
+            v.value = int(r)
+        else:
+            v.value = r
+    return opt
+
+
+def show_lp():
+    """
+    Show a Mixed Integer Programming Problem on LP Format.
+    :return:
+    """
+    global csp
+    csp.show_lp()
+
+
+# ///////////////////////////////////////////////////////////////////////////////
+# //        Copyright (c) 2012-2020 Oscar Riveros. all rights reserved.        //
+# //                        oscar.riveros@peqnp.science                        //
+# //                                                                           //
+# //   without any restriction, Oscar Riveros reserved rights, patents and     //
+# //  commercialization of this knowledge or derived directly from this work.  //
+# ///////////////////////////////////////////////////////////////////////////////
+def hess_sequence(n, oracle):
+    """
+    HESS Algorithm is a Universal Black Box Optimizer (sequence version).
+    :param n: The size of sequence.
+    :param oracle: The oracle, this output a number and input a sequence.
+    :return:
+    """
+    xs = list(range(n))
+    glb = oracle(xs)
+    opt = xs[:]
+
+    def __inv(a, b, xs):
+        i, j = min(a, b), max(a, b)
+        while i < j:
+            xs[i], xs[j] = xs[j], xs[i]
+            i += 1
+            j -= 1
+
+    while True:
+        anchor = glb
+        for i in range(len(xs)):
+            for j in range(len(xs)):
+                __inv(i, j, xs)
+                loc = oracle(xs)
+                if loc < glb:
+                    glb = loc
+                    opt = xs[:]
+                elif loc > glb:
+                    __inv(i, j, xs)
+        if anchor == glb:
+            break
+    return opt
+
+
+# ///////////////////////////////////////////////////////////////////////////////
+# //        Copyright (c) 2012-2020 Oscar Riveros. all rights reserved.        //
+# //                        oscar.riveros@peqnp.science                        //
+# //                                                                           //
+# //   without any restriction, Oscar Riveros reserved rights, patents and     //
+# //  commercialization of this knowledge or derived directly from this work.  //
+# ///////////////////////////////////////////////////////////////////////////////
+def hess_binary(n, oracle):
+    """
+    HESS Algorithm is a Universal Black Box Optimizer (binary version).
+    :param n: The size of bit vector.
+    :param oracle: The oracle, this output a number and input a bit vector.
+    :return:
+    """
+    xs = [False] * n
+    glb = oracle(xs)
+    opt = xs[:]
+
+    def __inv(i, j, xs):
+        if xs[i] == xs[j]:
+            xs[i] = not xs[j]
+        else:
+            aux = xs[i]
+            xs[i] = not xs[j]
+            xs[j] = aux
+
+    while True:
+        anchor = glb
+        for i in range(len(xs)):
+            for j in range(len(xs)):
+                __inv(i, j, xs)
+                loc = oracle(xs)
+                if loc < glb:
+                    glb = loc
+                    opt = xs[:]
+                elif loc > glb:
+                    __inv(i, j, xs)
+        if anchor == glb:
+            break
+    return opt
