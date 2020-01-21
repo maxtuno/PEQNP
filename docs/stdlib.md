@@ -292,12 +292,6 @@ def minimize(objective):
     :return: the values of the model in order of variable creation.
     """
 
-def show_lp():
-    """
-    Show the Mixed Integer Programming Problem on LP Format.
-    :return:
-    """
-
 def hess_sequence(n, oracle):
     """
     HESS Algorithm is a Universal Black Box Optimizer (sequence version).
