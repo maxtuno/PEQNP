@@ -1,4 +1,4 @@
-# Mixed Integer Programming
+# MIP
 
 Currently exist a module for Mixed Integer Programming can solve constraints linear constraints on standard form: 
 
