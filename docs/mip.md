@@ -48,17 +48,17 @@ from peqnp import *
 
 if __name__ == '__main__':
 
-    engine(0)
+    engine()
 
     x1 = linear()
     x2 = linear()
     x3 = linear()
-    x4 = linear()
+    x4 = linear(is_real=True)
 
-    assert x1 + 2 * x3 <= 700
-    assert 2 * x2 - 8 * x3 <= 0
-    assert x2 - 2 * x3 + x4 >= 1
-    assert x2 + x2 + x3 + x4 == 10
+    assert x1 + 2.1 * x3 <= 700.1
+    assert 2.1 * x2 - 0.8 * x3 <= 0
+    assert x2 - 2 * x3 + x4 >= 1.5
+    assert x2 + x2 + x3 + 0.1 * x4 == 10.123
 
     assert x1 <= 10
     assert x1 >= 10
@@ -67,4 +67,8 @@ if __name__ == '__main__':
     opt = maximize(x1 + x2 + 2 * x3 - 2 * x4)
 
     print(opt, x1, x2, x3, x4)
+```
+
+```
+-16.45999999999998 10 0 8 21.22999999999999
 ```
