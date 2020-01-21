@@ -1,4 +1,4 @@
-# The PEQNP System
+# The System
 
 For more info visit [www.peqnp.science](http://www.peqnp.science) and [Source Codes](https://github.com/maxtuno/PEQNP) and [Documentation](https://peqnp.readthedocs.io).
 
