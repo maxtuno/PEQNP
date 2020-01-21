@@ -1,6 +1,6 @@
 # MIP
 
-Currently exist a module for Mixed Integer Programming can solve constraints linear constraints on standard form: 
+Currently exist a module for Mixed Integer Programming can solve linear constraints on standard form: 
 
     expresion [<=, >=, ==] real
 
