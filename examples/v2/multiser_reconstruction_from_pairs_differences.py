@@ -81,8 +81,8 @@ if __name__ == '__main__':
     if satisfy(turbo=True):
         o = pairs_difference(list(map(int, x)))
         c = 100 * len(set(map(int, x)).intersection(set(original))) / len(set(original))
-        print('SOLVED            : {}'.format(x))
-        print('COINCIDENCES      : {}%'.format(c))
+        print('SOLVED             : {}'.format(x))
+        print('COINCIDENCES       : {}%'.format(c))
         if o == diffs:
             print('OK! - {}s'.format(time.time() - ini))
             exit(0)
