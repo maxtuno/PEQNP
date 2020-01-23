@@ -108,9 +108,8 @@ if __name__ == '__main__':
     assert x - y == z
     while satisfy():
         print(x, y, z)
-        # need selective normalization
-        # if x.value - y.value != z.value:
-        #     raise Exception('BUG!')
+        if x.value - y.value != z.value:
+            raise Exception('BUG!')
 
     print(80 * '-')
     print(' % ')

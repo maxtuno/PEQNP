@@ -26,6 +26,7 @@ class Rational:
     def __init__(self, x, y):
         self.denominator = x
         self.numerator = y
+        assert self.numerator > 0
 
     def __eq__(self, other):
         if isinstance(other, Entity):
@@ -47,6 +48,8 @@ class Rational:
         return Rational(self.denominator * other.numerator + self.numerator * other.denominator, self.numerator * other.numerator)
 
     def __radd__(self, other):
+        if other == 0:
+            return self
         return self + other
 
     def __sub__(self, other):
@@ -62,7 +65,7 @@ class Rational:
 
     def __le__(self, other):
         if isinstance(other, Entity):
-            assert self.numerator >= other * self.denominator
+            assert self.numerator * other >= self.denominator
         else:
             assert self.numerator * other.denominator >= self.denominator * other.numerator
         return True
@@ -76,7 +79,7 @@ class Rational:
 
     def __lt__(self, other):
         if isinstance(other, Entity):
-            assert self.numerator > other * self.denominator
+            assert self.numerator * other > self.denominator
         else:
             assert self.numerator * other.denominator > self.denominator * other.numerator
         return True
@@ -97,20 +100,20 @@ class Rational:
         else:
             other = self
             for _ in range(power - 1):
-                other *= self
+                other = other * self
             return other
 
     def __abs__(self):
         return Rational(abs(self.denominator), abs(self.numerator))
 
     def __str__(self):
-        return str(self.__repr__())
+        return self.__repr__()
 
     def __repr__(self):
-        return self.denominator / self.numerator
+        return '({} / {})'.format(self.denominator, self.numerator)
 
     def __float__(self):
-        return float(self.__repr__())
+        return float(self.denominator / self.numerator)
 
     def invert(self):
         return Rational(self.numerator, self.denominator)

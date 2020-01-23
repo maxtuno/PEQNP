@@ -70,8 +70,11 @@ class Gaussian:
     def __abs__(self):
         return Gaussian(self.real.encoder.sqrt(self.real ** 2 + self.imag ** 2), 0)
 
-    def __str__(self):
+    def __repr__(self):
         return '({}+{}j)'.format(self.real, self.imag)
+
+    def __str__(self):
+        return str(self.__repr__())
 
     def __complex__(self):
         return complex(int(self.real), int(self.imag))

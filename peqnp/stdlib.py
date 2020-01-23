@@ -42,7 +42,7 @@ def version():
     Print the current version of the system.
     :return:
     """
-    print('PEQNP - 0.2.2 - 21-1-2020')
+    print('PEQNP - 0.2.3 - 23-1-2020')
 
 
 def engine(bits=None, deep=None):
@@ -148,18 +148,24 @@ def subset(data, k, empty=None):
     return subset_
 
 
-def vector(key=None, bits=None, size=None, is_mip=False, is_real=False):
+def vector(key=None, bits=None, size=None, is_rational=False, is_gaussian=False, is_mip=False, is_real=False):
     """
     A vector of integers.
     :param key: The generic name for the array this appear indexed on cnf.
     :param bits: The bit bits for each integer.
     :param size: The bits of the vector.
+    :param is_rational: Indicate of is a Rational vector.
+    :param is_gaussian: Indicate of is a Gaussian Integers vector.
     :param is_mip: Indicate of is a MIP vector.
     :param is_real: Indicate of is a MIP vector and is real or int.
     :return: An instance of vector.
     """
     global csp
     check_engine()
+    if is_rational:
+        return [rational() for _ in range(size)]
+    if is_gaussian:
+        return [gaussian() for _ in range(size)]
     if is_mip:
         lns = []
         for _ in range(size):
@@ -440,7 +446,7 @@ def index(ith, data):
     return csp.variables[-1]
 
 
-def gaussian(x, y):
+def gaussian(x=None, y=None):
     """
     Create a gaussian integer from (x+yj).
     :param x: real
@@ -448,10 +454,12 @@ def gaussian(x, y):
     :return: (x+yj)
     """
     check_engine()
+    if x is None and y is None:
+        return Gaussian(integer(), integer())
     return Gaussian(x, y)
 
 
-def rational(x, y):
+def rational(x=None, y=None):
     """
     Create a rational x / y.
     :param x: numerator
@@ -459,6 +467,8 @@ def rational(x, y):
     :return: x / y
     """
     check_engine()
+    if x is None and y is None:
+        return Rational(integer(), integer())
     return Rational(x, y)
 
 
@@ -541,15 +551,6 @@ def minimize(objective):
         else:
             v.value = r
     return opt
-
-
-def show_lp():
-    """
-    Show a Mixed Integer Programming Problem on LP Format.
-    :return:
-    """
-    global csp
-    csp.show_lp()
 
 
 # ///////////////////////////////////////////////////////////////////////////////
