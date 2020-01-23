@@ -91,6 +91,10 @@ https://www.facebook.com/PEQNP-104747814228901
 Documentation
 https://peqnp.readthedocs.io
 
+### version 0.2.3
+- Several Improvements on Rationals and Gaussian Integers Sub Module
+- Add several examples on new features.
+
 ### version 0.2.2
 - Add beta support for Mixed Integer Programming
 
