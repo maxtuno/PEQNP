@@ -91,6 +91,12 @@ https://www.facebook.com/PEQNP-104747814228901
 Documentation
 https://peqnp.readthedocs.io
 
+### version 0.2.4
+- Improve HESS algorithm, add two parameters fast (now default), and cycles.
+- Add HYPER LOOP algorithm a nested for loop from www.PEQNP.science. 
+- Now is possible activate the BOOST Heuristic on SLIME 4 with the parameter boost=True. ref: https://helda.helsinki.fi/handle/10138/306988 (SLIME)
+- Several examples for test the new features. v2-boost (folder)
+
 ### version 0.2.3
 - Several Improvements on Rationals and Gaussian Integers Sub Module
 - Add several examples on new features.
