@@ -40,12 +40,13 @@ def constant(value=None, bits=None):
     :return: An instance of Constant.
     """
 
-def satisfy(solve=True, turbo=False, log=False, assumptions=None, cnf_path='', model_path='', proof_path='', normalize=False):
+def satisfy(solve=True, turbo=False, log=False, boost=False, assumptions=None, cnf_path='', model_path='', proof_path='', normalize=False):
     """
     Find a model for the current problem.
     :param solve: This indicate if the instance can be solved or not, its use in conjunction with cnf_path.
     :param turbo: This make a simplification of the model, is more fast to solve, but destroy the internal structure of the problem, need regenerate, and gent only one solution.
     :param log: Shot the log for the SLIME SAT Solver.
+    :param boost: Use BOOST heuristic.
     :param assumptions: A low level interrupt on the solver, this take a list with literals assumed true, and add to the hig level model.
     :param cnf_path: The path for the CNF representation of the problem, None by default and is not generated.
     :param model_path: The path for the MODEL of the problem, None by default and is not generated.
