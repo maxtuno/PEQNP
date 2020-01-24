@@ -447,10 +447,10 @@ class CSP:
 
         return result
 
-    def to_sat(self, args, solve=True, turbo=False, log=False, assumptions=None, cnf_path='', model_path='', proof_path='', normalize=False):
+    def to_sat(self, args, solve=True, turbo=False, log=False, boost=False, assumptions=None, cnf_path='', model_path='', proof_path='', normalize=False):
         if assumptions is None:
             assumptions = []
-        model = slime.solve(solve, turbo, log, assumptions, cnf_path, model_path, proof_path)
+        model = slime.solve(solve, turbo, log, boost, assumptions, cnf_path, model_path, proof_path)
         if cnf_path:
             with open(cnf_path, 'a') as file:
                 print('c {}'.format(self.map), file=file)

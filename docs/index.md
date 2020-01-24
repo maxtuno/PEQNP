@@ -90,9 +90,7 @@ while satisfy():
     print(x)
 ```
 
-# A Full Example
-
-### multiset reconstruction by differences
+# A Full Example - multiset reconstruction by differences
 
 ```python
 import time

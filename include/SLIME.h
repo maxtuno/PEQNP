@@ -161,7 +161,7 @@ PyObject *add_clause(PyObject *self, PyObject *args) {
 PyObject *solve(PyObject *self, PyObject *args) {
 
     char *path, *model_path, *proof;
-    bool simplify, log, solve;
+    bool simplify, log, solve, boost;
     lbool result;
     PyObject *pList;
     PyObject *pItem;
@@ -169,7 +169,7 @@ PyObject *solve(PyObject *self, PyObject *args) {
     Py_ssize_t n;
     int i;
 
-    if (!PyArg_ParseTuple(args, "bbbOsss", &solve, &simplify, &log, &pList, &path, &model_path, &proof)) {
+    if (!PyArg_ParseTuple(args, "bbbbOsss", &solve, &simplify, &log, &boost, &pList, &path, &model_path, &proof)) {
         Py_RETURN_NONE;
     }
 
@@ -178,6 +178,12 @@ PyObject *solve(PyObject *self, PyObject *args) {
         S->log = true;
     } else {
         S->log = false;
+    }
+
+    if (boost) {
+        S->boost = true;
+    } else {
+        S->boost = false;
     }
 
     n = PyList_Size(pList);

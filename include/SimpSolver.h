@@ -118,6 +118,7 @@ namespace SLIME {
         int eliminated_vars;
 
         bool log;
+        bool boost;
     protected:
         // Helper structures:
         //

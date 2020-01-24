@@ -42,7 +42,7 @@ def version():
     Print the current version of the system.
     :return:
     """
-    print('PEQNP - 0.2.3 - 23-1-2020')
+    print('PEQNP - 0.2.4 - 24-1-2020')
 
 
 def engine(bits=None, deep=None):
@@ -98,12 +98,13 @@ def constant(value=None, bits=None):
     return csp.variables[-1]
 
 
-def satisfy(solve=True, turbo=False, log=False, assumptions=None, cnf_path='', model_path='', proof_path='', normalize=False):
+def satisfy(solve=True, turbo=False, log=False, boost=False, assumptions=None, cnf_path='', model_path='', proof_path='', normalize=False):
     """
     Find a model for the current problem.
     :param solve: This indicate if the instance can be solved or not, its use in conjunction with cnf_path.
     :param turbo: This make a simplification of the model, is more fast to solve, but destroy the internal structure of the problem, need regenerate, and gent only one solution.
     :param log: Shot the log for the SLIME SAT Solver.
+    :param boost: Use BOOST heuristic.
     :param assumptions: A low level interrupt on the solver, this take a list with literals assumed true, and add to the hig level model.
     :param cnf_path: The path for the CNF representation of the problem, None by default and is not generated.
     :param model_path: The path for the MODEL of the problem, None by default and is not generated.
@@ -111,7 +112,7 @@ def satisfy(solve=True, turbo=False, log=False, assumptions=None, cnf_path='', m
     :param normalize: Indicate to the system that normalize integers from [2 ** (bits - 1), 2 ** bits - 1].
     :return: True if SATISFIABLE else False
     """
-    return csp.to_sat(csp.variables, solve=solve, turbo=turbo, log=log, assumptions=assumptions, cnf_path=cnf_path, model_path=model_path, proof_path=proof_path, normalize=normalize)
+    return csp.to_sat(csp.variables, solve=solve, turbo=turbo, log=log, boost=boost, assumptions=assumptions, cnf_path=cnf_path, model_path=model_path, proof_path=proof_path, normalize=normalize)
 
 
 def subsets(lst, k=None, key=None):
@@ -560,15 +561,17 @@ def minimize(objective):
 # //   without any restriction, Oscar Riveros reserved rights, patents and     //
 # //  commercialization of this knowledge or derived directly from this work.  //
 # ///////////////////////////////////////////////////////////////////////////////
-def hess_sequence(n, oracle):
+def hess_sequence(n, oracle, fast=True, cycles=1):
     """
     HESS Algorithm is a Universal Black Box Optimizer (sequence version).
     :param n: The size of sequence.
     :param oracle: The oracle, this output a number and input a sequence.
-    :return:
+    :param fast: More fast less accuracy.
+    :param cycles: How many times the HESS algorithm is executed.
+    :return optimized sequence.
     """
     xs = list(range(n))
-    glb = oracle(xs)
+    glb = oracle(xs) + 1
     opt = xs[:]
 
     def __inv(a, b, xs):
@@ -578,19 +581,46 @@ def hess_sequence(n, oracle):
             i += 1
             j -= 1
 
-    while True:
-        anchor = glb
-        for i in range(len(xs)):
-            for j in range(len(xs)):
-                __inv(i, j, xs)
-                loc = oracle(xs)
-                if loc < glb:
-                    glb = loc
-                    opt = xs[:]
-                elif loc > glb:
-                    __inv(i, j, xs)
-        if anchor == glb:
-            break
+    top = glb
+    for i in range(cycles):
+        glb = top + 1
+        if fast:
+            while True:
+                anchor = glb
+                for i in range(len(xs) - 1):
+                    for j in range(i + 1, len(xs)):
+                        __inv(i, j, xs)
+                        loc = oracle(xs)
+                        if loc == top:
+                            glb *= 2
+                        if loc < glb:
+                            glb = loc
+                            if glb < top:
+                                top = glb
+                                opt = xs[:]
+                        elif loc > glb:
+                            __inv(i, j, xs)
+                if anchor == glb:
+                    break
+        else:
+            while True:
+                anchor = glb
+                for i in range(len(xs)):
+                    for j in range(len(xs)):
+                        __inv(i, j, xs)
+                        loc = oracle(xs)
+                        if loc == top:
+                            glb *= 2
+                        if loc < glb:
+                            glb = loc
+                            if glb < top:
+                                top = glb
+                                opt = xs[:]
+                        elif loc > glb:
+                            __inv(i, j, xs)
+                if anchor == glb:
+                    break
+
     return opt
 
 
@@ -601,15 +631,17 @@ def hess_sequence(n, oracle):
 # //   without any restriction, Oscar Riveros reserved rights, patents and     //
 # //  commercialization of this knowledge or derived directly from this work.  //
 # ///////////////////////////////////////////////////////////////////////////////
-def hess_binary(n, oracle):
+def hess_binary(n, oracle, fast=True, cycles=1):
     """
     HESS Algorithm is a Universal Black Box Optimizer (binary version).
     :param n: The size of bit vector.
     :param oracle: The oracle, this output a number and input a bit vector.
-    :return:
+    :param fast: More fast some times less accuracy.
+    :param cycles: How many times the HESS algorithm is executed.
+    :return optimized sequence.
     """
     xs = [False] * n
-    glb = oracle(xs)
+    glb = oracle(xs) + 1
     opt = xs[:]
 
     def __inv(i, j, xs):
@@ -620,17 +652,67 @@ def hess_binary(n, oracle):
             xs[i] = not xs[j]
             xs[j] = aux
 
-    while True:
-        anchor = glb
-        for i in range(len(xs)):
-            for j in range(len(xs)):
-                __inv(i, j, xs)
-                loc = oracle(xs)
-                if loc < glb:
-                    glb = loc
-                    opt = xs[:]
-                elif loc > glb:
-                    __inv(i, j, xs)
-        if anchor == glb:
-            break
+    top = glb
+    for i in range(cycles):
+        glb = top + 1
+        if fast:
+            while True:
+                anchor = glb
+                for i in range(len(xs) - 1):
+                    for j in range(i + 1, len(xs)):
+                        __inv(i, j, xs)
+                        loc = oracle(xs)
+                        if loc == top:
+                            glb *= 2
+                        if loc < glb:
+                            glb = loc
+                            if glb < top:
+                                top = glb
+                                opt = xs[:]
+                        elif loc > glb:
+                            __inv(i, j, xs)
+                if anchor == glb:
+                    break
+        else:
+            while True:
+                anchor = glb
+                for i in range(len(xs)):
+                    for j in range(len(xs)):
+                        __inv(i, j, xs)
+                        loc = oracle(xs)
+                        if loc == top:
+                            glb *= 2
+                        if loc < glb:
+                            glb = loc
+                            if glb < top:
+                                top = glb
+                                opt = xs[:]
+                        elif loc > glb:
+                            __inv(i, j, xs)
+                if anchor == glb:
+                    break
     return opt
+
+
+# ///////////////////////////////////////////////////////////////////////////////
+# //        Copyright (c) 2012-2020 Oscar Riveros. all rights reserved.        //
+# //                        oscar.riveros@peqnp.science                        //
+# //                                                                           //
+# //   without any restriction, Oscar Riveros reserved rights, patents and     //
+# //  commercialization of this knowledge or derived directly from this work.  //
+# ///////////////////////////////////////////////////////////////////////////////
+def hyper_loop(n, m):
+    """
+    An nested for loop
+    :param n: The size of the samples
+    :param m: The numbers in the sample 0..m
+    :return:
+    """
+    idx = []
+    for k in range(m ** n):
+        for _ in range(n):
+            idx.append(k % m)
+            k //= m
+            if len(idx) == n:
+                yield idx[::-1]
+                idx.clear()

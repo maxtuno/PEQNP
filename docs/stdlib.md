@@ -72,14 +72,12 @@ def subset(data, k, empty=None):
     :return: An instance of Subset.
     """
 
-def vector(key=None, bits=None, size=None, is_rational=False, is_gaussian=False, is_mip=False, is_real=False):
+def vector(key=None, bits=None, size=None, is_mip=False, is_real=False):
     """
     A vector of integers.
     :param key: The generic name for the array this appear indexed on cnf.
     :param bits: The bit bits for each integer.
     :param size: The bits of the vector.
-    :param is_rational: Indicate of is a Rational vector.
-    :param is_gaussian: Indicate of is a Gaussian Integers vector.
     :param is_mip: Indicate of is a MIP vector.
     :param is_real: Indicate of is a MIP vector and is real or int.
     :return: An instance of vector.
@@ -294,19 +292,31 @@ def minimize(objective):
     :return: the values of the model in order of variable creation.
     """
 
-def hess_sequence(n, oracle):
+def hess_sequence(n, oracle, fast=True, cycles=1):
     """
     HESS Algorithm is a Universal Black Box Optimizer (sequence version).
     :param n: The size of sequence.
     :param oracle: The oracle, this output a number and input a sequence.
-    :return: 
+    :param fast: More fast less accuracy.
+    :param cycles: How many times the HESS algorithm is executed.
+    :return optimized sequence.
     """
 
-def hess_binary(n, oracle):
+def hess_binary(n, oracle, fast=True, cycles=1):
     """
     HESS Algorithm is a Universal Black Box Optimizer (binary version).
     :param n: The size of bit vector.
     :param oracle: The oracle, this output a number and input a bit vector.
-    :return: 
+    :param fast: More fast some times less accuracy.
+    :param cycles: How many times the HESS algorithm is executed.
+    :return optimized sequence.
+    """
+
+def hyper_loop(n, m):
+    """
+    An nested for loop
+    :param n: The size of the samples
+    :param m: The numbers in the sample 0..m
+    :return: The indexes for loops
     """
 ```

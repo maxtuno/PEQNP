@@ -1451,7 +1451,27 @@ lbool Solver::search(int &nof_conflicts) {
     }
 
     for (;;) {
-        CRef confl = propagate();
+        CRef confl;
+
+        /* SLIME -- Copyright (c) 2019, Oscar Riveros, oscar.riveros@peqnp.science, Santiago, Chile. https://maxtuno.github.io/slime-sat-solver */
+        /* SLIME SAT Solver and The BOOST Heuristic or Variations cannot be used on any contest without express permissions of Oscar Riveros. */
+        if (boost) {
+            polarity[trail.size()] = !polarity[trail.size()];
+            local = trail.size();
+            confl = propagate();
+            if (local > global) {
+                global = local;
+                if (logs) {
+                    printf("\rc %.2f %% \t ", 100.0 * (nVars() - global) / nVars());
+                    fflush(stdout);
+                }
+            } else if (local < global) {
+                polarity[trail.size()] = !polarity[trail.size()];
+            }
+        } else {
+            confl = propagate();
+        }
+
         if (confl != CRef_Undef) {
             // CONFLICT
             if (VSIDS) {
