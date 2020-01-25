@@ -5,9 +5,9 @@ import matplotlib.pyplot as plt
 
 
 """
-There are several infectious outbreaks, with different severity of severity, 
+Are Several infectious outbreaks with different severity, 
 we have a number of centers capable of attending to these patients, 
-we have a measure of the waiting time by center and severity, 
+we have a measure of the waiting time by center and severity,
 the crisis needs to be resolved in the shortest possible time.
 """
 
