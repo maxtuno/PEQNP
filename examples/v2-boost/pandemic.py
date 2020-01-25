@@ -74,8 +74,6 @@ if __name__ == '__main__':
         all_binaries(X.flatten())
 
         s = constant(value=0)
-        r = constant(value=0)
-        o = constant(value=0)
 
         # Maximize total number of people helped and minimize total time to solve the crisis and minizie distance ar centers from focus.
         for i in range(infections):
