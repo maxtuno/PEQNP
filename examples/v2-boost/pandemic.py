@@ -80,7 +80,7 @@ if __name__ == '__main__':
             for j in range(centres):
                 for k in range(priorities):
                     if b[i] == k:
-                        s += (1000 * a[i] // (t[j][k] * np.linalg.norm(D[i] - C[j]))) * X[i][j][k]
+                        s += (1000 * a[i] // (t[j][k] + np.linalg.norm(D[i] - C[j]))) * X[i][j][k]
                     else:
                         assert X[i][j][k] == 0
 
@@ -127,7 +127,7 @@ if __name__ == '__main__':
                             s += a[i]
                             r += t[j][k]
                             o += np.linalg.norm(D[i] - C[j])
-                            opt += (1000 * a[i] // (t[j][k] * np.linalg.norm(D[i] - C[j])))
+                            opt += (1000 * a[i] // (t[j][k] + np.linalg.norm(D[i] - C[j])))
                             print('{} INFECTIONS FROM {} WITH PRIORITY {} ATTENDED CENTER {} LOCATED AT {}km WIT CAPACITY {} WAITING TIME {}'.format(a[i], i, j, k, np.linalg.norm(D[i] - C[j]), c[j][k], t[j][k]))
                             ax.add_line(Line2D([D[i][0], C[j][0]], [D[i][1], C[j][1]]))
             print()
