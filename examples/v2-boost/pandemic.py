@@ -75,7 +75,7 @@ if __name__ == '__main__':
 
         s = constant(value=0)
 
-        # Maximize total number of people helped and minimize total time to solve the crisis and minizie distance ar centers from focus.
+        # Maximize total number of people helped and minimize total time to solve the crisis and minimize distance to centers from focus.
         for i in range(infections):
             for j in range(centres):
                 for k in range(priorities):
