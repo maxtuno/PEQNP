@@ -25,8 +25,6 @@ from peqnp import *
 import numpy as np
 import matplotlib.pyplot as plt
 
-np.random.seed(0)
-
 """
 Are Several infectious outbreaks with different severity, 
 we have a number of centers capable of attending to these patients, 
