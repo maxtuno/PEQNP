@@ -56,6 +56,7 @@ int main(int argc, char *argv[]) {
     printHeader();
 
     SimpSolver S;
+
     S.log = true;
     S.boost = true;
 

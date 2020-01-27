@@ -320,4 +320,28 @@ def hyper_loop(n, m):
     :param m: The numbers in the sample 0..m
     :return: The indexes for loops
     """
+
+def reshape(lst, dimensions):
+    """
+    Reshape a list
+    :param lst: The coherent list to reshape
+    :param dimensions:  The list of dimensions
+    :return: The reshaped list
+    """
+    global csp
+    check_engine()
+    return csp.reshape(lst, dimensions)
+
+
+def tensor(dimensions, key=None):
+    """
+    Create a tensor
+    :param dimensions: The list of dimensions
+    :param key: The name of tensor for CNF rendering
+    :return: A tensor
+    """
+    global csp
+    check_engine()
+    csp.variables.append(csp.int(key=key, size=None, deep=dimensions))
+    return csp.variables[-1]
 ```

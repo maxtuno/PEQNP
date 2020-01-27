@@ -42,7 +42,7 @@ def version():
     Print the current version of the system.
     :return:
     """
-    print('PEQNP - 0.2.4 - 24-1-2020')
+    print('PEQNP - 0.2.5 - 27-1-2020')
 
 
 def engine(bits=None, deep=None):
@@ -716,3 +716,28 @@ def hyper_loop(n, m):
             if len(idx) == n:
                 yield idx[::-1]
                 idx.clear()
+
+
+def reshape(lst, dimensions):
+    """
+    Reshape a list
+    :param lst: The coherent list to reshape
+    :param dimensions:  The list of dimensions
+    :return: The reshaped list
+    """
+    global csp
+    check_engine()
+    return csp.reshape(lst, dimensions)
+
+
+def tensor(dimensions, key=None):
+    """
+    Create a tensor
+    :param dimensions: The list of dimensions
+    :param key: The name of tensor for CNF rendering
+    :return: A tensor
+    """
+    global csp
+    check_engine()
+    csp.variables.append(csp.int(key=key, size=None, deep=dimensions))
+    return csp.variables[-1]

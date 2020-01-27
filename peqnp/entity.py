@@ -21,7 +21,7 @@ SOFTWARE.
 
 
 class Entity:
-    def __init__(self, encoder, key=None, block=None, value=None, bits=None, is_mip=False, is_real=False, idx=None):
+    def __init__(self, encoder, key=None, block=None, value=None, bits=None, deep=None, is_mip=False, is_real=False, idx=None):
         self.key = key
         self.model = []
         self.block = block
@@ -29,22 +29,35 @@ class Entity:
         self.value = None
         self.is_mip = is_mip
         self.is_real = is_real
+        self.data = []
+        self.bits = bits
+        self.deep = deep
         if self.is_mip:
             self.idx = idx
             self.value = 1
             self.constraint = [self]
         if bits is None:
             self.bits = self.encoder.bits
-        else:
-            self.bits = bits
-        if block is None and bits is None and value is None:
+            self.deep = [self.bits]
+        if deep is not None:
+            import functools
+            import operator
+            self.deep = [deep] if isinstance(deep, int) else deep
+            self.bits = functools.reduce(operator.mul, self.deep)
+            self.key, self.block = self.encoder.create_variable(self.key, self.bits)
+            self.data = self.encoder.reshape(self.block, self.deep)
+        elif block is None and bits is None and value is None:
             self.key, self.block = self.encoder.create_variable(self.key)
         elif block is None and bits is not None and value is None:
-            self.key, self.block = self.encoder.create_variable(self.key, bits)
+            self.key, self.block = self.encoder.create_variable(self.key, self.bits)
         elif value is not None:
             self.block = self.encoder.create_constant(value)
         else:
             self.block = block
+        if not self.data:
+            self.data = self.block
+        if not self.deep:
+            self.deep = [self.bits]
 
     def __add__(self, other):
         if self.is_mip:
@@ -313,18 +326,12 @@ class Entity:
             return Entity(self.encoder, key=str(other), block=output_block)
 
     def __getitem__(self, item):
-        if self.value is not None:
-            def __encode(n):
-                i, data = 0, n * [False]
-                while n:
-                    if n % 2 == 0:
-                        data[i] = [True]
-                    n //= 2
-                    i += 1
-                return data
-
-            return __encode(abs(self.value))[item]
-        return self.block[item]
+        if isinstance(item, int):
+            return self.data[item]
+        bb = self.data[:]
+        for i in item:
+            bb = bb[i]
+        return lambda a, b: (a if isinstance(a, Entity) else self.encoder.int(value=a)).iff(-l, (b if isinstance(b, Entity) else self.encoder.int(value=b)))
 
     @property
     def binary(self):
@@ -339,7 +346,7 @@ class Entity:
                 n //= 2
             return bits
 
-        return __encode(self.value)
+        return self.encoder.reshape(__encode(self.value), self.deep)
 
     def __repr__(self):
         return str(self.value)

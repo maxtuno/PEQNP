@@ -60,7 +60,7 @@ static int opt_phase_saving = 2;
 static bool opt_rnd_init_act = false;
 static int opt_restart_first = 100;
 static double opt_restart_inc = 2;
-static double opt_garbage_frac = 0.25;
+static double opt_garbage_frac = 0.20;
 static int opt_chrono = 100;
 static int opt_conf_to_chrono = 4000;
 
@@ -117,7 +117,7 @@ Solver::Solver()
       my_var_decay(0.6), DISTANCE(true), var_iLevel_inc(1), order_heap_distance(VarOrderLt(activity_distance))
 
 {
-    logs = false;
+
 }
 
 Solver::~Solver() {}
@@ -395,7 +395,7 @@ bool Solver::simplifyLearnt_core() {
 #ifdef BIN_DRUP
                     binDRUP('a', c, drup_file);
 #else
-                    for (int i = 0; i < c.bits(); i++)
+                    for (int i = 0; i < c.size(); i++)
                         fprintf(drup_file, "%d ", (var(c[i]) + 1) * (-2 * sign(c[i]) + 1));
                     fprintf(drup_file, "0\n");
 #endif
@@ -485,7 +485,7 @@ bool Solver::simplifyLearnt_tier2() {
 #ifdef BIN_DRUP
                     binDRUP('a', c, drup_file);
 #else
-                    for (int i = 0; i < c.bits(); i++)
+                    for (int i = 0; i < c.size(); i++)
                         fprintf(drup_file, "%d ", (var(c[i]) + 1) * (-2 * sign(c[i]) + 1));
                     fprintf(drup_file, "0\n");
 #endif
@@ -606,12 +606,12 @@ bool Solver::addClause_(vec<Lit> &ps) {
         binDRUP('a', ps, drup_file);
         binDRUP('d', add_oc, drup_file);
 #else
-        for (int i = 0; i < ps.bits(); i++)
+        for (int i = 0; i < ps.size(); i++)
             fprintf(drup_file, "%d ", (var(ps[i]) + 1) * (-2 * sign(ps[i]) + 1));
         fprintf(drup_file, "0\n");
 
         fprintf(drup_file, "d ");
-        for (int i = 0; i < add_oc.bits(); i++)
+        for (int i = 0; i < add_oc.size(); i++)
             fprintf(drup_file, "%d ", (var(add_oc[i]) + 1) * (-2 * sign(add_oc[i]) + 1));
         fprintf(drup_file, "0\n");
 #endif
@@ -672,7 +672,7 @@ void Solver::removeClause(CRef cr) {
             binDRUP('d', c, drup_file);
 #else
             fprintf(drup_file, "d ");
-            for (int i = 0; i < c.bits(); i++)
+            for (int i = 0; i < c.size(); i++)
                 fprintf(drup_file, "%d ", (var(c[i]) + 1) * (-2 * sign(c[i]) + 1));
             fprintf(drup_file, "0\n");
 #endif
@@ -777,6 +777,22 @@ Lit Solver::pickBranchLit() {
             next = order_heap.removeMin();
         }
 
+    /* SLIME -- Copyright (c) 2019, Oscar Riveros, oscar.riveros@peqnp.science, Santiago, Chile. https://maxtuno.github.io/slime-sat-solver */
+    /* SLIME SAT Solver and The BOOST Heuristic or Variations cannot be used on any contest without express permissions of Oscar Riveros. */
+    if (!VSIDS) {
+        polarity[trail.size()] = !polarity[trail.size()];
+        local = trail.size();
+        if (local > global) {
+            global = local;
+            if (log) {
+                printf("\rc %.2f %% \t ", 100.0 * (nVars() - global) / nVars());
+                fflush(stdout);
+            }
+        } else if (local < global) {
+            polarity[trail.size()] = !polarity[trail.size()];
+        }
+    }
+
     return mkLit(next, polarity[next]);
 }
 
@@ -827,7 +843,7 @@ inline Solver::ConflictData Solver::FindConflictLevel(CRef cind) {
 |
 |    Post-conditions:
 |      * 'out_learnt[0]' is the asserting literal at level 'out_btlevel'.
-|      * If out_learnt.bits() > 1 then 'out_learnt[1]' has the greatest decision level of the
+|      * If out_learnt.size() > 1 then 'out_learnt[1]' has the greatest decision level of the
 |        rest of literals. There may be others from the same level though.
 |
 |________________________________________________________________________________________________@*/
@@ -1451,27 +1467,7 @@ lbool Solver::search(int &nof_conflicts) {
     }
 
     for (;;) {
-        CRef confl;
-
-        /* SLIME -- Copyright (c) 2019, Oscar Riveros, oscar.riveros@peqnp.science, Santiago, Chile. https://maxtuno.github.io/slime-sat-solver */
-        /* SLIME SAT Solver and The BOOST Heuristic or Variations cannot be used on any contest without express permissions of Oscar Riveros. */
-        if (boost) {
-            polarity[trail.size()] = !polarity[trail.size()];
-            local = trail.size();
-            confl = propagate();
-            if (local > global) {
-                global = local;
-                if (logs) {
-                    printf("\rc %.2f %% \t ", 100.0 * (nVars() - global) / nVars());
-                    fflush(stdout);
-                }
-            } else if (local < global) {
-                polarity[trail.size()] = !polarity[trail.size()];
-            }
-        } else {
-            confl = propagate();
-        }
-
+        CRef confl = propagate();
         if (confl != CRef_Undef) {
             // CONFLICT
             if (VSIDS) {
@@ -1542,7 +1538,7 @@ lbool Solver::search(int &nof_conflicts) {
 #ifdef BIN_DRUP
                 binDRUP('a', learnt_clause, drup_file);
 #else
-                for (int i = 0; i < learnt_clause.bits(); i++)
+                for (int i = 0; i < learnt_clause.size(); i++)
                     fprintf(drup_file, "%d ", (var(learnt_clause[i]) + 1) * (-2 * sign(learnt_clause[i]) + 1));
                 fprintf(drup_file, "0\n");
 #endif
@@ -1552,11 +1548,19 @@ lbool Solver::search(int &nof_conflicts) {
                 varDecayActivity();
             claDecayActivity();
         } else {
-            if (trail.size() > global) {
-                global = trail.size();
-                if (logs) {
-                    printf("\rc %.2f %% \t ", 100.0 * (nVars() - global) / nVars());
-                    fflush(stdout);
+/* SLIME -- Copyright (c) 2019, Oscar Riveros, oscar.riveros@peqnp.science, Santiago, Chile. https://maxtuno.github.io/slime-sat-solver */
+            /* SLIME SAT Solver and The BOOST Heuristic or Variations cannot be used on any contest without express permissions of Oscar Riveros. */
+            if (VSIDS) {
+                polarity[trail.size()] = !polarity[trail.size()];
+                local = trail.size();
+                if (local > global) {
+                    global = local;
+                    if (log) {
+                        printf("\rc %.2f %% \t ", 100.0 * (nVars() - global) / nVars());
+                        fflush(stdout);
+                    }
+                } else if (local < global) {
+                    polarity[trail.size()] = !polarity[trail.size()];
                 }
             }
             // NO CONFLICT
@@ -1625,7 +1629,7 @@ lbool Solver::search(int &nof_conflicts) {
 static double luby(double y, int x) {
 
     // Find the finite subsequence that contains index 'x', and the
-    // bits of that subsequence:
+    // size of that subsequence:
     int size, seq;
     for (size = 1, seq = 0; size < x + 1; seq++, size = 2 * size + 1)
         ;
@@ -1726,49 +1730,45 @@ lbool Solver::solve_() {
 //
 // FIXME: this needs to be rewritten completely.
 
-static Var mapVar(Var x, vec<Var>& map, Var& max)
-{
-    if (map.size() <= x || map[x] == -1){
-        map.growTo(x+1, -1);
+static Var mapVar(Var x, vec<Var> &map, Var &max) {
+    if (map.size() <= x || map[x] == -1) {
+        map.growTo(x + 1, -1);
         map[x] = max++;
     }
     return map[x];
 }
 
-
-void Solver::toDimacs(FILE* f, Clause& c, vec<Var>& map, Var& max)
-{
-    if (satisfied(c)) return;
+void Solver::toDimacs(FILE *f, Clause &c, vec<Var> &map, Var &max) {
+    if (satisfied(c))
+        return;
 
     for (int i = 0; i < c.size(); i++)
         if (value(c[i]) != l_False)
-            fprintf(f, "%s%d ", sign(c[i]) ? "-" : "", mapVar(var(c[i]), map, max)+1);
+            fprintf(f, "%s%d ", sign(c[i]) ? "-" : "", mapVar(var(c[i]), map, max) + 1);
     fprintf(f, "0\n");
 }
 
-
-void Solver::toDimacs(const char *file, const vec<Lit>& assumps)
-{
-    FILE* f = fopen(file, "wr");
+void Solver::toDimacs(const char *file, const vec<Lit> &assumps) {
+    FILE *f = fopen(file, "wr");
     if (f == NULL)
         fprintf(stderr, "could not open file %s\n", file), exit(1);
     toDimacs(f, assumps);
     fclose(f);
 }
 
-
-void Solver::toDimacs(FILE* f, const vec<Lit>& assumps)
-{
+void Solver::toDimacs(FILE *f, const vec<Lit> &assumps) {
     fprintf(f, "c PEQNP - www.peqnp.science\n");
     fprintf(f, "c contact@peqnp.science\n");
-    fprintf(f, "c pip install PEQNP --upgrade\n");
+    fprintf(f, "c pip install PEQNP\n");
 
     // Handle case when solver is in contradictory state:
-    if (!ok){
+    if (!ok) {
         fprintf(f, "p cnf 1 2\n1 0\n-1 0\n");
-        return; }
+        return;
+    }
 
-    vec<Var> map; Var max = 0;
+    vec<Var> map;
+    Var max = 0;
 
     // Cannot use removeClauses here because it is not safe
     // to deallocate them at this point. Could be improved.
@@ -1778,21 +1778,21 @@ void Solver::toDimacs(FILE* f, const vec<Lit>& assumps)
             cnt++;
 
     for (int i = 0; i < clauses.size(); i++)
-        if (!satisfied(ca[clauses[i]])){
-            Clause& c = ca[clauses[i]];
+        if (!satisfied(ca[clauses[i]])) {
+            Clause &c = ca[clauses[i]];
             for (int j = 0; j < c.size(); j++)
                 if (value(c[j]) != l_False)
                     mapVar(var(c[j]), map, max);
         }
 
     // Assumptions are added as unit clauses:
-    cnt += assumps.size();
+    cnt += assumptions.size();
 
     fprintf(f, "p cnf %d %d\n", max, cnt);
 
-    for (int i = 0; i < assumps.size(); i++){
-        assert(value(assumps[i]) != l_False);
-        fprintf(f, "%s%d 0\n", sign(assumps[i]) ? "-" : "", mapVar(var(assumps[i]), map, max)+1);
+    for (int i = 0; i < assumptions.size(); i++) {
+        assert(value(assumptions[i]) != l_False);
+        fprintf(f, "%s%d 0\n", sign(assumptions[i]) ? "-" : "", mapVar(var(assumptions[i]), map, max) + 1);
     }
 
     for (int i = 0; i < clauses.size(); i++)
@@ -1848,7 +1848,7 @@ void Solver::relocAll(ClauseAllocator &to) {
 }
 
 void Solver::garbageCollect() {
-    // Initialize the next region to a bits corresponding to the estimated utilization degree. This
+    // Initialize the next region to a size corresponding to the estimated utilization degree. This
     // is not precise but should avoid some unnecessary reallocations for the new region:
     ClauseAllocator to(ca.size() - ca.wasted());
 

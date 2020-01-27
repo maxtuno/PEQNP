@@ -91,6 +91,11 @@ https://www.facebook.com/PEQNP-104747814228901
 Documentation
 https://peqnp.readthedocs.io
 
+### version 0.2.5
+- SLIME 4 Updated to SAT RACE Performance
+- Add the TENSOR object
+- Examples on on use of tensor.
+
 ### version 0.2.4
 - Improve HESS algorithm, add two parameters fast (now default), and cycles.
 - Add HYPER LOOP algorithm a nested for loop from www.PEQNP.science. 

@@ -125,11 +125,13 @@ class CSP:
         self.mapping(key, block)
         return key, block
 
-    def create_constant(self, value):
-        def __encode(n):
+    def create_constant(self, value, size=None):
+        def __encode(n, size):
+            if size is None:
+                size = self.bits
             if n in self.constants.keys():
                 return self.constants[n]
-            self.constants[n] = self.create_block()
+            self.constants[n] = self.create_block(size=size)
             block = self.constants[n]
             for i in range(self.bits):
                 if n % 2 == 0:
@@ -138,8 +140,7 @@ class CSP:
                     self.add_block([block[i]])
                 n //= 2
             return block
-
-        return __encode(value)
+        return __encode(value, size)
 
     def or_gate(self, il, ol=None):
         if ol is None:
@@ -466,8 +467,8 @@ class CSP:
             return True
         return False
 
-    def int(self, key=None, block=None, value=None, size=None, is_mip=False, is_real=False, idx=None):
-        return Entity(self, key=key, block=block, value=value, bits=size, is_mip=is_mip, is_real=is_real, idx=idx)
+    def int(self, key=None, block=None, value=None, size=None, deep=None, is_mip=False, is_real=False, idx=None):
+        return Entity(self, key=key, block=block, value=value, bits=size, deep=deep, is_mip=is_mip, is_real=is_real, idx=idx)
 
     def array(self, dimension, size=None, key=None):
         if size is not None:
@@ -621,3 +622,10 @@ class CSP:
     def negative(self, value):
         return value - (1 << self.bits)
 
+    def reshape(self, lst, shape):
+        from functools import reduce
+        from operator import mul
+        if len(shape) == 1:
+            return lst
+        n = reduce(mul, shape[1:])
+        return [self.reshape(lst[i * n:(i + 1) * n], shape[1:]) for i in range(len(lst) // n)]
