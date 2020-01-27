@@ -328,10 +328,6 @@ def reshape(lst, dimensions):
     :param dimensions:  The list of dimensions
     :return: The reshaped list
     """
-    global csp
-    check_engine()
-    return csp.reshape(lst, dimensions)
-
 
 def tensor(dimensions, key=None):
     """
@@ -340,8 +336,4 @@ def tensor(dimensions, key=None):
     :param key: The name of tensor for CNF rendering
     :return: A tensor
     """
-    global csp
-    check_engine()
-    csp.variables.append(csp.int(key=key, size=None, deep=dimensions))
-    return csp.variables[-1]
 ```
