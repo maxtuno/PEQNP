@@ -32,7 +32,7 @@ if __name__ == '__main__':
 
     Y = vector(size=n ** m)
 
-    apply_single(Y, lambda k: 1 <= k <= n)
+    apply_single(Y, lambda k: k < n)
 
     Y = np.reshape(Y, newshape=(m * [n]))
 
