@@ -28,7 +28,7 @@ if __name__ == '__main__':
     n = 5
     m = 3
 
-    engine((n * (n + 1) // 2).bit_length())
+    engine(n.bit_length())
 
     Y = vector(size=n ** m)
 
