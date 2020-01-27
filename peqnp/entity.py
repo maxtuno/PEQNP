@@ -331,7 +331,7 @@ class Entity:
         bb = self.data[:]
         for i in item:
             bb = bb[i]
-        return lambda a, b: (a if isinstance(a, Entity) else self.encoder.int(value=a)).iff(-l, (b if isinstance(b, Entity) else self.encoder.int(value=b)))
+        return lambda a, b: (a if isinstance(a, Entity) else self.encoder.int(value=a)).iff(-bb, (b if isinstance(b, Entity) else self.encoder.int(value=b)))
 
     @property
     def binary(self):
