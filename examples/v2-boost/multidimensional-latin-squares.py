@@ -50,7 +50,7 @@ if __name__ == '__main__':
             all_different(s)
             all_different(s.T)
 
-    if satisfy(turbo=True, log=True):
+    if satisfy(turbo=True, boost=True, log=True):
         y = np.vectorize(int)(Y).reshape(m * [n])
         print(y)
         print(80 * '-')
