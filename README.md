@@ -94,7 +94,7 @@ https://peqnp.readthedocs.io
 ### version 0.2.5
 - SLIME 4 Updated to SAT RACE Performance
 - Add the TENSOR object
-- Examples on on use of tensor.
+- Examples on use of tensor.
 
 ### version 0.2.4
 - Improve HESS algorithm, add two parameters fast (now default), and cycles.
