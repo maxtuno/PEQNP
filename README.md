@@ -1,6 +1,6 @@
 # PEQNP
 
-The PEQNP System its a automatic CNF encoder and SAT Solver for General Constrained Diophantine Equations and NP-Complete Problems, full integrated with Python 3.
+A Multi Paradigm Constrain Satisfaction Solver.
 
 # SLIME 4
 A Free World Class High Performance SAT Solver
