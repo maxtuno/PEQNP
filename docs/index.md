@@ -2,7 +2,7 @@
 
 For more info visit [www.peqnp.science](http://www.peqnp.science) and [Source Codes](https://github.com/maxtuno/PEQNP) and [Documentation](https://peqnp.readthedocs.io).
 
-# Introduction
+# A Multi Paradigm Constrain Satisfaction Solver
 
 The PEQNP System its a automatic CNF encoder and SAT Solver for General Constrained Diophantine Equations and NP-Complete Problems, full integrated with Python 3.
 
