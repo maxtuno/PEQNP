@@ -23,6 +23,7 @@ PyObject *reset(PyObject *self, PyObject *args) {
 
 PyObject *add_objective(PyObject *self, PyObject *args) {
     PyObject *pList;
+    //Py_INCREF(pList);
     Py_ssize_t n;
     int i;
 
@@ -36,12 +37,12 @@ PyObject *add_objective(PyObject *self, PyObject *args) {
     n = PyList_Size(pList);
     for (i = 0; i < n; i++) {
         PyObject *pItem = PyList_GetItem(pList, i);
+        //Py_INCREF(pItem);
         double var = PyFloat_AsDouble(pItem);
-        Py_DECREF(pItem);
+        //Py_DECREF(pItem);
         constraint.push_back(var);
     }
-    // TODO: Fix
-    // Py_DECREF(pList);
+    //Py_DECREF(pList);
 
     mip->add_objective(constraint);
 
@@ -50,6 +51,8 @@ PyObject *add_objective(PyObject *self, PyObject *args) {
 
 PyObject *set_integer_condition(PyObject *self, PyObject *args) {
     PyObject *pList;
+    //Py_INCREF(pList);
+
     Py_ssize_t n;
     int i;
 
@@ -63,11 +66,12 @@ PyObject *set_integer_condition(PyObject *self, PyObject *args) {
     n = PyList_Size(pList);
     for (i = 0; i < n; i++) {
         PyObject *pItem = PyList_GetItem(pList, i);
+        //Py_INCREF(pItem);
         int var = PyLong_AsLong(pItem);
-        Py_DECREF(pItem);
+        //Py_DECREF(pItem);
         constraint.push_back(var == 1);
     }
-    Py_DECREF(pList);
+    //Py_DECREF(pList);
 
     mip->set_integer_condition(constraint);
 
@@ -76,6 +80,7 @@ PyObject *set_integer_condition(PyObject *self, PyObject *args) {
 
 PyObject *add_constraint(PyObject *self, PyObject *args) {
     PyObject *pList;
+    //Py_INCREF(pList);
 
     char *s;
     double d;
@@ -93,11 +98,12 @@ PyObject *add_constraint(PyObject *self, PyObject *args) {
     n = PyList_Size(pList);
     for (i = 0; i < n; i++) {
         PyObject *pItem = PyList_GetItem(pList, i);
+        //Py_INCREF(pItem);
         double var = PyFloat_AsDouble(pItem);
-        Py_DECREF(pItem);
+        //Py_DECREF(pItem);
         constraint.push_back(var);
     }
-    Py_DECREF(pList);
+    //Py_DECREF(pList);
 
 
     mip->add_constraint(constraint, s, d);

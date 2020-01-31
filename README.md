@@ -121,7 +121,7 @@ https://www.facebook.com/PEQNP-104747814228901
 Documentation
 https://peqnp.readthedocs.io
 
-#### version 0.2.9
+#### version 0.3.0
 - Fix MIP module crash.
 
 #### version 0.2.8
