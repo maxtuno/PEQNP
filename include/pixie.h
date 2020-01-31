@@ -40,7 +40,8 @@ PyObject *add_objective(PyObject *self, PyObject *args) {
         Py_DECREF(pItem);
         constraint.push_back(var);
     }
-    Py_DECREF(pList);
+    // TODO: Fix
+    // Py_DECREF(pList);
 
     mip->add_objective(constraint);
 
@@ -49,7 +50,6 @@ PyObject *add_objective(PyObject *self, PyObject *args) {
 
 PyObject *set_integer_condition(PyObject *self, PyObject *args) {
     PyObject *pList;
-    PyObject *pItem;
     Py_ssize_t n;
     int i;
 
@@ -62,7 +62,7 @@ PyObject *set_integer_condition(PyObject *self, PyObject *args) {
 
     n = PyList_Size(pList);
     for (i = 0; i < n; i++) {
-        pItem = PyList_GetItem(pList, i);
+        PyObject *pItem = PyList_GetItem(pList, i);
         int var = PyLong_AsLong(pItem);
         Py_DECREF(pItem);
         constraint.push_back(var == 1);
@@ -76,7 +76,6 @@ PyObject *set_integer_condition(PyObject *self, PyObject *args) {
 
 PyObject *add_constraint(PyObject *self, PyObject *args) {
     PyObject *pList;
-    PyObject *pItem;
 
     char *s;
     double d;
@@ -93,10 +92,13 @@ PyObject *add_constraint(PyObject *self, PyObject *args) {
 
     n = PyList_Size(pList);
     for (i = 0; i < n; i++) {
-        pItem = PyList_GetItem(pList, i);
+        PyObject *pItem = PyList_GetItem(pList, i);
         double var = PyFloat_AsDouble(pItem);
+        Py_DECREF(pItem);
         constraint.push_back(var);
     }
+    Py_DECREF(pList);
+
 
     mip->add_constraint(constraint, s, d);
 
