@@ -4,7 +4,7 @@ For more info visit [www.peqnp.science](http://www.peqnp.science) and [Source Co
 
 # A Multi Paradigm Constrain Satisfaction Solver
 
-A Multi Paradigm Constrain Satisfaction Solver.
+The PEQNP System its a automatic CNF encoder and SAT Solver for General Constrained Diophantine Equations and NP-Complete Problems, full integrated with Python 3.
 
 # Installation
 [![Downloads](https://pepy.tech/badge/peqnp)](https://pepy.tech/project/peqnp)
