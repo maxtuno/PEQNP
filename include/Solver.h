@@ -447,7 +447,7 @@ class Solver {
 
     static inline void binDRUP_flush(FILE *drup_file) {
 #if defined(__linux__)
-        fwrite_unlocked(drup_buf, sizeof(unsigned char), buf_len, drup_file);
+        fwrite(drup_buf, sizeof(unsigned char), buf_len, drup_file);
 #else
         fwrite(drup_buf, sizeof(unsigned char), buf_len, drup_file);
 #endif

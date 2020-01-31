@@ -25,8 +25,6 @@
 
 #define EPS 1e-6
 
-namespace peqnp::science {
-
     enum C {
         L,
         E,
@@ -35,7 +33,5 @@ namespace peqnp::science {
 
     template<typename R>
     bool ii(const R x) { return (std::abs(x - round(x)) < EPS); }
-
-} // namespace peqnp::science
 
 #endif // MIP_SOLVER_UTILS_HH

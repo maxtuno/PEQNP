@@ -20,7 +20,6 @@ SOFTWARE.
 """
 
 import slime
-import pixie
 
 from peqnp.entity import Entity
 
@@ -28,7 +27,6 @@ from peqnp.entity import Entity
 class CSP:
     def __init__(self, bits=None, deep=None, hess=False):
         slime.reset()
-        pixie.reset()
         import sys
         sys.setrecursionlimit(1 << 16)
         self.hess = hess
@@ -46,39 +44,6 @@ class CSP:
         self.false = -self.true
         self.constants = {}
         self.add_block([-self.true])
-
-    def add_constraint(self, l, c, r):
-        ll = len(self.mips) * [0]
-        for v in l:
-            ll[v.idx] = self.mips[v.idx].value
-            self.mips[v.idx].value = 1
-            self.mips[v.idx].constraint.clear()
-            self.mips[v.idx].constraint.append(v)
-        pixie.add_constraint(ll, c, r)
-        if isinstance(r, Entity):
-            r.value = 1
-            r.constraint.clear()
-            r.constraint.append(v)
-
-    @staticmethod
-    def set_integer_condition(c):
-        pixie.set_integer_condition(c)
-
-    def maximize(self, objective):
-        ll = len(self.mips) * [0]
-        for v in objective.constraint:
-            ll[v.idx] = self.mips[v.idx].value
-        pixie.add_objective(ll)
-        mips = pixie.maximize()
-        return pixie.optimal(), mips
-
-    def minimize(self, objective):
-        ll = len(self.mips) * [0]
-        for v in objective.constraint:
-            ll[v.idx] = self.mips[v.idx].value
-        pixie.add_objective([-d for d in ll])
-        mips = pixie.minimize()
-        return -pixie.optimal(), mips
 
     @property
     def zero(self):

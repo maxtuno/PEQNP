@@ -25,7 +25,6 @@ The standard high level library for the PEQNP system.
 
 from .gaussian import Gaussian
 from .rational import Rational
-from .linear import Linear
 from .solver import *
 
 csp = None
@@ -42,7 +41,7 @@ def version():
     Print the current version of the system.
     :return:
     """
-    print('PEQNP - 0.3.0 - 31-1-2020')
+    print('PEQNP - 0.3.4 - 31-1-2020')
 
 
 def engine(bits=None, deep=None, approximate=False):
@@ -150,7 +149,7 @@ def subset(data, k, empty=None):
     return subset_
 
 
-def vector(key=None, bits=None, size=None, is_rational=False, is_gaussian=False, is_mip=False, is_real=False):
+def vector(key=None, bits=None, size=None, is_rational=False, is_gaussian=False):
     """
     A vector of integers.
     :param key: The generic name for the array this appear indexed on cnf.
@@ -158,8 +157,6 @@ def vector(key=None, bits=None, size=None, is_rational=False, is_gaussian=False,
     :param size: The bits of the vector.
     :param is_rational: Indicate of is a Rational vector.
     :param is_gaussian: Indicate of is a Gaussian Integers vector.
-    :param is_mip: Indicate of is a MIP vector.
-    :param is_real: Indicate of is a MIP vector and is real or int.
     :return: An instance of vector.
     """
     global csp
@@ -168,25 +165,17 @@ def vector(key=None, bits=None, size=None, is_rational=False, is_gaussian=False,
         return [rational() for _ in range(size)]
     if is_gaussian:
         return [gaussian() for _ in range(size)]
-    if is_mip:
-        lns = []
-        for _ in range(size):
-            lns.append(linear(is_real=is_real))
-        return lns
-    else:
-        array_ = csp.array(key=key, size=bits, dimension=size)
-        csp.variables += array_
+    array_ = csp.array(key=key, size=bits, dimension=size)
+    csp.variables += array_
     return array_
 
 
-def matrix(key=None, bits=None, dimensions=None, is_mip=False, is_real=False):
+def matrix(key=None, bits=None, dimensions=None):
     """
     A matrix of integers.
     :param key: The generic name for the array this appear indexed on cnf.
     :param bits: The bit bits for each integer.
     :param dimensions: An tuple with the dimensions for the array (n, m).
-    :param is_mip: Indicate of is a MIP vector.
-    :param is_real: Indicate of is a MIP vector and is real or int.
     :return: An instance of Matrix.
     """
     global csp
@@ -194,14 +183,9 @@ def matrix(key=None, bits=None, dimensions=None, is_mip=False, is_real=False):
     matrix_ = []
     for i in range(dimensions[0]):
         row = []
-        lns = []
         for j in range(dimensions[1]):
-            if is_mip:
-                lns.append(linear(is_real=is_real))
-                row.append(lns[-1])
-            else:
-                csp.variables.append(integer(key='{}_{}_{}'.format(key, i, j) if key is not None else key, bits=bits))
-                row.append(csp.variables[-1])
+            csp.variables.append(integer(key='{}_{}_{}'.format(key, i, j) if key is not None else key, bits=bits))
+            row.append(csp.variables[-1])
         matrix_.append(row)
     return matrix_
 
@@ -495,64 +479,6 @@ def sqrt(x):
     global csp
     check_engine()
     return csp.sqrt(x)
-
-
-def linear(is_real=False):
-    """
-    Create a linear variable.
-    :param is_real: If true, the variable is a real number if not an integer.
-    :return: The new variable.
-    """
-    global csp
-    check_engine()
-    csp.mips.append(Linear(csp, len(csp.mips), is_real=is_real))
-    return csp.mips[-1]
-
-
-def maximize(objective):
-    """
-    Maximize the objective, according to the current linear constrains.
-    :param objective: An standard linear expression.
-    :return: the values of the model in order of variable creation.
-    """
-    global csp
-    ints = []
-    for var in csp.mips:
-        if var.is_real:
-            ints.append(0)
-        else:
-            ints.append(1)
-    csp.set_integer_condition(ints)
-    opt, result = csp.maximize(objective)
-    for v, r in zip(csp.mips, result):
-        if not v.is_real:
-            v.value = int(r)
-        else:
-            v.value = r
-    return opt
-
-
-def minimize(objective):
-    """
-    Minimize the objective, according to the current linear constrains.
-    :param objective: An standard linear expression.
-    :return: the values of the model in order of variable creation.
-    """
-    global csp
-    ints = []
-    for var in csp.mips:
-        if var.is_real:
-            ints.append(0)
-        else:
-            ints.append(1)
-    csp.set_integer_condition(ints)
-    opt, result = csp.minimize(objective)
-    for v, r in zip(csp.mips, result):
-        if not v.is_real:
-            v.value = int(r)
-        else:
-            v.value = r
-    return opt
 
 
 # ///////////////////////////////////////////////////////////////////////////////
