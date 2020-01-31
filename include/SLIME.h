@@ -132,7 +132,6 @@ PyObject *reset(PyObject *self, PyObject *args) {
 
 PyObject *add_clause(PyObject *self, PyObject *args) {
     PyObject *pList;
-    PyObject *pItem;
     Py_ssize_t n;
     int i;
 
@@ -145,13 +144,14 @@ PyObject *add_clause(PyObject *self, PyObject *args) {
 
     n = PyList_Size(pList);
     for (i = 0; i < n; i++) {
-        pItem = PyList_GetItem(pList, i);
+        PyObject *pItem = PyList_GetItem(pList, i);
         int lit = PyLong_AsLong(pItem);
         v = abs(lit) - 1;
         while (v >= S->nVars())
             S->newVar();
         clause.push((lit > 0) ? mkLit(v) : ~mkLit(v));
     }
+    Py_DECREF(pList);
 
     S->addClause(clause);
 

@@ -23,7 +23,6 @@ PyObject *reset(PyObject *self, PyObject *args) {
 
 PyObject *add_objective(PyObject *self, PyObject *args) {
     PyObject *pList;
-    PyObject *pItem;
     Py_ssize_t n;
     int i;
 
@@ -36,10 +35,12 @@ PyObject *add_objective(PyObject *self, PyObject *args) {
 
     n = PyList_Size(pList);
     for (i = 0; i < n; i++) {
-        pItem = PyList_GetItem(pList, i);
+        PyObject *pItem = PyList_GetItem(pList, i);
         double var = PyFloat_AsDouble(pItem);
+        Py_DECREF(pItem);
         constraint.push_back(var);
     }
+    Py_DECREF(pList);
 
     mip->add_objective(constraint);
 
@@ -63,8 +64,10 @@ PyObject *set_integer_condition(PyObject *self, PyObject *args) {
     for (i = 0; i < n; i++) {
         pItem = PyList_GetItem(pList, i);
         int var = PyLong_AsLong(pItem);
+        Py_DECREF(pItem);
         constraint.push_back(var == 1);
     }
+    Py_DECREF(pList);
 
     mip->set_integer_condition(constraint);
 

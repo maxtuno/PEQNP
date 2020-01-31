@@ -117,7 +117,7 @@ Solver::Solver()
       my_var_decay(0.6), DISTANCE(true), var_iLevel_inc(1), order_heap_distance(VarOrderLt(activity_distance))
 
 {
-
+    log = false;
 }
 
 Solver::~Solver() {}
@@ -777,19 +777,20 @@ Lit Solver::pickBranchLit() {
             next = order_heap.removeMin();
         }
 
-    /* SLIME -- Copyright (c) 2019, Oscar Riveros, oscar.riveros@peqnp.science, Santiago, Chile. https://maxtuno.github.io/slime-sat-solver */
-    /* SLIME SAT Solver and The BOOST Heuristic or Variations cannot be used on any contest without express permissions of Oscar Riveros. */
     if (!VSIDS) {
-        polarity[trail.size()] = !polarity[trail.size()];
-        local = trail.size();
-        if (local > global) {
-            global = local;
+        if (boost) {
+            polarity[trail.size()] = !polarity[trail.size()];
+        }
+        if (trail.size() > global) {
+            global = trail.size();
             if (log) {
                 printf("\rc %.2f %% \t ", 100.0 * (nVars() - global) / nVars());
                 fflush(stdout);
             }
-        } else if (local < global) {
-            polarity[trail.size()] = !polarity[trail.size()];
+        } else if (trail.size() < global) {
+            if (boost) {
+                polarity[trail.size()] = !polarity[trail.size()];
+            }
         }
     }
 
@@ -1547,22 +1548,23 @@ lbool Solver::search(int &nof_conflicts) {
             if (VSIDS)
                 varDecayActivity();
             claDecayActivity();
-        } else {
-/* SLIME -- Copyright (c) 2019, Oscar Riveros, oscar.riveros@peqnp.science, Santiago, Chile. https://maxtuno.github.io/slime-sat-solver */
-            /* SLIME SAT Solver and The BOOST Heuristic or Variations cannot be used on any contest without express permissions of Oscar Riveros. */
-            if (VSIDS) {
+            if (boost) {
                 polarity[trail.size()] = !polarity[trail.size()];
-                local = trail.size();
-                if (local > global) {
-                    global = local;
+            }
+            if (VSIDS) {
+                if (trail.size() > global) {
+                    global = trail.size();
                     if (log) {
                         printf("\rc %.2f %% \t ", 100.0 * (nVars() - global) / nVars());
                         fflush(stdout);
                     }
-                } else if (local < global) {
-                    polarity[trail.size()] = !polarity[trail.size()];
+                } else if (trail.size() < global) {
+                    if (boost) {
+                        polarity[trail.size()] = !polarity[trail.size()];
+                    }
                 }
             }
+        } else {
             // NO CONFLICT
             bool restart = false;
             if (!VSIDS) {

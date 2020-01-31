@@ -61,7 +61,7 @@ namespace SLIME {
 class Solver {
   protected:
     bool log, boost;
-    int global, local;
+    int global;
 
   private:
     template <typename T> class MyQueue {

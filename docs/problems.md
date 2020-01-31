@@ -242,3 +242,86 @@ else:
 p size 3
 0 3 4
 ```
+
+# Multidimensional Latin Squares
+
+```python
+import numpy as np
+from peqnp import *
+
+n = 5
+m = 3
+
+engine(n.bit_length())
+
+Y = vector(size=n ** m)
+
+apply_single(Y, lambda k: k < n)
+
+Y = np.reshape(Y, newshape=(m * [n]))
+
+for i in range(n):
+    all_different(Y[i])
+    all_different(Y.T[i])
+    for j in range(n):
+        all_different(Y[i][j])
+        all_different(Y.T[i][j])
+
+for idx in hyper_loop(m - 1, n):
+    s = Y
+    for i in idx:
+        s = s[i]
+        all_different(s)
+        all_different(s.T)
+
+if satisfy(turbo=True, boost=True, log=True):
+    y = np.vectorize(int)(Y).reshape(m * [n])
+    print(y)
+    print(80 * '-')
+else:
+    print('Infeasible ...')
+```
+
+```
+[[[4 1 5 2 3 0]
+  [1 5 2 4 0 3]
+  [5 2 3 0 4 1]
+  [2 4 0 3 1 5]
+  [0 3 4 1 5 2]
+  [3 0 1 5 2 4]]
+
+ [[5 0 4 3 1 2]
+  [0 4 3 5 2 1]
+  [4 3 2 1 5 0]
+  [3 5 1 2 0 4]
+  [2 1 0 4 3 5]
+  [1 2 5 0 4 3]]
+
+ [[0 4 3 5 2 1]
+  [5 0 4 3 1 2]
+  [3 5 1 2 0 4]
+  [4 3 2 1 5 0]
+  [1 2 5 0 4 3]
+  [2 1 0 4 3 5]]
+
+ [[1 5 2 4 0 3]
+  [4 1 5 2 3 0]
+  [2 4 0 3 1 5]
+  [5 2 3 0 4 1]
+  [3 0 1 5 2 4]
+  [0 3 4 1 5 2]]
+
+ [[3 2 1 0 4 5]
+  [2 3 0 1 5 4]
+  [0 1 5 4 3 2]
+  [1 0 4 5 2 3]
+  [4 5 3 2 1 0]
+  [5 4 2 3 0 1]]
+
+ [[2 3 0 1 5 4]
+  [3 2 1 0 4 5]
+  [1 0 4 5 2 3]
+  [0 1 5 4 3 2]
+  [5 4 2 3 0 1]
+  [4 5 3 2 1 0]]]
+```

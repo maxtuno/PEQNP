@@ -57,9 +57,6 @@ int main(int argc, char *argv[]) {
 
     SimpSolver S;
 
-    S.log = true;
-    S.boost = true;
-
 #ifdef DRAT
     if (argc > 3) {
         S.drup_file = fopen(argv[3], "wb");

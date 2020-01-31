@@ -1,6 +1,6 @@
 # PEQNP
 
-A Multi Paradigm Constrain Satisfaction Solver.
+The PEQNP System its a automatic CNF encoder and SAT Solver for General Constrained Diophantine Equations and NP-Complete Problems, full integrated with Python 3.
 
 # SLIME 4
 A Free World Class High Performance SAT Solver
@@ -21,56 +21,86 @@ To install the latest version:
 
     pip install PEQNP --upgrade
     
-Schur Triples problem: (Strong NP-Complete):
+Latin Hyper Cubes:
 
-    # ref: https://cstheory.stackexchange.com/questions/16253/list-of-strongly-np-hard-problems-with-numerical-data
-    
-    import random
-    
+    import numpy as np
     from peqnp import *
     
-    bits = 7
-    size = 3 * 3
+    n = 6
+    m = 3
     
-    triplets = []
-    while len(triplets) < size:
-        a = random.randint(1, 2 ** bits)
-        b = random.randint(1, 2 ** bits)
-        if a != b and a not in triplets and b not in triplets and a + b not in triplets:
-            triplets += [a, b, a + b]
-    triplets.sort()
-    print(triplets)
-    print()
+    engine(n.bit_length() + 1)
     
-    engine(bits=max(triplets).bit_length())
+    Y = vector(size=n ** m)
     
-    xs, ys = permutations(triplets, size)
+    apply_single(Y, lambda k: k < n)
     
-    for i in range(0, size, 3):
-        assert ys[i] + ys[i + 1] == ys[i + 2]
+    Y = np.reshape(Y, newshape=(m * [n]))
     
-    if satisfy(turbo=True):
-        for i in range(0, size, 3):
-            print('{} == {} + {}'.format(ys[i + 2], ys[i], ys[i + 1]))
+    for i in range(n):
+        all_different(Y[i])
+        all_different(Y.T[i])
+        for j in range(n):
+            all_different(Y[i][j])
+            all_different(Y.T[i][j])
+    
+    for idx in hyper_loop(m - 1, n):
+        s = Y
+        for i in idx:
+            s = s[i]
+            all_different(s)
+            all_different(s.T)
+    
+    if satisfy(turbo=True, boost=True, log=True):
+        y = np.vectorize(int)(Y).reshape(m * [n])
+        print(y)
+        print(80 * '-')
     else:
         print('Infeasible ...')
 
-            
 Output:
 
-    [7, 9, 19, 20, 32, 48, 53, 59, 67, 76, 82, 84, 85, 100, 103, 108, 109, 112, 113, 115, 116, 119, 125, 132, 144, 148, 172, 192, 201, 218]
-    
-    132 == 112 + 20
-    85 == 53 + 32
-    192 == 108 + 84
-    201 == 119 + 82
-    144 == 125 + 19
-    172 == 59 + 113
-    218 == 115 + 103
-    148 == 48 + 100
-    76 == 67 + 9
-    116 == 7 + 109
-
+     [[[4 1 5 2 3 0]
+       [1 5 2 4 0 3]
+       [5 2 3 0 4 1]
+       [2 4 0 3 1 5]
+       [0 3 4 1 5 2]
+       [3 0 1 5 2 4]]
+     
+      [[5 0 4 3 1 2]
+       [0 4 3 5 2 1]
+       [4 3 2 1 5 0]
+       [3 5 1 2 0 4]
+       [2 1 0 4 3 5]
+       [1 2 5 0 4 3]]
+     
+      [[0 4 3 5 2 1]
+       [5 0 4 3 1 2]
+       [3 5 1 2 0 4]
+       [4 3 2 1 5 0]
+       [1 2 5 0 4 3]
+       [2 1 0 4 3 5]]
+     
+      [[1 5 2 4 0 3]
+       [4 1 5 2 3 0]
+       [2 4 0 3 1 5]
+       [5 2 3 0 4 1]
+       [3 0 1 5 2 4]
+       [0 3 4 1 5 2]]
+     
+      [[3 2 1 0 4 5]
+       [2 3 0 1 5 4]
+       [0 1 5 4 3 2]
+       [1 0 4 5 2 3]
+       [4 5 3 2 1 0]
+       [5 4 2 3 0 1]]
+     
+      [[2 3 0 1 5 4]
+       [3 2 1 0 4 5]
+       [1 0 4 5 2 3]
+       [0 1 5 4 3 2]
+       [5 4 2 3 0 1]
+       [4 5 3 2 1 0]]]
     
 More Examples https://github.com/maxtuno/PEQNP/tree/master/examples
 
@@ -91,9 +121,13 @@ https://www.facebook.com/PEQNP-104747814228901
 Documentation
 https://peqnp.readthedocs.io
 
+### version 0.2.8
+- Better memory management from python native code.
+- This increases the resolution speed considerably.
+
 ### version 0.2.5
-- SLIME 4 Updated to SAT RACE Performance
-- Add the TENSOR object
+- SLIME 4 Updated to SAT RACE Performance.
+- Add the TENSOR object.
 - Examples on use of tensor.
 
 ### version 0.2.4

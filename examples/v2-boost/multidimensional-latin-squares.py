@@ -25,10 +25,10 @@ from peqnp import *
 
 if __name__ == '__main__':
 
-    n = 5
+    n = 6
     m = 3
 
-    engine(n.bit_length())
+    engine(n.bit_length() + 1)
 
     Y = vector(size=n ** m)
 

@@ -42,21 +42,22 @@ def version():
     Print the current version of the system.
     :return:
     """
-    print('PEQNP - 0.2.5 - 27-1-2020')
+    print('PEQNP - 0.2.8 - 31-1-2020')
 
 
-def engine(bits=None, deep=None):
+def engine(bits=None, deep=None, approximate=False):
     """
     Initialize and reset the internal state of solver engine.
     :param bits: The bits 2 ** bits - 1 of solving space.
     :param deep: The scope for the exponential variables bits / 4 by default.
+    :param approximate: Use the HESS engine.
     :return:
     """
     global csp
     if bits is None:
-        csp = CSP(0, deep)
+        csp = CSP(0, deep, approximate)
     else:
-        csp = CSP(bits, deep)
+        csp = CSP(bits, deep, approximate)
 
 
 def slime4(cnf_path, model_path='', proof_path=''):

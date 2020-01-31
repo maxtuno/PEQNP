@@ -26,11 +26,12 @@ from peqnp.entity import Entity
 
 
 class CSP:
-    def __init__(self, bits=None, deep=None):
+    def __init__(self, bits=None, deep=None, hess=False):
         slime.reset()
         pixie.reset()
         import sys
         sys.setrecursionlimit(1 << 16)
+        self.hess = hess
         self.mips = []
         self.variables = []
         self.map = {}
@@ -62,10 +63,6 @@ class CSP:
     @staticmethod
     def set_integer_condition(c):
         pixie.set_integer_condition(c)
-
-    @staticmethod
-    def show_lp():
-        pixie.show_lp()
 
     def maximize(self, objective):
         ll = len(self.mips) * [0]
@@ -140,6 +137,7 @@ class CSP:
                     self.add_block([block[i]])
                 n //= 2
             return block
+
         return __encode(value, size)
 
     def or_gate(self, il, ol=None):
