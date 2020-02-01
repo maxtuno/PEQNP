@@ -35,14 +35,13 @@ if __name__ == '__main__':
     n = 4
     k = 3
 
-    engine(8)
+    engine(10)
 
     c = integer()
 
     X = np.reshape(vector(size=(n ** k)), newshape=k * [n])
 
     apply_single(X.flatten(), lambda x: x > 0)
-    all_different(X.flatten()[n:])
 
     for x in X:
         for i in range(n):
@@ -50,10 +49,44 @@ if __name__ == '__main__':
             assert sum(x.T[i]) == c
         assert sum([x[i][i] for i in range(n)]) == c
         assert sum([x[n - 1 - i][i] for i in range(n)]) == c
+
     assert sum([X[i][i][i] for i in range(n)]) == c
     assert sum([X[n - 1 - i][i][i] for i in range(n)]) == c
     assert sum([X[i][n - 1 - i][i] for i in range(n)]) == c
     assert sum([X[i][i][n - 1 - i] for i in range(n)]) == c
+
+    for i in range(n):
+        assert sum([X[i][j][j] for j in range(n)]) == c
+        assert sum([X[j][i][j] for j in range(n)]) == c
+        assert sum([X[j][j][i] for j in range(n)]) == c
+
+        assert sum([X[j][i][i] for j in range(n)]) == c
+        assert sum([X[i][j][i] for j in range(n)]) == c
+        assert sum([X[i][i][j] for j in range(n)]) == c
+
+        assert sum([X.T[i][j][j] for j in range(n)]) == c
+        assert sum([X.T[j][i][j] for j in range(n)]) == c
+        assert sum([X.T[j][j][i] for j in range(n)]) == c
+
+        assert sum([X.T[j][i][i] for j in range(n)]) == c
+        assert sum([X.T[i][j][i] for j in range(n)]) == c
+        assert sum([X.T[i][i][j] for j in range(n)]) == c
+
+        assert sum([X[i].T[j][j] for j in range(n)]) == c
+        assert sum([X[j].T[i][j] for j in range(n)]) == c
+        assert sum([X[j].T[j][i] for j in range(n)]) == c
+
+        assert sum([X[j].T[i][i] for j in range(n)]) == c
+        assert sum([X[i].T[j][i] for j in range(n)]) == c
+        assert sum([X[i].T[i][j] for j in range(n)]) == c
+
+        assert sum([X[i][j].T[j] for j in range(n)]) == c
+        assert sum([X[j][i].T[j] for j in range(n)]) == c
+        assert sum([X[j][j].T[i] for j in range(n)]) == c
+
+        assert sum([X[j][i].T[i] for j in range(n)]) == c
+        assert sum([X[i][j].T[i] for j in range(n)]) == c
+        assert sum([X[i][i].T[j] for j in range(n)]) == c
 
     if satisfy(turbo=True, boost=True, log=True):
         print(80 * '-')
@@ -80,28 +113,28 @@ if __name__ == '__main__':
     c                                          
     c         http://www.peqnp.science         
     c                                          
-    c Reduced to 11270 vars, 63081 cls (grow=0)
-    c 48.82 % 	 
+    c Reduced to 8490 vars, 55376 cls (grow=0)
+    c 33.29 % 	 
     --------------------------------------------------------------------------------
-    [[[128 54 37 1]
-      [10 33 82 95]
-      [16 71 34 99]
-      [66 62 67 25]]
+    [[[378 113 231 222]
+      [316 254 173 201]
+      [6 305 212 421]
+      [244 272 328 100]]
     
-     [[47 70 15 88]
-      [76 73 3 68]
-      [32 64 80 44]
-      [65 13 122 20]]
+     [[98 239 527 80]
+      [177 179 172 416]
+      [347 370 223 4]
+      [322 156 22 444]]
     
-     [[86 38 22 74]
-      [30 110 69 11]
-      [51 24 17 128]
-      [53 48 112 7]]
+     [[96 335 99 414]
+      [581 249 102 12]
+      [139 300 293 212]
+      [128 60 450 306]]
     
-     [[5 154 40 21]
-      [9 57 6 148]
-      [14 1 156 49]
-      [192 8 18 2]]]
+     [[372 75 269 228]
+      [124 262 211 347]
+      [198 255 216 275]
+      [250 352 248 94]]]
     --------------------------------------------------------------------------------
-    TIME : 0.6833 (s)
+    TIME : 52.89 (s)
     """
