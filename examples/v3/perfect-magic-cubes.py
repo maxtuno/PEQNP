@@ -35,65 +35,120 @@ if __name__ == '__main__':
     n = 5
     k = 3
 
-    engine(16)
+    engine(6)
 
     c = integer()
 
     X = np.reshape(vector(size=(n ** k)), newshape=k * [n])
 
     apply_single(X.flatten(), lambda x: x > 0)
+    # different = ?
+    # all_different(X.flatten()[:different])
 
     for x in X:
         for i in range(n):
             assert sum(x[i]) == c
+            assert sum(x[n - 1 - i]) == c
             assert sum(x.T[i]) == c
+            assert sum(x.T[n - 1 - i]) == c
         assert sum([x[i][i] for i in range(n)]) == c
         assert sum([x[n - 1 - i][i] for i in range(n)]) == c
+        assert sum([x[i][n - 1 - i] for i in range(n)]) == c
+        assert sum([x[n - 1 - i][n - 1 - i] for i in range(n)]) == c
+        assert sum([x.T[i][i] for i in range(n)]) == c
+        assert sum([x.T[n - 1 - i][i] for i in range(n)]) == c
+        assert sum([x.T[i][n - 1 - i] for i in range(n)]) == c
+        assert sum([x.T[n - 1 - i][n - 1 - i] for i in range(n)]) == c
 
     for x in X.T:
         for i in range(n):
             assert sum(x[i]) == c
+            assert sum(x[n - 1 - i]) == c
             assert sum(x.T[i]) == c
+            assert sum(x.T[n - 1 - i]) == c
         assert sum([x[i][i] for i in range(n)]) == c
         assert sum([x[n - 1 - i][i] for i in range(n)]) == c
+        assert sum([x[i][n - 1 - i] for i in range(n)]) == c
+        assert sum([x[n - 1 - i][n - 1 - i] for i in range(n)]) == c
+        assert sum([x.T[i][i] for i in range(n)]) == c
+        assert sum([x.T[n - 1 - i][i] for i in range(n)]) == c
+        assert sum([x.T[i][n - 1 - i] for i in range(n)]) == c
+        assert sum([x.T[n - 1 - i][n - 1 - i] for i in range(n)]) == c
 
     assert sum([X[i][i][i] for i in range(n)]) == c
-    assert sum([X[n - 1 - i][i][i] for i in range(n)]) == c
-    assert sum([X[i][n - 1 - i][i] for i in range(n)]) == c
     assert sum([X[i][i][n - 1 - i] for i in range(n)]) == c
+    assert sum([X[i][n - 1 - i][i] for i in range(n)]) == c
+    assert sum([X[i][n - 1 - i][n - 1 - i] for i in range(n)]) == c
+    assert sum([X[n - 1 - i][i][i] for i in range(n)]) == c
+    assert sum([X[n - 1 - i][i][n - 1 - i] for i in range(n)]) == c
+    assert sum([X[n - 1 - i][n - 1 - i][i] for i in range(n)]) == c
+    assert sum([X[n - 1 - i][n - 1 - i][n - 1 - i] for i in range(n)]) == c
 
-    for i in range(n):
-        assert sum([X[i][j][j] for j in range(n)]) == c
-        assert sum([X[j][i][j] for j in range(n)]) == c
-        assert sum([X[j][j][i] for j in range(n)]) == c
+    assert sum([X.T[i][i][i] for i in range(n)]) == c
+    assert sum([X.T[i][i][n - 1 - i] for i in range(n)]) == c
+    assert sum([X.T[i][n - 1 - i][i] for i in range(n)]) == c
+    assert sum([X.T[i][n - 1 - i][n - 1 - i] for i in range(n)]) == c
+    assert sum([X.T[n - 1 - i][i][i] for i in range(n)]) == c
+    assert sum([X.T[n - 1 - i][i][n - 1 - i] for i in range(n)]) == c
+    assert sum([X.T[n - 1 - i][n - 1 - i][i] for i in range(n)]) == c
+    assert sum([X.T[n - 1 - i][n - 1 - i][n - 1 - i] for i in range(n)]) == c
 
-        assert sum([X[j][i][i] for j in range(n)]) == c
-        assert sum([X[i][j][i] for j in range(n)]) == c
-        assert sum([X[i][i][j] for j in range(n)]) == c
+    for j in range(n):
+        assert sum([X[j][i][i] for i in range(n)]) == c
+        assert sum([X[j][i][n - 1 - i] for i in range(n)]) == c
+        assert sum([X[j][n - 1 - i][i] for i in range(n)]) == c
+        assert sum([X[j][n - 1 - i][n - 1 - i] for i in range(n)]) == c
+        assert sum([X[n - 1 - j][i][i] for i in range(n)]) == c
+        assert sum([X[n - 1 - j][i][n - 1 - i] for i in range(n)]) == c
+        assert sum([X[n - 1 - j][n - 1 - i][i] for i in range(n)]) == c
+        assert sum([X[n - 1 - j][n - 1 - i][n - 1 - i] for i in range(n)]) == c
 
-        assert sum([X.T[i][j][j] for j in range(n)]) == c
-        assert sum([X.T[j][i][j] for j in range(n)]) == c
-        assert sum([X.T[j][j][i] for j in range(n)]) == c
+        assert sum([X.T[j][i][i] for i in range(n)]) == c
+        assert sum([X.T[j][i][n - 1 - i] for i in range(n)]) == c
+        assert sum([X.T[j][n - 1 - i][i] for i in range(n)]) == c
+        assert sum([X.T[j][n - 1 - i][n - 1 - i] for i in range(n)]) == c
+        assert sum([X.T[n - 1 - j][i][i] for i in range(n)]) == c
+        assert sum([X.T[n - 1 - j][i][n - 1 - i] for i in range(n)]) == c
+        assert sum([X.T[n - 1 - j][n - 1 - i][i] for i in range(n)]) == c
+        assert sum([X.T[n - 1 - j][n - 1 - i][n - 1 - i] for i in range(n)]) == c
 
-        assert sum([X.T[j][i][i] for j in range(n)]) == c
-        assert sum([X.T[i][j][i] for j in range(n)]) == c
-        assert sum([X.T[i][i][j] for j in range(n)]) == c
+    for j in range(n):
+        assert sum([X[i][j][i] for i in range(n)]) == c
+        assert sum([X[i][j][n - 1 - i] for i in range(n)]) == c
+        assert sum([X[i][n - 1 - j][i] for i in range(n)]) == c
+        assert sum([X[i][n - 1 - j][n - 1 - i] for i in range(n)]) == c
+        assert sum([X[n - 1 - i][j][i] for i in range(n)]) == c
+        assert sum([X[n - 1 - i][j][n - 1 - i] for i in range(n)]) == c
+        assert sum([X[n - 1 - i][n - 1 - j][i] for i in range(n)]) == c
+        assert sum([X[n - 1 - i][n - 1 - j][n - 1 - i] for i in range(n)]) == c
 
-        assert sum([X[i].T[j][j] for j in range(n)]) == c
-        assert sum([X[j].T[i][j] for j in range(n)]) == c
-        assert sum([X[j].T[j][i] for j in range(n)]) == c
+        assert sum([X.T[i][j][i] for i in range(n)]) == c
+        assert sum([X.T[i][j][n - 1 - i] for i in range(n)]) == c
+        assert sum([X.T[i][n - 1 - j][i] for i in range(n)]) == c
+        assert sum([X.T[i][n - 1 - j][n - 1 - i] for i in range(n)]) == c
+        assert sum([X.T[n - 1 - i][j][i] for i in range(n)]) == c
+        assert sum([X.T[n - 1 - i][j][n - 1 - i] for i in range(n)]) == c
+        assert sum([X.T[n - 1 - i][n - 1 - j][i] for i in range(n)]) == c
+        assert sum([X.T[n - 1 - i][n - 1 - j][n - 1 - i] for i in range(n)]) == c
 
-        assert sum([X[j].T[i][i] for j in range(n)]) == c
-        assert sum([X[i].T[j][i] for j in range(n)]) == c
-        assert sum([X[i].T[i][j] for j in range(n)]) == c
+    for j in range(n):
+        assert sum([X[i][i][j] for i in range(n)]) == c
+        assert sum([X[i][i][n - 1 - j] for i in range(n)]) == c
+        assert sum([X[i][n - 1 - i][j] for i in range(n)]) == c
+        assert sum([X[i][n - 1 - i][n - 1 - j] for i in range(n)]) == c
+        assert sum([X[n - 1 - i][i][j] for i in range(n)]) == c
+        assert sum([X[n - 1 - i][i][n - 1 - j] for i in range(n)]) == c
+        assert sum([X[n - 1 - i][n - 1 - i][j] for i in range(n)]) == c
+        assert sum([X[n - 1 - i][n - 1 - i][n - 1 - j] for i in range(n)]) == c
 
-        assert sum([X[i][j].T[j] for j in range(n)]) == c
-        assert sum([X[j][i].T[j] for j in range(n)]) == c
-        assert sum([X[j][j].T[i] for j in range(n)]) == c
-
-        assert sum([X[j][i].T[i] for j in range(n)]) == c
-        assert sum([X[i][j].T[i] for j in range(n)]) == c
-        assert sum([X[i][i].T[j] for j in range(n)]) == c
+        assert sum([X.T[i][i][j] for i in range(n)]) == c
+        assert sum([X.T[i][i][n - 1 - j] for i in range(n)]) == c
+        assert sum([X.T[i][n - 1 - i][j] for i in range(n)]) == c
+        assert sum([X.T[i][n - 1 - i][n - 1 - j] for i in range(n)]) == c
+        assert sum([X.T[n - 1 - i][i][j] for i in range(n)]) == c
+        assert sum([X.T[n - 1 - i][i][n - 1 - j] for i in range(n)]) == c
+        assert sum([X.T[n - 1 - i][n - 1 - i][j] for i in range(n)]) == c
+        assert sum([X.T[n - 1 - i][n - 1 - i][n - 1 - j] for i in range(n)]) == c
 
     if satisfy(turbo=True, boost=True, log=True):
         print(80 * '-')
@@ -120,38 +175,38 @@ if __name__ == '__main__':
     c                                          
     c         http://www.peqnp.science         
     c                                          
-    c Reduced to 32028 vars, 212208 cls (grow=0)
-    c 28.82 % 	 
+    c Reduced to 23804 vars, 154833 cls (grow=0)
+    c 32.21 % 	 
     --------------------------------------------------------------------------------
-    [[[5985 3655 2706 36831 14357]
-      [3477 17466 30319 10070 2202]
-      [25358 6392 21980 2 9802]
-      [22535 10948 5337 2822 21892]
-      [6179 25073 3192 13809 15281]]
+    [[[9 19 6 10 16]
+      [14 6 13 16 11]
+      [13 9 23 11 4]
+      [21 2 6 12 19]
+      [3 24 12 11 10]]
     
-     [[2667 20095 16296 987 23489]
-      [17058 25309 12693 6237 2237]
-      [6836 6894 3121 36371 10312]
-      [16431 10145 29119 6390 1449]
-      [20542 1091 2305 13549 26047]]
+     [[16 7 31 5 1]
+      [6 25 4 16 9]
+      [10 2 4 17 27]
+      [4 15 17 8 16]
+      [24 11 4 14 7]]
     
-     [[13067 20270 19750 7762 2685]
-      [8219 864 8704 8232 37515]
-      [21769 297 13845 9720 17903]
-      [921 19214 5226 34250 3923]
-      [19558 22889 16009 3570 1508]]
+     [[11 16 8 10 15]
+      [11 7 2 16 24]
+      [25 4 12 12 7]
+      [12 16 14 17 1]
+      [1 17 24 5 13]]
     
-     [[30009 7707 18891 814 6113]
-      [7349 16212 11487 16475 12011]
-      [2499 13517 6896 16271 24351]
-      [12572 22945 9261 4057 14699]
-      [11105 3153 16999 25917 6360]]
+     [[8 15 11 17 9]
+      [12 14 15 11 8]
+      [8 23 12 14 3]
+      [10 6 20 5 19]
+      [22 2 2 13 21]]
     
-     [[11806 11807 5891 17140 16890]
-      [27431 3683 331 22520 9569]
-      [7072 36434 17692 1170 1166]
-      [11075 282 14591 16015 21571]
-      [6150 11328 25029 6689 14338]]]
+     [[16 3 4 18 19]
+      [17 8 26 1 8]
+      [4 22 9 6 19]
+      [13 21 3 18 5]
+      [10 6 18 17 9]]]
     --------------------------------------------------------------------------------
-    TIME : 715.5 (s)
+    TIME : 133.4 (s)
     """
