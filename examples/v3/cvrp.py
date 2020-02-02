@@ -60,7 +60,7 @@ if __name__ == '__main__':
                     return sum(abs(loc[seq[i - 1]] - loc[seq[i]]) for i in range(len(seq)))
 
 
-                seq = hess_sequence(len(loc), oracle)
+                seq = hess_sequence(len(loc), oracle, fast=False)
 
                 ds.append((sub, loc, seq))
 
