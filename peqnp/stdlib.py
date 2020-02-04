@@ -41,22 +41,21 @@ def version():
     Print the current version of the system.
     :return:
     """
-    print('PEQNP - 0.3.4 - 31-1-2020')
+    print('PEQNP + SLIME X : 0.4.0 - 4-2-2020')
 
 
-def engine(bits=None, deep=None, approximate=False):
+def engine(bits=None, deep=None):
     """
     Initialize and reset the internal state of solver engine.
     :param bits: The bits 2 ** bits - 1 of solving space.
     :param deep: The scope for the exponential variables bits / 4 by default.
-    :param approximate: Use the HESS engine.
     :return:
     """
     global csp
     if bits is None:
-        csp = CSP(0, deep, approximate)
+        csp = CSP(0, deep)
     else:
-        csp = CSP(bits, deep, approximate)
+        csp = CSP(bits, deep)
 
 
 def slime4(cnf_path, model_path='', proof_path=''):
@@ -81,11 +80,10 @@ def integer(key=None, bits=None):
     global csp
     check_engine()
     csp.variables.append(csp.int(key=key, size=bits))
-    assert 0 <= csp.variables[-1] <= oo()
     return csp.variables[-1]
 
 
-def constant(value=None, bits=None):
+def constant(value, bits=None):
     """
     Correspond to an constant of value with bits bits.
     :param bits: The bits bits of the constant.
@@ -98,13 +96,12 @@ def constant(value=None, bits=None):
     return csp.variables[-1]
 
 
-def satisfy(solve=True, turbo=False, log=False, boost=False, assumptions=None, cnf_path='', model_path='', proof_path='', normalize=False):
+def satisfy(solve=True, turbo=False, log=False, assumptions=None, cnf_path='', model_path='', proof_path='', normalize=False):
     """
     Find a model for the current problem.
     :param solve: This indicate if the instance can be solved or not, its use in conjunction with cnf_path.
     :param turbo: This make a simplification of the model, is more fast to solve, but destroy the internal structure of the problem, need regenerate, and gent only one solution.
     :param log: Shot the log for the SLIME SAT Solver.
-    :param boost: Use BOOST heuristic.
     :param assumptions: A low level interrupt on the solver, this take a list with literals assumed true, and add to the hig level model.
     :param cnf_path: The path for the CNF representation of the problem, None by default and is not generated.
     :param model_path: The path for the MODEL of the problem, None by default and is not generated.
@@ -112,7 +109,7 @@ def satisfy(solve=True, turbo=False, log=False, boost=False, assumptions=None, c
     :param normalize: Indicate to the system that normalize integers from [2 ** (bits - 1), 2 ** bits - 1].
     :return: True if SATISFIABLE else False
     """
-    return csp.to_sat(csp.variables, solve=solve, turbo=turbo, log=log, boost=boost, assumptions=assumptions, cnf_path=cnf_path, model_path=model_path, proof_path=proof_path, normalize=normalize)
+    return csp.to_sat(csp.variables, solve=solve, turbo=turbo, log=log, assumptions=assumptions, cnf_path=cnf_path, model_path=model_path, proof_path=proof_path, normalize=normalize)
 
 
 def subsets(lst, k=None, key=None):

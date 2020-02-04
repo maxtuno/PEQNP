@@ -25,11 +25,10 @@ from peqnp.entity import Entity
 
 
 class CSP:
-    def __init__(self, bits=None, deep=None, hess=False):
+    def __init__(self, bits=None, deep=None):
         slime.reset()
         import sys
         sys.setrecursionlimit(1 << 16)
-        self.hess = hess
         self.mips = []
         self.variables = []
         self.map = {}
@@ -70,9 +69,6 @@ class CSP:
         self.map[key] = value
         return {key: value}
 
-    def constraint(self, args):
-        pass
-
     def create_block(self, size=None):
         if size:
             return [self.add_variable() for _ in range(size)]
@@ -108,59 +104,47 @@ class CSP:
     def or_gate(self, il, ol=None):
         if ol is None:
             ol = self.add_variable()
-
         fc = list(il)
         fc.append(-ol)
         self.add_block(fc)
-
         for lit in il:
             self.add_block([-lit, ol])
-
         return ol
 
     def and_gate(self, il, ol=None):
         if ol is None:
             ol = self.add_variable()
-
         fc = list(map(lambda x: -x, il))
         fc.append(ol)
         self.add_block(fc)
-
         for lit in il:
             self.add_block([lit, -ol])
-
         return ol
 
     def binary_xor_gate(self, il, ol=None):
         if ol is None:
             ol = self.add_variable()
         l1, l2 = il[0], il[1]
-
         self.add_block([l1, l2, -ol])
         self.add_block([-l1, -l2, -ol])
         self.add_block([l1, -l2, ol])
         self.add_block([-l1, l2, ol])
-
         return ol
 
     def binary_mux_gate(self, il, ol=None):
         if ol is None:
             ol = self.add_variable()
         sel, lhs, rhs = il[0], il[1], il[2]
-
         self.add_block([sel, lhs, -ol])
         self.add_block([sel, -lhs, ol])
         self.add_block([-sel, rhs, -ol])
         self.add_block([-sel, -rhs, ol])
-
         return ol
 
     def fas_gate(self, il, ol=None):
         if ol is None:
             ol = self.add_variable()
-
         lhs, rhs, c_in = il
-
         for x in [[lhs, rhs, c_in, -ol],
                   [lhs, -rhs, -c_in, -ol],
                   [lhs, -rhs, c_in, ol],
@@ -170,15 +154,12 @@ class CSP:
                   [-lhs, -rhs, c_in, -ol],
                   [-lhs, rhs, -c_in, -ol]]:
             self.add_block(x)
-
         return ol
 
     def fac_gate(self, il, ol=None):
         if ol is None:
             ol = self.add_variable()
-
         lhs, rhs, c_in = il
-
         for x in [[lhs, rhs, -ol],
                   [lhs, c_in, -ol],
                   [lhs, -rhs, -c_in, ol],
@@ -186,14 +167,12 @@ class CSP:
                   [-lhs, -rhs, ol],
                   [-lhs, -c_in, ol]]:
             self.add_block(x)
-
         return ol
 
     @staticmethod
     def gate_vector(bge, lhs_il, rhs_il, ol=None):
         if ol is None:
             ol = [None] * len(lhs_il)
-
         return [bge((lhs, rhs), ol) for lhs, rhs, ol in zip(lhs_il, rhs_il, ol)]
 
     def bv_and_gate(self, lhs_il, rhs_il, ol=None):
@@ -208,18 +187,13 @@ class CSP:
 
     def bv_rca_gate(self, lhs_il, rhs_il, carry_in_lit=None, ol=None, carry_out_lit=None):
         wt = min(len(lhs_il), len(rhs_il))
-
         if wt == 0:
             return []
-
         if ol is None:
             ol = [self.add_variable() for _ in range(0, wt)]
-
         ol = [o if o is not None else self.add_variable() for o in ol]
-
         crr = [self.add_variable() for _ in range(0, wt - 1)]
         crr.append(carry_out_lit)
-
         if carry_in_lit is not None:
             adi = (lhs_il[0], rhs_il[0], carry_in_lit)
             self.fas_gate(adi, ol[0])
@@ -230,13 +204,11 @@ class CSP:
             self.binary_xor_gate(adi, ol[0])
             if crr[0] is not None:
                 self.and_gate(adi, crr[0])
-
         for i in range(1, wt):
             adi = (lhs_il[i], rhs_il[i], crr[i - 1])
             self.fas_gate(adi, ol[i])
             if crr[i] is not None:
                 self.fac_gate(adi, crr[i])
-
         return ol
 
     def bv_rcs_gate(self, lhs_il, rhs_il, ol=None):
@@ -247,7 +219,6 @@ class CSP:
 
     def bv_pm_gate(self, lhs_il, rhs_il, ol=None, ow_lit=None):
         wt = len(lhs_il)
-
         if wt == 0:
             return []
 
@@ -258,7 +229,6 @@ class CSP:
             ol = __cfl(wt)
         else:
             ol = list(map(lambda l: self.add_variable() if l is None else l, ol))
-
         pp = [[ol[0]] + __cfl(wt - 1)]
         l_lhs = lhs_il[0]
         self.bv_and_gate(rhs_il, [l_lhs] * wt, pp[0])
@@ -268,7 +238,6 @@ class CSP:
             pp += [self.bv_and_gate(rhs_il[0:wt - i], [lhs_il[i]] * (wt - i)) for i in range(1, wt)]
         partial_sums = [([ol[i]] + __cfl(wt - i - 1)) for i in range(1, wt)]
         csc = __cfl(wt - 1) if ow_lit is not None else [None] * (wt - 1)
-
         cps = pp[0][1:wt]
         for i in range(1, wt):
             cpp = pp[i][0:wt - i]
@@ -276,49 +245,38 @@ class CSP:
             assert len(cps) == wt - i
             self.bv_rca_gate(lhs_il=cps, rhs_il=cpp, ol=psa, carry_out_lit=csc[i - 1])
             cps = psa[1:]
-
         if ow_lit is not None:
             ow = csc[:]
             for i in range(1, wt):
                 ow += pp[i][wt - i:wt]
             self.or_gate(ow, ow_lit)
-
         return ol
 
     def bv_ule_gate(self, lhs_il, rhs_il, ol=None):
         if ol is None:
             ol = self.add_variable()
-
         if len(lhs_il) == 0:
             self.add_block([ol])
             return ol
-
         if len(lhs_il) == 1:
             self.and_gate([lhs_il[0], -rhs_il[0]], -ol)
             return ol
-
         wt = len(lhs_il)
         rl = self.bv_ule_gate(lhs_il[:wt - 1], rhs_il[:wt - 1])
-
         lhs_msb, rhs_msb = lhs_il[wt - 1], rhs_il[wt - 1]
         msb_is_lt = self.and_gate([-lhs_msb, rhs_msb])
         msb_is_eq = -self.binary_xor_gate([lhs_msb, rhs_msb])
-
         leq_if_first_is_eq = self.and_gate([msb_is_eq, rl])
         return self.or_gate([msb_is_lt, leq_if_first_is_eq], ol)
 
     def bv_sle_gate(self, lhs_il, rhs_il, ol=None):
-
         if ol is None:
             ol = self.add_variable()
-
         if len(lhs_il) == 0:
             self.add_block([ol])
             return ol
-
         if len(lhs_il) == 1:
             return self.or_gate([lhs_il[0], -rhs_il[0]], ol)
-
         wt = len(lhs_il)
         lhs_msb = lhs_il[wt - 1]
         rhs_msb = rhs_il[wt - 1]
@@ -329,10 +287,8 @@ class CSP:
         return self.or_gate(il=[npos, sleq], ol=ol)
 
     def bv_eq_gate(self, lhs_il, rhs_il, ol=None):
-
         if ol is None:
             ol = self.add_variable()
-
         dif = self.bv_xor_gate(lhs_il, rhs_il)
         self.or_gate(dif, -ol)
         return ol
@@ -345,7 +301,6 @@ class CSP:
 
     def bv_lud_gate(self, lhs_il, rhs_il, ol=None, remainder_ol=None):
         wt = len(lhs_il)
-
         if wt == 0:
             return []
 
@@ -354,31 +309,22 @@ class CSP:
 
         cf = self.add_variable()
         self.add_block([-cf])
-
         dnz = self.stg_or_gate(il=rhs_il)
-
         qt = __cfl(wt)
-
         rem = list()
         for step_idx in reversed(range(0, wt)):
             rem = [lhs_il[step_idx]] + rem
-
             if len(rem) == len(rhs_il):
                 self.bv_ule_gate(lhs_il=rhs_il, rhs_il=rem, ol=qt[step_idx])
             else:
                 lbc = self.bv_ule_gate(lhs_il=rhs_il[0:len(rem)], rhs_il=rem)
                 hbc = dnz[len(rem)]
                 self.and_gate(il=[lbc, -hbc], ol=qt[step_idx])
-
             rmd = self.bv_rcs_gate(lhs_il=rem, rhs_il=rhs_il[0:len(rem)])
-
             rem = self.bv_mux_gate(lhs_il=rmd, rhs_il=rem, s_lhs_lit=qt[step_idx])
-
         rhs_is_zero = -self.or_gate(il=rhs_il)
-
         if remainder_ol is not None:
             self.bv_and_gate(lhs_il=[-rhs_is_zero] * wt, rhs_il=rem, ol=remainder_ol)
-
         return self.bv_and_gate(lhs_il=[-rhs_is_zero] * wt, rhs_il=qt, ol=ol)
 
     def bv_lur_gate(self, lhs_il, rhs_il, ol=None):
@@ -386,35 +332,28 @@ class CSP:
             ol = [self.add_variable() for _ in lhs_il]
         else:
             ol = [self.add_variable() if x is None else x for x in ol]
-
         self.bv_lud_gate(
             lhs_il=lhs_il, rhs_il=rhs_il,
             remainder_ol=ol)
-
         return ol
 
     def stg_or_gate(self, il, ol=None):
         wt = len(il)
-
         if wt == 0:
             return []
-
         if ol is None:
             result = [self.add_variable() for _ in range(0, wt)]
         else:
             result = [out_lit if out_lit is not None else self.add_variable() for out_lit in ol]
-
         self.or_gate(il=[il[-1]], ol=result[-1])
-
         for idx in reversed(range(0, wt - 1)):
             self.or_gate(il=[il[idx], result[idx + 1]], ol=result[idx])
-
         return result
 
-    def to_sat(self, args, solve=True, turbo=False, log=False, boost=False, assumptions=None, cnf_path='', model_path='', proof_path='', normalize=False):
+    def to_sat(self, args, solve=True, turbo=False, log=False, assumptions=None, cnf_path='', model_path='', proof_path='', normalize=False):
         if assumptions is None:
             assumptions = []
-        model = slime.solve(solve, turbo, log, boost, assumptions, cnf_path, model_path, proof_path)
+        model = slime.solve(solve, turbo, log, assumptions, cnf_path, model_path, proof_path)
         if cnf_path:
             with open(cnf_path, 'a') as file:
                 print('c {}'.format(self.map), file=file)
@@ -425,13 +364,17 @@ class CSP:
             for key, value in self.map.items():
                 for arg in args:
                     if isinstance(arg, Entity) and arg.key == key:
-                        arg.value = self.normalize(int(''.join(map(str, [int(int(model[abs(bit) - 1]) > 0) for bit in value[::-1]])), 2), normalize=normalize)
+                        ds = ''.join(map(str, [int(int(model[abs(bit) - 1]) > 0) for bit in value[::-1]]))
+                        if normalize:
+                            arg.value = -2 ** (self.bits - 1) + int(ds, 2)
+                        else:
+                            arg.value = int(ds, 2)
             self.add_block([-lit for lit in model])
             return True
         return False
 
-    def int(self, key=None, block=None, value=None, size=None, deep=None, is_mip=False, is_real=False, idx=None):
-        return Entity(self, key=key, block=block, value=value, bits=size, deep=deep, is_mip=is_mip, is_real=is_real, idx=idx)
+    def int(self, key=None, block=None, value=None, size=None, deep=None):
+        return Entity(self, key=key, block=block, value=value, bits=size, deep=deep)
 
     def array(self, dimension, size=None, key=None):
         if size is not None:
@@ -453,14 +396,6 @@ class CSP:
         n = len(xs)
         for i in range(n):
             self.element(n * xs[i] + xs[(i + 1) % n], lst, ys[i])
-
-    def asymmetrical_indexing(self, xs, ys, lst):
-        n = len(xs)
-        m = len(ys)
-        zs = self.array(m)
-        for i in range(m):
-            self.element(zs[i], lst, ys[i])
-            assert xs[i % n] * n + xs[(i + 1) % n] == zs[i]
 
     def sequencing(self, xs, ys, lst):
         n = len(xs)
@@ -486,10 +421,10 @@ class CSP:
     def factorial(self, x):
         import functools
         import operator
-        aa = Entity(self, bits=self.bits)
-        assert sum([self.zero.iff(aa[i], self.one) for i in range(self.bits)]) == self.one
-        assert sum([self.zero.iff(aa[i], i) for i in range(self.bits)]) == x
-        return sum([self.zero.iff(aa[i], functools.reduce(operator.mul, [x - j for j in range(i)])) for i in range(1, self.bits)])
+        sub = Entity(self, bits=self.bits)
+        assert sum([self.zero.iff(sub[i], self.one) for i in range(self.bits)]) == self.one
+        assert sum([self.zero.iff(sub[i], i) for i in range(self.bits)]) == x
+        return sum([self.zero.iff(sub[i], functools.reduce(operator.mul, [x - j for j in range(i)])) for i in range(1, self.bits)])
 
     def sigma(self, f, i, n):
         import functools
@@ -500,10 +435,10 @@ class CSP:
                 return functools.reduce(operator.add, xs)
             return self.zero
 
-        aa = Entity(self, bits=self.bits)
-        assert sum([self.zero.iff(aa[j], self.one) for j in range(self.bits)]) == self.one
-        assert sum([self.zero.iff(aa[j], j) for j in range(self.bits)]) == n + self.one
-        return sum([self.zero.iff(aa[j], __sum([f(j) for j in range(i, j)])) for j in range(i, self.bits)])
+        sub = Entity(self, bits=self.bits)
+        assert sum([self.zero.iff(sub[j], self.one) for j in range(self.bits)]) == self.one
+        assert sum([self.zero.iff(sub[j], j) for j in range(self.bits)]) == n + self.one
+        return sum([self.zero.iff(sub[j], __sum([f(j) for j in range(i, j)])) for j in range(i, self.bits)])
 
     def pi(self, f, i, n):
         import functools
@@ -514,10 +449,10 @@ class CSP:
                 return functools.reduce(operator.mul, xs)
             return self.one
 
-        aa = Entity(self, bits=self.bits)
-        assert sum([self.zero.iff(aa[j], self.one) for j in range(self.bits)]) == self.one
-        assert sum([self.zero.iff(aa[j], j) for j in range(self.bits)]) == n + self.one
-        return sum([self.zero.iff(aa[j], __pi([f(j) for j in range(i, j)])) for j in range(i, self.bits)])
+        sub = Entity(self, bits=self.bits)
+        assert sum([self.zero.iff(sub[j], self.one) for j in range(self.bits)]) == self.one
+        assert sum([self.zero.iff(sub[j], j) for j in range(self.bits)]) == n + self.one
+        return sum([self.zero.iff(sub[j], __pi([f(j) for j in range(i, j)])) for j in range(i, self.bits)])
 
     def sqrt(self, x):
         y = self.int()
@@ -576,14 +511,6 @@ class CSP:
             if dual is not None:
                 for j in range(i + 1, len(xs)):
                     dual(i, j, xs[i], xs[j])
-
-    def normalize(self, value, normalize):
-        if normalize and abs(value).bit_length() > self.bits - 1:
-            return self.negative(value)
-        return value
-
-    def negative(self, value):
-        return value - (1 << self.bits)
 
     def reshape(self, lst, shape):
         from functools import reduce

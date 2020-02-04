@@ -2,11 +2,11 @@
 
 The PEQNP System its a automatic CNF encoder and SAT Solver for General Constrained Diophantine Equations and NP-Complete Problems, full integrated with Python 3.
 
-# SLIME 4
-A Free World Class High Performance SAT Solver
+# SLIME X
+Simple: The Best SAT Solver on The Planet.
 
 # HESS 
-Hyper Expoential Space Sorting an Universal Black Box Optimizer
+Hyper Exponential Space Sorting an Universal Black Box Optimizer.
 
 # DEIDOS COVENANT 
 A extremely fast algorithm to get all solutions of a Sum Subset Problem.
@@ -120,6 +120,10 @@ https://www.facebook.com/PEQNP-104747814228901
 
 Documentation
 https://peqnp.readthedocs.io
+
+#### version 0.4.0
+- Include SLIME X. (https://twitter.com/maxtuno/status/1224460098984194052)
+- The BOOST option on satisfy function is removed, BOOST is now from SLIME X.
 
 #### version 0.3.4
 - MIP Module is removed temporarily by compatibility problems with some old systems.

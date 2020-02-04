@@ -21,21 +21,15 @@ SOFTWARE.
 
 
 class Entity:
-    def __init__(self, encoder, key=None, block=None, value=None, bits=None, deep=None, is_mip=False, is_real=False, idx=None):
+    def __init__(self, encoder, key=None, block=None, value=None, bits=None, deep=None):
         self.key = key
         self.model = []
         self.block = block
         self.encoder = encoder
         self.value = None
-        self.is_mip = is_mip
-        self.is_real = is_real
         self.data = []
         self.bits = bits
         self.deep = deep
-        if self.is_mip:
-            self.idx = idx
-            self.value = 1
-            self.constraint = [self]
         if bits is None:
             self.bits = self.encoder.bits
             self.deep = [self.bits]
@@ -60,12 +54,6 @@ class Entity:
             self.deep = [self.bits]
 
     def __add__(self, other):
-        if self.is_mip:
-            if not self.constraint:
-                self.constraint.append(self)
-            if isinstance(other, Entity):
-                self.constraint += other.constraint
-            return self
         if self.value is not None:
             if isinstance(other, Entity):
                 return self.value + other.value
@@ -81,12 +69,6 @@ class Entity:
         return self + other
 
     def __eq__(self, other):
-        if self.is_mip:
-            self.constraint.append('==')
-            self.constraint.append(other)
-            self.encoder.add_constraint(self.constraint[:-2], self.constraint[-2], self.constraint[-1])
-            self.constraint.clear()
-            return True
         if self.value is not None:
             if isinstance(other, Entity):
                 return self.value == other.value
@@ -115,10 +97,6 @@ class Entity:
         return self.encoder.bv_eq_gate(self.block, self.encoder.create_constant(other), self.encoder.true)
 
     def __mul__(self, other):
-        if self.is_mip:
-            self.value *= other
-            self.constraint.append(self)
-            return self
         if self.value is not None:
             if isinstance(other, Entity):
                 return self.value * other.value
@@ -174,12 +152,6 @@ class Entity:
         return Entity(self.encoder, block=output_block)
 
     def __sub__(self, other):
-        if self.is_mip:
-            if not self.constraint:
-                self.constraint.append(self)
-            other.value = -other.value
-            self.constraint += other.constraint
-            return self
         if self.value is not None:
             if isinstance(other, Entity):
                 return self.value - other.value
@@ -208,14 +180,6 @@ class Entity:
         return self
 
     def __le__(self, other):
-        if self.is_mip:
-            if not self.constraint:
-                self.constraint.append(self)
-            self.constraint.append('<=')
-            self.constraint.append(other)
-            self.encoder.add_constraint(self.constraint[:-2], self.constraint[-2], self.constraint[-1])
-            self.constraint.clear()
-            return True
         return self.__lt__(other + 1)
 
     def __gt__(self, other):
@@ -230,21 +194,11 @@ class Entity:
             return self.encoder.bv_ule_gate(self.block, self.encoder.create_constant(other), self.encoder.true)
 
     def __ge__(self, other):
-        if self.is_mip:
-            if not self.constraint:
-                self.constraint.append(self)
-            self.constraint.append('>=')
-            self.constraint.append(other)
-            self.encoder.add_constraint(self.constraint[:-2], self.constraint[-2], self.constraint[-1])
-            self.constraint.clear()
-            return True
         if other > 0:
             return self.__gt__(other - 1)
         return True
 
     def __neg__(self):
-        if self.is_mip:
-            self.value = -self.value
         if self.value is not None:
             return -self.value
         return self.encoder.zero - self

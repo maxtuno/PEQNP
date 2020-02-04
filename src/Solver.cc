@@ -117,7 +117,6 @@ Solver::Solver()
       my_var_decay(0.6), DISTANCE(true), var_iLevel_inc(1), order_heap_distance(VarOrderLt(activity_distance))
 
 {
-    log = false;
 }
 
 Solver::~Solver() {}
@@ -1674,21 +1673,25 @@ lbool Solver::solve_() {
     int curr_restarts = 0;
     status = l_Undef;
     while (status == l_Undef /*&& withinBudget()*/) {
-        if (!switch_mode) {
-            clock_t difference = clock() - before;
-            msec = difference * 1000 / CLOCKS_PER_SEC;
-            if (msec > trigger) {
-                switch_mode = true;
-                trigger = 2 * msec + 1;
-                VSIDS = switch_mode;
-            }
-        } else {
-            clock_t difference = clock() - before;
-            msec = difference * 1000 / CLOCKS_PER_SEC;
-            if (msec > trigger) {
-                switch_mode = false;
-                trigger = 2 * msec + 1;
-                VSIDS = switch_mode;
+        boost = !boost;
+        CRef ref = propagate();
+        if (ref == CRef_Undef) {
+            if (!switch_mode) {
+                clock_t difference = clock() - before;
+                msec = difference * 1000 / CLOCKS_PER_SEC;
+                if (msec > trigger) {
+                    switch_mode = true;
+                    trigger = 2 * msec + 1;
+                    VSIDS = switch_mode;
+                }
+            } else {
+                clock_t difference = clock() - before;
+                msec = difference * 1000 / CLOCKS_PER_SEC;
+                if (msec > trigger) {
+                    switch_mode = false;
+                    trigger = 2 * msec + 1;
+                    VSIDS = switch_mode;
+                }
             }
         }
         if (VSIDS) {
