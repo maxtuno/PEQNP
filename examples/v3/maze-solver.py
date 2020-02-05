@@ -27,7 +27,7 @@ from peqnp import *
 
 # https://gist.github.com/fcogama/3689650
 
-def maze(width=81, height=51, complexity=.75, density=.75):
+def maze(width=81, height=51, complexity=.5, density=1):
     # Only odd shapes
     shape = ((height // 2) * 2 + 1, (width // 2) * 2 + 1)
     # Adjust complexity and density relative to maze size
@@ -61,6 +61,8 @@ def maze(width=81, height=51, complexity=.75, density=.75):
     # close the direct path
     Z[1][-2] = True
     Z[2][-2] = True
+    Z[-2][1] = True
+    Z[-2][2] = True
     return Z
 
 
@@ -70,7 +72,7 @@ if __name__ == '__main__':
     A simple optimal maze solver is not perfect, need more work...
     """
 
-    m = int(sys.argv[1])
+    m = 20
     n = 2 * m
 
     M = maze(n, m)
