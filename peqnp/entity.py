@@ -30,6 +30,7 @@ class Entity:
         self.data = []
         self.bits = bits
         self.deep = deep
+        self.bin = []
         if bits is None:
             self.bits = self.encoder.bits
             self.deep = [self.bits]
@@ -290,6 +291,8 @@ class Entity:
     @property
     def binary(self):
         def __encode(n):
+            if self.bin:
+                return self.bin
             bits = []
             n = abs(n)
             for i in range(self.bits):
@@ -298,6 +301,7 @@ class Entity:
                 else:
                     bits += [True]
                 n //= 2
+            self.bin = bits
             return bits
 
         return self.encoder.reshape(__encode(self.value), self.deep)

@@ -204,7 +204,7 @@ def matrix_permutation(lst, n):
     return xs, ys
 
 
-def permutations(lst, n):
+def permutations(lst, n, key=None):
     """
     Entangle all permutations of bits n for the vector lst.
     :param lst: The list to entangle.
@@ -212,7 +212,7 @@ def permutations(lst, n):
     :return: (indexes, values)
     """
     check_engine()
-    xs = vector(size=n)
+    xs = vector(size=n, key=key)
     ys = vector(size=n)
     for i in range(n):
         assert element(ys[i], lst) == xs[i]
@@ -570,7 +570,7 @@ def hess_binary(n, oracle, fast=True, cycles=1):
 
     def __inv(i, j, xs):
         if xs[i] == xs[j]:
-            xs[i] = not xs[j]
+            xs[j] = not xs[i]
         else:
             aux = xs[i]
             xs[i] = not xs[j]

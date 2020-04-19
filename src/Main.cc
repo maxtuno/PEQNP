@@ -24,17 +24,16 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 #include <SolverTypes.h>
 #include <iostream>
 
+#ifdef MASSIVE
+
+#include <mpi.h>
+
+#endif
+
 #define DRAT // Generate unsat proof.
 
 using namespace SLIME;
 
-#if _WIN32 || _WIN64
-void printHeader() {
-    printf("c                                             \n");
-    printf("c SLIME SAT Solver by http://www.peqnp.science\n");
-    printf("c                                             \n");
-}
-#else
 void printHeader() {
     printf("c                                         \n");
     printf("c   ██████  ██▓     ██▓ ███▄ ▄███▓▓█████  \n");
@@ -47,20 +46,44 @@ void printHeader() {
     printf("c ░  ░  ░    ░ ░    ▒ ░░      ░      ░    \n");
     printf("c       ░      ░  ░ ░         ░      ░  ░ \n");
     printf("c                                         \n");
-    printf("c        http://www.peqnp.science         \n");
+    printf("c         http://www.peqnp.science        \n");
     printf("c                                         \n");
 }
-#endif
 
 int main(int argc, char *argv[]) {
-    printHeader();
+
+#ifdef MASSIVE
+    int rank;
+
+    MPI_Init(&argc, &argv);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+    if (rank == 0) {
+        printHeader();
+    }
 
     SimpSolver S;
+    S.rank = rank;
+#else
+    printHeader();
+    SimpSolver S;
+#endif
+
+#ifdef LOG
     S.log = true;
+#else
+    S.log = false;
+#endif
 
 #ifdef DRAT
-    if (argc > 3) {
-        S.drup_file = fopen(argv[3], "wb");
+    if (argc > 2) {
+#ifdef MASSIVE
+        char *proof_file = (char * ) calloc(strlen(argv[2]), sizeof(char) + 10);
+        sprintf(proof_file, "%s_%d", argv[2], rank);
+        S.drup_file = fopen(proof_file, "wb");
+#else
+        S.drup_file = fopen(argv[2], "wb");
+#endif
     }
 #endif
 
@@ -77,7 +100,11 @@ int main(int argc, char *argv[]) {
     vec<Lit> assumptions;
     lbool result = S.solveLimited(assumptions);
 
+#ifdef MASSIVE
+    printf("c [%i]\n", rank);
+#else
     printf("\n");
+#endif
 
     printf(result == l_True ? "s SATISFIABLE\nv " : result == l_False ? "s UNSATISFIABLE\n" : "s UNKNOWN\n");
     if (result == l_True) {
@@ -88,7 +115,7 @@ int main(int argc, char *argv[]) {
         printf(" 0\n");
     } else {
 #ifdef DRAT
-        if (argc > 3) {
+        if (argc > 2) {
             fputc('a', S.drup_file);
             fputc(0, S.drup_file);
             fclose(S.drup_file);
@@ -96,17 +123,29 @@ int main(int argc, char *argv[]) {
 #endif
     }
 
-    if (argc > 2) {
-        FILE *model = fopen(argv[2], "w");
+    if (argc > 3) {
+#ifdef MASSIVE
+        char *model_file = (char * ) calloc(strlen(argv[3]), sizeof(char) + 10);
+        sprintf(model_file, "%s_%d", argv[3], rank);
+        FILE *model = fopen(model_file, "wb");
+#else
+        FILE *model = fopen(argv[3], "w");
+#endif
         fprintf(model, result == l_True ? "SAT\n" : result == l_False ? "UNSAT\n" : "UNKNOWN\n");
-        if (result == l_True) {        
+        if (result == l_True) {
             for (int i = 0; i < S.nVars(); i++)
                 if (S.model[i] != l_Undef) {
                     fprintf(model, "%s%s%d", (i == 0) ? "" : " ", (S.model[i] == l_True) ? "" : "-", i + 1);
                 }
             fprintf(model, " 0\n");
         }
+        fclose(model);
     }
+
+#ifdef MASSIVE
+    MPI_Abort(MPI_COMM_WORLD, EXIT_SUCCESS);
+    MPI_Finalize();
+#endif
 
     exit(result == l_True ? 10 : result == l_False ? 20 : 0);
 }

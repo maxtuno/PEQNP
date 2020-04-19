@@ -62,8 +62,8 @@ SimpSolver::~SimpSolver() {}
 Var SimpSolver::newVar(bool sign, bool dvar) {
     Var v = Solver::newVar(sign, dvar);
 
-    frozen.push((char)false);
-    eliminated.push((char)false);
+    frozen.push((char) false);
+    eliminated.push((char) false);
 
     if (use_simplification) {
         n_occ.push(0);
@@ -243,7 +243,7 @@ bool SimpSolver::merge(const Clause &_ps, const Clause &_qs, Var v, vec<Lit> &ou
                 }
             out_clause.push(qs[i]);
         }
-    next:;
+        next:;
     }
 
     for (int i = 0; i < ps.size(); i++)
@@ -260,8 +260,8 @@ bool SimpSolver::merge(const Clause &_ps, const Clause &_qs, Var v, int &size) {
     bool ps_smallest = _ps.size() < _qs.size();
     const Clause &ps = ps_smallest ? _qs : _ps;
     const Clause &qs = ps_smallest ? _ps : _qs;
-    const Lit *__ps = (const Lit *)ps;
-    const Lit *__qs = (const Lit *)qs;
+    const Lit *__ps = (const Lit *) ps;
+    const Lit *__qs = (const Lit *) qs;
 
     size = ps.size() - 1;
 
@@ -277,7 +277,7 @@ bool SimpSolver::merge(const Clause &_ps, const Clause &_qs, Var v, int &size) {
                 }
             size++;
         }
-    next:;
+        next:;
     }
 
     return true;
@@ -368,7 +368,7 @@ bool SimpSolver::backwardSubsumptionCheck() {
 
         // Search all candidates:
         vec<CRef> &_cs = occurs.lookup(best);
-        CRef *cs = (CRef *)_cs;
+        CRef *cs = (CRef *) _cs;
 
         for (int j = 0; j < _cs.size(); j++)
             if (c.mark())
@@ -566,7 +566,7 @@ void SimpSolver::extendModel() {
 
         x = toLit(elimclauses[i]);
         model[var(x)] = lbool(!sign(x));
-    next:;
+        next:;
     }
 }
 
@@ -610,12 +610,18 @@ bool SimpSolver::eliminate(bool turn_off_elim) {
     n_vars = nFreeVars();
 
     if (log) {
+#ifdef MASSIVE
+#else
         printf("c Reduced to %d vars, %d cls (grow=%d)\n", n_vars, n_cls, grow);
+#endif
     }
 
-    if ((double)n_cls / n_vars >= 10 || n_vars < 1000 || trail.size() == 0) {
+    if ((double) n_cls / n_vars >= 10 || n_vars < 1000 || trail.size() == 0) {
         if (log) {
+#ifdef MASSIVE
+#else
             printf("c No iterative elimination performed. (vars=%d, c/v ratio=%.1f)\n", n_vars, (double)n_cls / n_vars);
+#endif
         }
         goto cleanup;
     }
@@ -643,14 +649,14 @@ bool SimpSolver::eliminate(bool turn_off_elim) {
         int n_cls_now = nClauses();
         int n_vars_now = nFreeVars();
 
-        double cl_inc_rate = (double)n_cls_now / n_cls_last;
-        double var_dec_rate = (double)n_vars_last / n_vars_now;
+        double cl_inc_rate = (double) n_cls_now / n_cls_last;
+        double var_dec_rate = (double) n_vars_last / n_vars_now;
 
         if (n_cls_now > n_cls_init || cl_inc_rate > var_dec_rate)
             break;
     }
 
-cleanup:
+    cleanup:
     touched.clear(true);
     occurs.clear(true);
     n_occ.clear(true);
@@ -729,7 +735,7 @@ bool SimpSolver::eliminate_() {
 
         assert(subsumption_queue.size() == 0);
     }
-cleanup:
+    cleanup:
     // To get an accurate number of clauses.
     if (trail_size_last != trail.size())
         removeSatisfied();

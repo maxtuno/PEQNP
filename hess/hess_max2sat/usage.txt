@@ -1,2 +1,0 @@
-# ./hess_max2sat <wcnf-instance> <hyper-loop>
-./hess_max2sat pq.wcnf 2

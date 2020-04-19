@@ -63,7 +63,7 @@ class Solver {
     bool log, boost;
     int global;
 
-  private:
+private:
     template <typename T> class MyQueue {
         int max_sz, q_sz;
         int ptr;
@@ -105,6 +105,25 @@ class Solver {
     };
 
   public:
+
+    void* termCallbackState;
+    int (*termCallback)(void* state);
+    void setTermCallback(void* state, int (*termCallback)(void*)) {
+        this->termCallbackState = state;
+        this->termCallback = termCallback;
+    }
+
+    void* learnCallbackState;
+    int* learnCallbackBuffer;
+    int learnCallbackLimit;
+    void (*learnCallback)(void * state, int * clause);
+    void setLearnCallback(void * state, int maxLength, void (*learn)(void * state, int * clause)) {
+        this->learnCallbackState = state;
+        this->learnCallbackLimit = maxLength;
+        this->learnCallbackBuffer = (int*) realloc (this->learnCallbackBuffer, (1+maxLength)*sizeof(int));
+        this->learnCallback = learn;
+    }
+
     // Constructor/Destructor:
     //
     Solver();
@@ -240,7 +259,8 @@ class Solver {
         return (cr != CRef_Undef);
     }
 
-  protected:
+        int rank;
+    protected:
     // Helper structures:
     //
     struct VarData {
@@ -447,7 +467,11 @@ class Solver {
 
     static inline void binDRUP_flush(FILE *drup_file) {
 #if defined(__linux__)
+#ifdef SAT_RACE
+        fwrite_unlocked(drup_buf, sizeof(unsigned char), buf_len, drup_file);
+#else
         fwrite(drup_buf, sizeof(unsigned char), buf_len, drup_file);
+#endif
 #else
         fwrite(drup_buf, sizeof(unsigned char), buf_len, drup_file);
 #endif
@@ -616,7 +640,7 @@ inline void Solver::setPropBudget(int x) { propagation_budget = propagations + x
 inline void Solver::interrupt() { asynch_interrupt = true; }
 inline void Solver::clearInterrupt() { asynch_interrupt = false; }
 inline void Solver::budgetOff() { conflict_budget = propagation_budget = -1; }
-inline bool Solver::withinBudget() const { return !asynch_interrupt && (conflict_budget < 0 || conflicts < (int)conflict_budget) && (propagation_budget < 0 || propagations < (int)propagation_budget); }
+inline bool Solver::withinBudget() const { return 0 == termCallback(termCallbackState); }
 
 // FIXME: after the introduction of asynchronous interrruptions the solve-versions that return a
 // pure bool do not give a safe interface. Either interrupts must be possible to turn off here, or

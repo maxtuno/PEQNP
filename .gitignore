@@ -128,3 +128,5 @@ cmake-build-minsizerel/hess/hess_max2sat/hess_max2sat.cbp
 cmake-build-minsizerel/hess/hess_max2sat/Makefile
 cmake-build-minsizerel/Makefile
 cmake-build-minsizerel/PEQNP.cbp
+.DS_Store
+dist/PEQNP-1.0.0.tar.gz

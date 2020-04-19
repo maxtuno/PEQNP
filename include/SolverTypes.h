@@ -31,14 +31,14 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 #ifndef SLIME_SolverTypes_h
 #define SLIME_SolverTypes_h
 
-#include <assert.h>
+#include <cstdio>
+#include <iostream>
 
 #include "mtl/Alg.h"
 #include "mtl/Alloc.h"
 #include "mtl/IntTypes.h"
 #include "mtl/Map.h"
 #include "mtl/Vec.h"
-#include <iostream>
 
 namespace SLIME {
 

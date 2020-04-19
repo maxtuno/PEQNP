@@ -356,11 +356,11 @@ class CSP:
         model = slime.solve(solve, turbo, log, assumptions, cnf_path, model_path, proof_path)
         if cnf_path:
             with open(cnf_path, 'a') as file:
-                print('c {}'.format(self.map), file=file)
+                maps = {}
+                for key, value in self.map.items():
+                    maps[key] = [(1 if v > 0 else -1) * (abs(v) - 1) for v in value]
+                print('c {}'.format(maps), file=file)
         if model:
-            if cnf_path:
-                with open(cnf_path, 'a') as file:
-                    print('c {}'.format(model), file=file)
             for key, value in self.map.items():
                 for arg in args:
                     if isinstance(arg, Entity) and arg.key == key:
