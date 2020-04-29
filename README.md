@@ -1,4 +1,4 @@
-# PEQNP [1.0.0]
+# PEQNP [1.0.2]
 
 The PEQNP System its a automatic CNF encoder and SAT Solver for General Constrained Diophantine Equations and NP-Complete Problems, full integrated with Python 3 and 0 dependencies (requirements.txt is only for documentation on readthedocs).
 
@@ -92,8 +92,6 @@ Output:
        [0 1 5 4 3 2]
        [5 4 2 3 0 1]
        [4 5 3 2 1 0]]]
-    
-More Examples https://github.com/maxtuno/PEQNP/tree/master/examples
 
 More info:
 
@@ -111,4 +109,10 @@ https://www.facebook.com/PEQNP-104747814228901
 
 Documentation
 https://peqnp.readthedocs.io
+
+PEQNP Examples
+https://github.com/maxtuno/PEQNP/tree/master/examples
+
+Advanced PEQNP Examples
+https://github.com/maxtuno/PEQNP_EXAMPLES
 

@@ -369,6 +369,7 @@ class CSP:
                             arg.value = -2 ** (self.bits - 1) + int(ds, 2)
                         else:
                             arg.value = int(ds, 2)
+                        arg.bin.clear()
             self.add_block([-lit for lit in model])
             return True
         return False

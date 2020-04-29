@@ -41,7 +41,7 @@ def version():
     Print the current version of the system.
     :return:
     """
-    print('PEQNP + SLIME X : 1.0.1 - 19-4-2020')
+    print('PEQNP + SLIME 4 : 1.0.2 - 29-4-2020')
 
 
 def engine(bits=None, deep=None):
