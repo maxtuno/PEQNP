@@ -41,7 +41,7 @@ def version():
     Print the current version of the system.
     :return:
     """
-    print('PEQNP + SLIME 4 : 1.0.2 - 29-4-2020')
+    print('PEQNP + SLIME 4 : 1.0.3 - 3-5-2020')
 
 
 def engine(bits=None, deep=None):
@@ -112,13 +112,14 @@ def satisfy(solve=True, turbo=False, log=False, assumptions=None, cnf_path='', m
     return csp.to_sat(csp.variables, solve=solve, turbo=turbo, log=log, assumptions=assumptions, cnf_path=cnf_path, model_path=model_path, proof_path=proof_path, normalize=normalize)
 
 
-def subsets(lst, k=None, key=None):
+def subsets(lst, k=None, key=None, complement=False):
     """
     Generate all subsets for an specific universe of data.
     :param lst: The universe of data.
     :param k: The cardinality of the subsets.
     :param key: The name os the binary representation of subsets.
-    :return: (binary representation of subsets, the generic subset representation)
+    :param complement: True if include in return the complement.
+    :return: (binary representation of subsets, the generic subset representation, the complement of subset if complement=True)
     """
     global csp
     check_engine()
@@ -128,21 +129,33 @@ def subsets(lst, k=None, key=None):
         assert sum(csp.zero.iff(-bits[i], csp.one) for i in range(len(lst))) == k
     subset_ = [csp.zero.iff(-bits[i], lst[i]) for i in range(len(lst))]
     csp.variables += subset_
-    return bits, subset_
+    if complement:
+        complement_ = [csp.zero.iff(bits[i], lst[i]) for i in range(len(lst))]
+        csp.variables += complement_
+        return bits, subset_, complement_
+    else:
+        return bits, subset_
 
 
-def subset(data, k, empty=None):
+def subset(data, k, empty=None, complement=False):
     """
     An operative structure (like integer ot constant) that represent a subset of at most k elements.
     :param data: The data for the subsets.
     :param k: The maximal bits for subsets.
     :param empty: The empty element, 0, by default.
-    :return: An instance of Subset.
+    :param complement: True if include in return the complement.
+    :return: An instance of subset or (subset, complement) if complement=True.
     """
     global csp
     check_engine()
-    subset_ = csp.subset(k, data, empty)
+    if complement:
+        subset_, complement_ = csp.subset(k, data, empty, complement=complement)
+    else:
+        subset_ = csp.subset(k, data, empty)
     csp.variables += subset_
+    if complement:
+        csp.variables += complement_
+        return subset_, complement_
     return subset_
 
 
@@ -348,7 +361,7 @@ def apply_single(lst, f):
 
 def apply_dual(lst, f):
     """
-    A cross operation over a vector.
+    A cross operation over a vector on all pairs i, j such that i < j elements.
     :param lst: The vector.
     :param f: The lambda f of two integer variables.
     :return: The entangled structure.
@@ -356,6 +369,18 @@ def apply_dual(lst, f):
     global csp
     check_engine()
     csp.apply(lst, dual=f)
+
+
+def apply_different(lst, f):
+    """
+    A cross operation over a vector on all pairs i, j such that i != j elements.
+    :param lst: The vector.
+    :param f: The lambda f of two integer variables.
+    :return: The entangled structure.
+    """
+    global csp
+    check_engine()
+    csp.apply(lst, different=f)
 
 
 def all_different(args):
@@ -367,6 +392,30 @@ def all_different(args):
     global csp
     check_engine()
     csp.apply(args, dual=lambda x, y: x != y)
+
+
+def all_out(args, values):
+    """
+    The all different to values global constraint.
+    :param args: A vector of integers.
+    :param values: The values excluded.
+    :return:
+    """
+    global csp
+    check_engine()
+    csp.apply(args, single=lambda x: [x != v for v in values])
+
+
+def all_in(args, values):
+    """
+    The all in values global constraint.
+    :param args: A vector of integers.
+    :param values: The values included.
+    :return:
+    """
+    global csp
+    check_engine()
+    csp.apply(args, single=lambda x: x == one_of(values))
 
 
 def flatten(mtx):

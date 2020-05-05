@@ -1,10 +1,10 @@
-# PEQNP [1.0.2]
+# PEQNP [PEQNP + SLIME 4 : 1.0.3 - 3-5-2020]
 
-The PEQNP System its a automatic CNF encoder and SAT Solver for General Constrained Diophantine Equations and NP-Complete Problems, full integrated with Python 3 and 0 dependencies (requirements.txt is only for documentation on readthedocs).
+The PEQNP System its a automatic CNF encoder and SAT Solver for General Constrained Diophantine Equations and NP-Complete Problems, full integrated with Python 3 and 0 dependencies.
 
 # SLIME 4
 
-Simple: The Best SAT Solver on The Planet.
+Simple: The Best SAT Solver on The Planet. https://github.com/maxtuno/SLIME
 
 [![Downloads](https://pepy.tech/badge/peqnp)](https://pepy.tech/project/peqnp)
 

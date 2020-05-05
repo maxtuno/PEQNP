@@ -468,13 +468,19 @@ class CSP:
             self.add_block(sub)
         return x
 
-    def subset(self, k, data, empty=None):
+    def subset(self, k, data, empty=None, complement=False):
         x = self.int(size=len(data))
         self.at_most_k(x, k)
         y = self.array(len(data))
+        if complement:
+            z = self.array(len(data))
         for i in range(len(data)):
             assert self.zero.iff(x[i], data[i]) == self.zero.iff(x[i], y[i])
+            if complement:
+                assert self.zero.iff(-x[i], data[i]) == self.zero.iff(-x[i], z[i])
             assert self.zero.iff(-x[i], self.zero if empty is None else empty) == self.zero.iff(-x[i], y[i])
+        if complement:
+            return y, z
         return y
 
     @staticmethod
@@ -496,13 +502,17 @@ class CSP:
         return [item for sublist in xs for item in sublist]
 
     @staticmethod
-    def apply(xs, single=None, dual=None):
+    def apply(xs, single=None, dual=None, different=None):
         for i in range(len(xs)):
             if single is not None:
                 single(xs[i])
             if dual is not None:
                 for j in range(i + 1, len(xs)):
                     dual(xs[i], xs[j])
+            if different is not None:
+                for j in range(len(xs)):
+                    if i != j:
+                        different(xs[i], xs[j])
 
     @staticmethod
     def apply_indexed(xs, single=None, dual=None):

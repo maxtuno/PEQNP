@@ -4,44 +4,44 @@ The PEQNP System include the HESS algorithm, that is a Universal Black Box Optim
 
 # Partial Latin Hyper Cubes with Tensors
 
-A multi-dimensional latin square with an empty element.
+A multi - dimensional latin square with an empty element.
 
 ```python
 import numpy as np
-from peqnp import *
+import peqnp as pn
 
 if __name__ == '__main__':
 
     n = 6
     m = 3
 
-    engine((n + 1).bit_length())
+    pn.engine((n + 1).bit_length())
 
-    X = tensor(dimensions=m * [n])
-    Y = vector(size=n ** m)
+    X = pn.tensor(dimensions=m * [n])
+    Y = pn.vector(size=n ** m)
 
-    apply_single(Y, lambda k: 1 <= k <= n)
+    pn.apply_single(Y, lambda k: 1 <= k <= n)
 
-    t = np.empty(shape=n ** m, dtype=Entity)
-    for k, idx in enumerate(hyper_loop(m, n)):
+    t = np.empty(shape=n ** m, dtype=pn.Entity)
+    for k, idx in enumerate(pn.hyper_loop(m, n)):
         t[k] = X[idx](0, Y[k])
     t = t.reshape(m * [n])
 
     for k in range(n):
-        all_different(t[k])
-        all_different(t.T[k])
+        pn.all_different(t[k])
+        pn.all_different(t.T[k])
         for l in range(n):
-            all_different(t[k][l])
-            all_different(t.T[k][l])
+            pn.all_different(t[k][l])
+            pn.all_different(t.T[k][l])
 
-    for idx in hyper_loop(m - 1, n):
+    for idx in pn.hyper_loop(m - 1, n):
         s = t
         for k in idx:
             s = s[k]
-            all_different(s)
-            all_different(s.T)
+            pn.all_different(s)
+            pn.all_different(s.T)
 
-    if satisfy(turbo=True, boost=True, log=True):
+    if pn.satisfy(turbo=True, log=True):
         x = np.vectorize(int)(X.binary)
         y = np.vectorize(int)(Y).reshape(m * [n])
         print(x * y)
@@ -95,7 +95,7 @@ A bouncing balls GUI with the realtime power of HESS.
 import random
 from tkinter import *
 
-from peqnp import *
+import peqnp as pn
 
 
 class Ball:
@@ -131,7 +131,7 @@ def distance(seq):
 
 
 def update():
-    seq = hess_sequence(len(balls), oracle=distance, fast=True)
+    seq = pn.hess_sequence(len(balls), oracle=distance)
     canvas.delete('lines')
     for i in range(len(seq)):
         x = balls[seq[i - 1]].position.real

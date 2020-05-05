@@ -2,7 +2,7 @@ from distutils.core import setup, Extension
 
 setup(
     name='PEQNP',
-    version='1.0.2',
+    version='1.0.3',
     packages=['peqnp'],
     url='http://www.peqnp.science',
     license='copyright (c) 2012-2020 Oscar Riveros. All rights reserved.',

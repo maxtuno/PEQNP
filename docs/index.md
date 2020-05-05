@@ -1,34 +1,34 @@
 # The System
 
-For more info visit [www.peqnp.science](http://www.peqnp.science) and [Source Codes](https://github.com/maxtuno/PEQNP) and [Documentation](https://peqnp.readthedocs.io).
+For more info visit[www.peqnp.science](http: // www.peqnp.science) and [Source Codes](https: // github.com / maxtuno / PEQNP) and [Documentation](https: // peqnp.readthedocs.io).
 
 # A Multi Paradigm Constrain Satisfaction Solver
 
-The PEQNP System its a automatic CNF encoder and SAT Solver for General Constrained Diophantine Equations and NP-Complete Problems, full integrated with Python 3.
+The PEQNP System its a automatic CNF encoder and SAT Solver for General Constrained Diophantine Equations and NP - Complete Problems, full integrated with Python 3.
 
 # Installation
-[![Downloads](https://pepy.tech/badge/peqnp)](https://pepy.tech/project/peqnp)
+[![Downloads](https: // pepy.tech / badge / peqnp)](https: // pepy.tech / project / peqnp)
 ```python
-pip install PEQNP --upgrade
+pip install PEQNP - -upgrade
 ```
 
 A simple example its the factorization of RSA numbers.
-    
-### With Integers:    
-    
+
+#  With Integers:
+
 ```python
-from peqnp import *
+import peqnp as pn
 
 rsa = 3007
 
-engine(rsa.bit_length())
+pn.engine(rsa.bit_length())
 
-p = integer()
-q = integer()
+p = pn.integer()
+q = pn.integer()
 
 assert p * q == rsa
 
-while satisfy():
+while pn.satisfy():
     print(p, q)
 ```
 output:
@@ -43,20 +43,20 @@ output:
 
 On PEQNP all elements are integers and relations on this integers, this relations are at bit level or arithmetic level.
 
-## Supported Operations
+# Supported Operations
 
-+, -, *, /, \*\*, pow_mod, %, &, |, ^, ==, =, <, <=, >, >=, <<, >>.
++, -, *, /, \*\*, pow_mod, %, & , | , ^ , == , = , < , <= , > , >= , << , >>.
 
-## Integers
+# Integers
 
-All integers live on \(\mathbb{N}_{2^{bits} - 1}\) and always positives, i.e. for two integer \(x, y\) the operation, \(x - y\) take all possibilities such that \(x - y >= 0\).         
+All integers live on \(\mathbb{N}_{2 ^ {bits} - 1}\) and always positives, i.e. for two integer \(x, y\) the operation, \(x - y\) take all possibilities such that \(x - y >= 0\).
 
-## The Mantra
+# The Mantra
 
 First is needed import all PEQNP system.
 
 ```python
-from peqnp import *
+import peqnp as pn
 ```
 
 Define the data and constants.
@@ -68,13 +68,13 @@ bits = 10
 Next initialize the engine.
 
 ```python
-engine(bits=10)
+pn.engine(bits=10)
 ```
 
-Declare the variables.
+Declare variables.
 
 ```python
-x = integer()
+x = pn.integer()
 ```
 
 Add constrains.
@@ -86,7 +86,7 @@ assert x < 10
 Solve the problem.
 
 ```python
-while satisfy():
+while pn.satisfy():
     print(x)
 ```
 
@@ -96,11 +96,12 @@ while satisfy():
 import time
 import random
 
-from peqnp import *
+import peqnp as pn
 
 """
 Given a sorted multiset, their differences and one tip: an element and position for only one arbitrary element, is possible recovery the original multiset?
 """
+
 
 def generator(n, max_val):
     return sorted([random.randint(1, max_val) for _ in range(n)])
@@ -112,6 +113,7 @@ def differences(lst):
 
 if __name__ == '__main__':
 
+    # 100 tests
     for n in range(1, 100):
 
         m = random.randint(1, n ** 2)
@@ -132,21 +134,21 @@ if __name__ == '__main__':
         ini = time.time()
 
         # Empirical bits necessarily to solve the problem.
-        engine(sum(diffs).bit_length() + 4)
+        pn.engine(sum(diffs).bit_length() + 4)
 
         # Declare a n-vector of integer variables to store the solution.
-        x = vector(size=n)
+        x = pn.vector(size=n)
 
         # The tip is on x at index ith
-        assert tip == index(ith, x)
+        assert tip == pn.index(ith, x)
 
         # The i-th element of the instance is the absolute difference of two consecutive elements
         for i in range(n - 1):
             assert x[i] <= x[i + 1]
-            assert index(i, diffs) == x[i + 1] - x[i]
+            assert pn.index(i, diffs) == x[i + 1] - x[i]
 
         # Solve the problem for only one solution.
-        if satisfy(turbo=True):
+        if pn.satisfy(turbo=True):
             o = [abs(x[i + 1] - x[i]) for i in range(n - 1)]
             c = 100 * len(set(map(int, x)).intersection(set(original))) / len(set(original))
             print('SOLVED       : {}'.format(x))

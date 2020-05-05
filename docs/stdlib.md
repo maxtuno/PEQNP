@@ -7,6 +7,7 @@ def version():
     :return:
     """
 
+
 def engine(bits=None, deep=None):
     """
     Initialize and reset the internal state of solver engine.
@@ -14,6 +15,7 @@ def engine(bits=None, deep=None):
     :param deep: The scope for the exponential variables bits / 4 by default.
     :return:
     """
+
 
 def slime4(cnf_path, model_path='', proof_path=''):
     """
@@ -24,6 +26,7 @@ def slime4(cnf_path, model_path='', proof_path=''):
     :return: A List with the model if SAT else an empty list.
     """
 
+
 def integer(key=None, bits=None):
     """
     Correspond to an integer of name key, and bits bits.
@@ -32,6 +35,7 @@ def integer(key=None, bits=None):
     :return: An instance of Integer.
     """
 
+
 def constant(value, bits=None):
     """
     Correspond to an constant of value with bits bits.
@@ -39,6 +43,7 @@ def constant(value, bits=None):
     :param value: The value that represent the constant.
     :return: An instance of Constant.
     """
+
 
 def satisfy(solve=True, turbo=False, log=False, assumptions=None, cnf_path='', model_path='', proof_path='', normalize=False):
     """
@@ -54,45 +59,50 @@ def satisfy(solve=True, turbo=False, log=False, assumptions=None, cnf_path='', m
     :return: True if SATISFIABLE else False
     """
 
-def subsets(lst, k=None, key=None):
+
+def subsets(lst, k=None, key=None, complement=False):
     """
     Generate all subsets for an specific universe of data.
     :param lst: The universe of data.
     :param k: The cardinality of the subsets.
     :param key: The name os the binary representation of subsets.
-    :return: (binary representation of subsets, the generic subset representation)
+    :param complement: True if include in return the complement.
+    :return: (binary representation of subsets, the generic subset representation, the complement of subset if complement=True)
     """
 
-def subset(data, k, empty=None):
+
+def subset(data, k, empty=None, complement=False):
     """
     An operative structure (like integer ot constant) that represent a subset of at most k elements.
     :param data: The data for the subsets.
     :param k: The maximal bits for subsets.
     :param empty: The empty element, 0, by default.
-    :return: An instance of Subset.
+    :param complement: True if include in return the complement.
+    :return: An instance of subset or (subset, complement) if complement=True.
     """
 
-def vector(key=None, bits=None, size=None, is_mip=False, is_real=False):
+
+def vector(key=None, bits=None, size=None, is_rational=False, is_gaussian=False):
     """
     A vector of integers.
     :param key: The generic name for the array this appear indexed on cnf.
     :param bits: The bit bits for each integer.
     :param size: The bits of the vector.
-    :param is_mip: Indicate of is a MIP vector.
-    :param is_real: Indicate of is a MIP vector and is real or int.
+    :param is_rational: Indicate of is a Rational vector.
+    :param is_gaussian: Indicate of is a Gaussian Integers vector.
     :return: An instance of vector.
     """
 
-def matrix(key=None, bits=None, dimensions=None, is_mip=False, is_real=False):
+
+def matrix(key=None, bits=None, dimensions=None):
     """
     A matrix of integers.
     :param key: The generic name for the array this appear indexed on cnf.
     :param bits: The bit bits for each integer.
     :param dimensions: An tuple with the dimensions for the array (n, m).
-    :param is_mip: Indicate of is a MIP vector.
-    :param is_real: Indicate of is a MIP vector and is real or int.
     :return: An instance of Matrix.
     """
+
 
 def matrix_permutation(lst, n):
     """
@@ -102,13 +112,15 @@ def matrix_permutation(lst, n):
     :return: An tuple with (index for the elements, the elements that represent the indexes)
     """
 
-def permutations(lst, n):
+
+def permutations(lst, n, key=None):
     """
     Entangle all permutations of bits n for the vector lst.
     :param lst: The list to entangle.
     :param n: The bits of entanglement.
     :return: (indexes, values)
     """
+
 
 def combinations(lst, n):
     """
@@ -118,12 +130,14 @@ def combinations(lst, n):
     :return: (indexes, values)
     """
 
+
 def all_binaries(lst):
     """
     This say that, the vector of integer are all binaries.
     :param lst: The vector of integers.
     :return:
     """
+
 
 def switch(x, ith, neg=False):
     """
@@ -134,6 +148,7 @@ def switch(x, ith, neg=False):
     :return: 0 if the uth bit for the argument collapse to true else return 1, if neg is active exchange 1 by 0.
     """
 
+
 def one_of(lst):
     """
     This indicate that at least one of the instruction on the array is active for the current problem.
@@ -141,12 +156,14 @@ def one_of(lst):
     :return: The entangled structure.
     """
 
+
 def factorial(x):
     """
     The factorial for the integer.
     :param x: The integer.
     :return: The factorial.
     """
+
 
 def sigma(f, i, n):
     """
@@ -157,6 +174,7 @@ def sigma(f, i, n):
     :return: The entangled structure.
     """
 
+
 def pi(f, i, n):
     """
     The Pi for i to n, for the lambda f f,
@@ -166,6 +184,7 @@ def pi(f, i, n):
     :return: The entangled structure.
     """
 
+
 def dot(xs, ys):
     """
     The dot product of two compatible Vectors.
@@ -173,6 +192,7 @@ def dot(xs, ys):
     :param ys: The second vector.
     :return: The dot product.
     """
+
 
 def mul(xs, ys):
     """
@@ -182,6 +202,7 @@ def mul(xs, ys):
     :return: The product.
     """
 
+
 def apply_single(lst, f):
     """
     A sequential operation over a vector.
@@ -190,13 +211,24 @@ def apply_single(lst, f):
     :return: The entangled structure.
     """
 
+
 def apply_dual(lst, f):
     """
-    A cross operation over a vector.
+    A cross operation over a vector on all pairs i, j such that i < j elements.
     :param lst: The vector.
     :param f: The lambda f of two integer variables.
     :return: The entangled structure.
     """
+
+
+def apply_different(lst, f):
+    """
+    A cross operation over a vector on all pairs i, j such that i != j elements.
+    :param lst: The vector.
+    :param f: The lambda f of two integer variables.
+    :return: The entangled structure.
+    """
+
 
 def all_different(args):
     """
@@ -205,6 +237,25 @@ def all_different(args):
     :return:
     """
 
+
+def all_out(args, values):
+    """
+    The all different to values global constraint.
+    :param args: A vector of integers.
+    :param values: The values excluded.
+    :return:
+    """
+
+
+def all_in(args, values):
+    """
+    The all in values global constraint.
+    :param args: A vector of integers.
+    :param values: The values included.
+    :return:
+    """
+
+
 def flatten(mtx):
     """
     Flatten a matrix into list.
@@ -212,17 +263,20 @@ def flatten(mtx):
     :return: The entangled structure.
     """
 
+
 def bits():
     """
     The current bits for the engine.
     :return: The bits
     """
 
+
 def oo():
     """
     The infinite for rhe system, the maximal value for the current engine.
     :return: 2 ** bits - 1
     """
+
 
 def element(item, data):
     """
@@ -232,6 +286,7 @@ def element(item, data):
     :return: The position of element
     """
 
+
 def index(ith, data):
     """
     Ensure that the element i is on the data, on the position index.
@@ -240,7 +295,8 @@ def index(ith, data):
     :return: The position of element
     """
 
-def gaussian(x, y):
+
+def gaussian(x=None, y=None):
     """
     Create a gaussian integer from (x+yj).
     :param x: real
@@ -248,13 +304,15 @@ def gaussian(x, y):
     :return: (x+yj)
     """
 
-def rational(x, y):
+
+def rational(x=None, y=None):
     """
     Create a rational x / y.
     :param x: numerator
     :param y: denominator
     :return: x / y
     """
+
 
 def at_most_k(x, k):
     """
@@ -264,6 +322,7 @@ def at_most_k(x, k):
     :return: The encoded variable
     """
 
+
 def sqrt(x):
     """
     Define x as a perfect square.
@@ -271,26 +330,6 @@ def sqrt(x):
     :return: The square of this integer.
     """
 
-def linear(is_real=False):
-    """
-    Create a linear variable.
-    :param is_real: If true, the variable is a real number if not an integer.
-    :return: The new variable.
-    """
-
-def maximize(objective):
-    """
-    Maximize the objective, according to the current linear constrains.
-    :param objective: An standard linear expression.
-    :return: the values of the model in order of variable creation.
-    """
-
-def minimize(objective):
-    """
-    Minimize the objective, according to the current linear constrains.
-    :param objective: An standard linear expression.
-    :return: the values of the model in order of variable creation.
-    """
 
 def hess_sequence(n, oracle, fast=True, cycles=1):
     """
@@ -302,6 +341,7 @@ def hess_sequence(n, oracle, fast=True, cycles=1):
     :return optimized sequence.
     """
 
+
 def hess_binary(n, oracle, fast=True, cycles=1):
     """
     HESS Algorithm is a Universal Black Box Optimizer (binary version).
@@ -312,13 +352,15 @@ def hess_binary(n, oracle, fast=True, cycles=1):
     :return optimized sequence.
     """
 
+
 def hyper_loop(n, m):
     """
     An nested for loop
     :param n: The size of the samples
     :param m: The numbers in the sample 0..m
-    :return: The indexes for loops
+    :return:
     """
+
 
 def reshape(lst, dimensions):
     """
@@ -328,6 +370,7 @@ def reshape(lst, dimensions):
     :return: The reshaped list
     """
 
+
 def tensor(dimensions, key=None):
     """
     Create a tensor
@@ -335,4 +378,6 @@ def tensor(dimensions, key=None):
     :param key: The name of tensor for CNF rendering
     :return: A tensor
     """
+
+
 ```
