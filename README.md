@@ -13,7 +13,9 @@ The PEQNP System its a automatic CNF encoder and SAT Solver for General Constrai
 To install the latest version:
 
     pip install PEQNP --upgrade
-    
+
+[Home](www.peqnp.com) [Twitter](https://twitter.com/maxtuno) [Youtube](https://www.youtube.com/channel/UCFlk1dUYLKtymcoMScdynNA) [Facebook](https://www.facebook.com/PEQNP-104747814228901) [Documentation](https://peqnp.readthedocs.io) [Examples](https://github.com/maxtuno/PEQNP/tree/master/examples) [Advanced Examples](https://github.com/maxtuno/PEQNP_EXAMPLES)
+
 Latin Hyper Cubes:
 
     import numpy as np
@@ -95,16 +97,3 @@ Output:
        [5 4 2 3 0 1]
        [4 5 3 2 1 0]]]
 
-[Home](www.peqnp.com)
-
-[Twitter](https://twitter.com/maxtuno)
-
-[Youtube](https://www.youtube.com/channel/UCFlk1dUYLKtymcoMScdynNA)
-
-[Facebook](https://www.facebook.com/PEQNP-104747814228901)
-
-[Documentation](https://peqnp.readthedocs.io)
-
-[Examples](https://github.com/maxtuno/PEQNP/tree/master/examples)
-
-[Advanced Examples](https://github.com/maxtuno/PEQNP_EXAMPLES)
