@@ -4,7 +4,7 @@ The PEQNP System its a automatic CNF encoder and SAT Solver for General Constrai
 
 # SLIME 4
 
-Simple: The Best SAT Solver on The Planet. https://github.com/maxtuno/SLIME
+[The Best SAT Solver on The Planet](https://github.com/maxtuno/SLIME)
 
 [![Downloads](https://pepy.tech/badge/peqnp)](https://pepy.tech/project/peqnp)
 
@@ -95,26 +95,16 @@ Output:
        [5 4 2 3 0 1]
        [4 5 3 2 1 0]]]
 
-More info:
+[Home](www.peqnp.com)
 
-PEQNP Home
-www.peqnp.science
+[Twitter](https://twitter.com/maxtuno)
 
-Twitter Account
-https://twitter.com/maxtuno
+[Youtube](https://www.youtube.com/channel/UCFlk1dUYLKtymcoMScdynNA)
 
-Youtube Channel
-https://www.youtube.com/channel/UCFlk1dUYLKtymcoMScdynNA
+[Facebook](https://www.facebook.com/PEQNP-104747814228901)
 
-Facebook Page
-https://www.facebook.com/PEQNP-104747814228901
+[Documentation](https://peqnp.readthedocs.io)
 
-Documentation
-https://peqnp.readthedocs.io
+[Examples](https://github.com/maxtuno/PEQNP/tree/master/examples)
 
-PEQNP Examples
-https://github.com/maxtuno/PEQNP/tree/master/examples
-
-Advanced PEQNP Examples
-https://github.com/maxtuno/PEQNP_EXAMPLES
-
+[Advanced Examples](https://github.com/maxtuno/PEQNP_EXAMPLES)
