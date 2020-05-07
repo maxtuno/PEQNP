@@ -14,7 +14,7 @@ To install the latest version:
 
     pip install PEQNP --upgrade
 
-[Home](www.peqnp.com) [Twitter](https://twitter.com/maxtuno) [Youtube](https://www.youtube.com/channel/UCFlk1dUYLKtymcoMScdynNA) [Facebook](https://www.facebook.com/PEQNP-104747814228901) [Documentation](https://peqnp.readthedocs.io) [Examples](https://github.com/maxtuno/PEQNP/tree/master/examples) [Advanced Examples](https://github.com/maxtuno/PEQNP_EXAMPLES)
+[Home](www.peqnp.com) [Twitter](https://twitter.com/maxtuno) [Youtube](https://www.youtube.com/channel/UCFlk1dUYLKtymcoMScdynNA) [Facebook](https://www.facebook.com/PEQNP-104747814228901) [Documentation](https://peqnp.readthedocs.io) [Examples](https://github.com/maxtuno/PEQNP/tree/master/examples) [Advanced](https://github.com/maxtuno/PEQNP_EXAMPLES)
 
 Latin Hyper Cubes:
 
