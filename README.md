@@ -100,6 +100,7 @@ Output:
 PIXIE: Otional submodule for Mixed Integer Programming. 
 
 To install submodule:
+
     pip install PEQNP --force --install-option=pixie
 
 Simple MIP:
