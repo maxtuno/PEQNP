@@ -1,6 +1,6 @@
 # MiP
 
-PIXIE is an optional sub - module dedicated to Mixed Integer Programming that can be installed with 'pip install PEQNP --with-pixie' requires that compiler support c + +17.
+PIXIE is an optional submodule dedicated to Mixed Integer Programming that can be installed with 'pip install PEQNP --force --install-option=pixie'.
 
 ```python
 import peqnp as pn
