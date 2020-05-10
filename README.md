@@ -4,16 +4,18 @@ The PEQNP System its a automatic CNF encoder and SAT Solver for General Constrai
 
 # SLIME 4
 
-Simple: The Best SAT Solver on The Planet. https://github.com/maxtuno/SLIME
+[The Best SAT Solver on The Planet](https://github.com/maxtuno/SLIME)
 
 [![Downloads](https://pepy.tech/badge/peqnp)](https://pepy.tech/project/peqnp)
 
-    [PEQNP + SLIME 4 : 1.1.0 - 10-5-2020]
+    [PEQNP + SLIME 4 : 1.0.3 - 3-5-2020]
 
 To install the latest version:
 
     pip install PEQNP --upgrade
-    
+
+[Home](https://www.peqnp.com) [Twitter](https://twitter.com/maxtuno) [Youtube](https://www.youtube.com/channel/UCFlk1dUYLKtymcoMScdynNA) [Facebook](https://www.facebook.com/PEQNP-104747814228901) [Documentation](https://peqnp.readthedocs.io) [Examples](https://github.com/maxtuno/PEQNP/tree/master/examples) [Advanced](https://github.com/maxtuno/PEQNP_EXAMPLES)
+
 Latin Hyper Cubes:
 
     import numpy as np
@@ -94,64 +96,4 @@ Output:
        [0 1 5 4 3 2]
        [5 4 2 3 0 1]
        [4 5 3 2 1 0]]]
-
-
-PIXIE: Otional submodule for Mixed Integer Programming. 
-
-To install submodule:
-    pip install PEQNP --force --install-option=pixie
-
-Simple MIP:
-
-    import peqnp as pn
-
-    pn.engine()
-
-    x0 = pn.linear(is_real=True)
-    x1 = pn.linear()
-    x2 = pn.linear()
-    x3 = pn.linear()
-    assert +0.5420 * x0 - 0.4835 * x1 + 1.5304 * x2 + 0.0000 * x3 <= -2.0000
-    assert +1.7801 * x0 + 0.0000 * x1 + 1.4747 * x2 + 0.0000 * x3 <= 3.0000
-    assert x0 <= 6.0000
-    assert x1 <= 6.0000
-    assert x2 <= 1.0000
-    assert x3 <= 7.0000
-    print(pn.minimize(-13.3221 * x0 + 1.0028 * x1 + 2.3615 * x2 - 53.7288 * x3))
-    print(x0)
-    print(x1)
-    print(x2)
-    print(x3)
-
-  Output:
-
-    -392.2309477859779
-    1.6623616236162357
-    6
-    0
-    7
-
-
-More info:
-
-PEQNP Home
-www.peqnp.science
-
-Twitter Account
-https://twitter.com/maxtuno
-
-Youtube Channel
-https://www.youtube.com/channel/UCFlk1dUYLKtymcoMScdynNA
-
-Facebook Page
-https://www.facebook.com/PEQNP-104747814228901
-
-Documentation
-https://peqnp.readthedocs.io
-
-PEQNP Examples
-https://github.com/maxtuno/PEQNP/tree/master/examples
-
-Advanced PEQNP Examples
-https://github.com/maxtuno/PEQNP_EXAMPLES
 
