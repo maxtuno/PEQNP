@@ -97,3 +97,37 @@ Output:
        [5 4 2 3 0 1]
        [4 5 3 2 1 0]]]
 
+PIXIE: Otional submodule for Mixed Integer Programming. 
+
+To install submodule:
+    pip install PEQNP --force --install-option=pixie
+
+Simple MIP:
+
+    import peqnp as pn
+
+    pn.engine()
+
+    x0 = pn.linear(is_real=True)
+    x1 = pn.linear()
+    x2 = pn.linear()
+    x3 = pn.linear()
+    assert +0.5420 * x0 - 0.4835 * x1 + 1.5304 * x2 + 0.0000 * x3 <= -2.0000
+    assert +1.7801 * x0 + 0.0000 * x1 + 1.4747 * x2 + 0.0000 * x3 <= 3.0000
+    assert x0 <= 6.0000
+    assert x1 <= 6.0000
+    assert x2 <= 1.0000
+    assert x3 <= 7.0000
+    print(pn.minimize(-13.3221 * x0 + 1.0028 * x1 + 2.3615 * x2 - 53.7288 * x3))
+    print(x0)
+    print(x1)
+    print(x2)
+    print(x3)
+
+  Output:
+
+    -392.2309477859779
+    1.6623616236162357
+    6
+    0
+    7
