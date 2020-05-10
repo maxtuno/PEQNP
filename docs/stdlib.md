@@ -1,6 +1,8 @@
 # The Standard Library
 
 ```python
+
+
 def version():
     """
     Print the current version of the system.
@@ -377,6 +379,30 @@ def tensor(dimensions, key=None):
     :param dimensions: The list of dimensions
     :param key: The name of tensor for CNF rendering
     :return: A tensor
+    """
+
+
+def linear(is_real=False):
+    """
+    Create a linear variable.
+    :param is_real: If true, the variable is a real number if not an integer.
+    :return: The new variable.
+    """
+
+
+def maximize(objective):
+    """
+    Maximize the objective, according to the current linear constrains.
+    :param objective: An standard linear expression.
+    :return: the values of the model in order of variable creation.
+    """
+
+
+def minimize(objective):
+    """
+    Minimize the objective, according to the current linear constrains.
+    :param objective: An standard linear expression.
+    :return: the values of the model in order of variable creation.
     """
 
 

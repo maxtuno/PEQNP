@@ -20,13 +20,23 @@ SOFTWARE.
 """
 
 import slime
-
+try:
+    import pixie
+    pixie.reset()
+except ImportError:
+    pass
 from peqnp.entity import Entity
 
 
 class CSP:
     def __init__(self, bits=None, deep=None):
         slime.reset()
+        try:
+            import pixie
+            pixie.reset()
+        except ImportError:
+            pass
+
         import sys
         sys.setrecursionlimit(1 << 16)
         self.mips = []
@@ -43,6 +53,43 @@ class CSP:
         self.false = -self.true
         self.constants = {}
         self.add_block([-self.true])
+
+    def add_constraint(self, l, c, r):
+        try:
+            import pixie
+        except ImportError:
+            raise Exception('\nPIXIE is not installed!\ntry reinstall with:\npip install PEQNP --force --install-option=pixie')
+        ll = len(self.mips) * [0]
+        for v in l:
+            ll[v.idx] = self.mips[v.idx].value
+            self.mips[v.idx].value = 1
+            self.mips[v.idx].constraint.clear()
+            self.mips[v.idx].constraint.append(v)
+        pixie.add_constraint(ll, c, r)
+        if isinstance(r, Entity):
+            r.value = 1
+            r.constraint.clear()
+            r.constraint.append(v)
+
+    @staticmethod
+    def set_integer_condition(c):
+        pixie.set_integer_condition(c)
+
+    def maximize(self, objective):
+        ll = len(self.mips) * [0]
+        for v in objective.constraint:
+            ll[v.idx] = self.mips[v.idx].value
+        pixie.add_objective(ll)
+        mips = pixie.maximize()
+        return pixie.optimal(), mips
+
+    def minimize(self, objective):
+        ll = len(self.mips) * [0]
+        for v in objective.constraint:
+            ll[v.idx] = self.mips[v.idx].value
+        pixie.add_objective([-d for d in ll])
+        mips = pixie.minimize()
+        return -pixie.optimal(), mips
 
     @property
     def zero(self):
@@ -374,8 +421,8 @@ class CSP:
             return True
         return False
 
-    def int(self, key=None, block=None, value=None, size=None, deep=None):
-        return Entity(self, key=key, block=block, value=value, bits=size, deep=deep)
+    def int(self, key=None, block=None, value=None, size=None, deep=None, is_mip=False, is_real=False):
+        return Entity(self, key=key, block=block, value=value, bits=size, deep=deep, is_mip=is_mip, is_real=is_real)
 
     def array(self, dimension, size=None, key=None):
         if size is not None:

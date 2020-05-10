@@ -25,6 +25,7 @@ The standard high level library for the PEQNP system.
 
 from .gaussian import Gaussian
 from .rational import Rational
+from .linear import Linear
 from .solver import *
 
 csp = None
@@ -41,7 +42,7 @@ def version():
     Print the current version of the system.
     :return:
     """
-    print('PEQNP + SLIME 4 : 1.0.3 - 3-5-2020')
+    print('PEQNP + SLIME 4 : 1.1.0 - 10-5-2020')
 
 
 def engine(bits=None, deep=None):
@@ -714,3 +715,61 @@ def tensor(dimensions, key=None):
     check_engine()
     csp.variables.append(csp.int(key=key, size=None, deep=dimensions))
     return csp.variables[-1]
+
+
+def linear(is_real=False):
+    """
+    Create a linear variable.
+    :param is_real: If true, the variable is a real number if not an integer.
+    :return: The new variable.
+    """
+    global csp
+    check_engine()
+    csp.mips.append(Linear(csp, len(csp.mips), is_real=is_real))
+    return csp.mips[-1]
+
+
+def maximize(objective):
+    """
+    Maximize the objective, according to the current linear constrains.
+    :param objective: An standard linear expression.
+    :return: the values of the model in order of variable creation.
+    """
+    global csp
+    ints = []
+    for var in csp.mips:
+        if var.is_real:
+            ints.append(0)
+        else:
+            ints.append(1)
+    csp.set_integer_condition(ints)
+    opt, result = csp.maximize(objective)
+    for v, r in zip(csp.mips, result):
+        if not v.is_real:
+            v.value = int(r)
+        else:
+            v.value = r
+    return opt
+
+
+def minimize(objective):
+    """
+    Minimize the objective, according to the current linear constrains.
+    :param objective: An standard linear expression.
+    :return: the values of the model in order of variable creation.
+    """
+    global csp
+    ints = []
+    for var in csp.mips:
+        if var.is_real:
+            ints.append(0)
+        else:
+            ints.append(1)
+    csp.set_integer_condition(ints)
+    opt, result = csp.minimize(objective)
+    for v, r in zip(csp.mips, result):
+        if not v.is_real:
+            v.value = int(r)
+        else:
+            v.value = r
+    return opt

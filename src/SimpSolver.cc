@@ -612,7 +612,7 @@ bool SimpSolver::eliminate(bool turn_off_elim) {
     if (log) {
 #ifdef MASSIVE
 #else
-        printf("c Reduced to %d vars, %d cls (grow=%d)\n", n_vars, n_cls, grow);
+        printf("c Reduced to %d vars, %d cls\n", n_vars, n_cls);
 #endif
     }
 
