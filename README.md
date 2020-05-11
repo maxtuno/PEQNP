@@ -8,7 +8,7 @@ The PEQNP System its a automatic CNF encoder and SAT Solver for General Constrai
 
 [![Downloads](https://pepy.tech/badge/peqnp)](https://pepy.tech/project/peqnp)
 
-    [PEQNP + SLIME 4 : 1.0.3 - 3-5-2020]
+    [PEQNP + SLIME 4 : 1.1.1 - 10-5-2020]
 
 To install the latest version:
 

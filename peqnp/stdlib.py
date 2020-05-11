@@ -42,7 +42,11 @@ def version():
     Print the current version of the system.
     :return:
     """
-    print('PEQNP + SLIME 4 : 1.1.0 - 10-5-2020')
+    try:
+        import pixie
+        print('PEQNP + SLIME 4 + PIXIE : 1.1.1 - 10-5-2020')
+    except ImportError:
+        print('PEQNP + SLIME 4 : 1.1.1 - 10-5-2020')
 
 
 def engine(bits=None, deep=None):
@@ -160,7 +164,7 @@ def subset(data, k, empty=None, complement=False):
     return subset_
 
 
-def vector(key=None, bits=None, size=None, is_rational=False, is_gaussian=False):
+def vector(key=None, bits=None, size=None, is_rational=False, is_gaussian=False, is_mip=False, is_real=False):
     """
     A vector of integers.
     :param key: The generic name for the array this appear indexed on cnf.
@@ -168,6 +172,8 @@ def vector(key=None, bits=None, size=None, is_rational=False, is_gaussian=False)
     :param size: The bits of the vector.
     :param is_rational: Indicate of is a Rational vector.
     :param is_gaussian: Indicate of is a Gaussian Integers vector.
+    :param is_mip: Indicate of is a MIP vector.
+    :param is_real: Indicate of is a MIP vector and is real or int.
     :return: An instance of vector.
     """
     global csp
@@ -176,17 +182,25 @@ def vector(key=None, bits=None, size=None, is_rational=False, is_gaussian=False)
         return [rational() for _ in range(size)]
     if is_gaussian:
         return [gaussian() for _ in range(size)]
-    array_ = csp.array(key=key, size=bits, dimension=size)
-    csp.variables += array_
+    if is_mip:
+        lns = []
+        for _ in range(size):
+            lns.append(linear(is_real=is_real))
+        return lns
+    else:
+        array_ = csp.array(key=key, size=bits, dimension=size)
+        csp.variables += array_
     return array_
 
 
-def matrix(key=None, bits=None, dimensions=None):
+def matrix(key=None, bits=None, dimensions=None, is_mip=False, is_real=False):
     """
     A matrix of integers.
     :param key: The generic name for the array this appear indexed on cnf.
     :param bits: The bit bits for each integer.
     :param dimensions: An tuple with the dimensions for the array (n, m).
+    :param is_mip: Indicate of is a MIP vector.
+    :param is_real: Indicate of is a MIP vector and is real or int.
     :return: An instance of Matrix.
     """
     global csp
@@ -194,9 +208,14 @@ def matrix(key=None, bits=None, dimensions=None):
     matrix_ = []
     for i in range(dimensions[0]):
         row = []
+        lns = []
         for j in range(dimensions[1]):
-            csp.variables.append(integer(key='{}_{}_{}'.format(key, i, j) if key is not None else key, bits=bits))
-            row.append(csp.variables[-1])
+            if is_mip:
+                lns.append(linear(is_real=is_real))
+                row.append(lns[-1])
+            else:
+                csp.variables.append(integer(key='{}_{}_{}'.format(key, i, j) if key is not None else key, bits=bits))
+                row.append(csp.variables[-1])
         matrix_.append(row)
     return matrix_
 

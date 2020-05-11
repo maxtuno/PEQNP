@@ -84,7 +84,7 @@ def subset(data, k, empty=None, complement=False):
     """
 
 
-def vector(key=None, bits=None, size=None, is_rational=False, is_gaussian=False):
+def vector(key=None, bits=None, size=None, is_rational=False, is_gaussian=False, is_mip=False, is_real=False):
     """
     A vector of integers.
     :param key: The generic name for the array this appear indexed on cnf.
@@ -92,16 +92,20 @@ def vector(key=None, bits=None, size=None, is_rational=False, is_gaussian=False)
     :param size: The bits of the vector.
     :param is_rational: Indicate of is a Rational vector.
     :param is_gaussian: Indicate of is a Gaussian Integers vector.
+    :param is_mip: Indicate of is a MIP vector.
+    :param is_real: Indicate of is a MIP vector and is real or int.
     :return: An instance of vector.
     """
 
 
-def matrix(key=None, bits=None, dimensions=None):
+def matrix(key=None, bits=None, dimensions=None, is_mip=False, is_real=False):
     """
     A matrix of integers.
     :param key: The generic name for the array this appear indexed on cnf.
     :param bits: The bit bits for each integer.
     :param dimensions: An tuple with the dimensions for the array (n, m).
+    :param is_mip: Indicate of is a MIP vector.
+    :param is_real: Indicate of is a MIP vector and is real or int.
     :return: An instance of Matrix.
     """
 
