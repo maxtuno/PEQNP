@@ -1,6 +1,6 @@
 # PEQNP 
 
-The PEQNP System its a automatic CNF encoder and SAT Solver for General Constrained Diophantine Equations and NP-Complete Problems, full integrated with Python 3 and 0 dependencies.
+The PEQNP System its an automatic CNF encoder and SAT Solver for General Constrained Diophantine Equations and NP-Complete Problems, full integrated with Python 3 and 2 with 0 dependencies.
 
 # SLIME 4
 
@@ -8,7 +8,7 @@ The PEQNP System its a automatic CNF encoder and SAT Solver for General Constrai
 
 [![Downloads](https://pepy.tech/badge/peqnp)](https://pepy.tech/project/peqnp)
 
-    [PEQNP + SLIME 4 : 1.1.1 - 10-5-2020]
+    [PEQNP + SLIME 4 : 1.2.0 - 11-5-2020]
 
 To install the latest version:
 
@@ -99,7 +99,7 @@ Output:
 
 PIXIE: Otional submodule for Mixed Integer Programming. 
 
-    [PEQNP + SLIME 4 + PIXIE : 1.1.1 - 10-5-2020]
+    [PEQNP + SLIME 4 + PIXIE : 1.2.0 - 11-5-2020]
 
 To install submodule:
 

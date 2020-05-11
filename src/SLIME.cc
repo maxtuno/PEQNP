@@ -26,12 +26,19 @@ static PyMethodDef module_methods[] = {{"slime4", (PyCFunction) slime4, METH_VAR
                                         ""},
                                        {NULL, NULL, 0, NULL}};
 
-static struct PyModuleDef slime = {PyModuleDef_HEAD_INIT, "slime",
+
+#if PY_MAJOR_VERSION < 3
+    PyMODINIT_FUNC initslime() {
+        Py_InitModule3("slime", module_methods, "");
+    }
+#else
+    static struct PyModuleDef slime = {PyModuleDef_HEAD_INIT, "slime",
                                    ""
                                    "SLIME 4 SAT Solver."
                                    "",
                                    -1, module_methods};
 
-PyMODINIT_FUNC PyInit_slime() {
-    return PyModule_Create(&slime);
-}
+    PyMODINIT_FUNC PyInit_slime() {
+        return PyModule_Create(&slime);
+    }
+#endif

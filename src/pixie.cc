@@ -38,12 +38,18 @@ static PyMethodDef module_methods[] = {{"add_objective", (PyCFunction) add_objec
                                                ""},
                                        {NULL, NULL, 0, NULL}};
 
-static struct PyModuleDef pixie = {PyModuleDef_HEAD_INIT, "pixie",
-                                   ""
-                                   "PIXIE 1 MIP Solver."
-                                   "",
-                                   -1, module_methods};
+#if PY_MAJOR_VERSION < 3
+    PyMODINIT_FUNC initpixie() {
+        Py_InitModule3("pixie", module_methods, "");
+    }
+#else
+    static struct PyModuleDef pixie = {PyModuleDef_HEAD_INIT, "pixie",
+                                       ""
+                                       "PIXIE 1 MIP Solver."
+                                       "",
+                                       -1, module_methods};
 
-PyMODINIT_FUNC PyInit_pixie() {
-    return PyModule_Create(&pixie);
-}
+    PyMODINIT_FUNC PyInit_pixie() {
+        return PyModule_Create(&pixie);
+    }
+#endif

@@ -48,7 +48,7 @@ if __name__ == '__main__':
             elements.append(int(lines[i]))
 
     # theoretical optimal distribution possible
-    bins = math.ceil(sum(elements) / capacity)
+    bins = int(math.ceil(sum(elements) / capacity))
     while True:
 
         pn.engine(bits=capacity.bit_length() + 1)

@@ -63,12 +63,12 @@ class CSP:
         for v in l:
             ll[v.idx] = self.mips[v.idx].value
             self.mips[v.idx].value = 1
-            self.mips[v.idx].constraint.clear()
+            del self.mips[v.idx].constraint[:]
             self.mips[v.idx].constraint.append(v)
         pixie.add_constraint(ll, c, r)
         if isinstance(r, Entity):
             r.value = 1
-            r.constraint.clear()
+            del r.constraint[:]
             r.constraint.append(v)
 
     @staticmethod
@@ -406,7 +406,7 @@ class CSP:
                 maps = {}
                 for key, value in self.map.items():
                     maps[key] = [(1 if v > 0 else -1) * (abs(v) - 1) for v in value]
-                print('c {}'.format(maps), file=file)
+                file.write('c {}\n'.format(maps))
         if model:
             for key, value in self.map.items():
                 for arg in args:
@@ -416,7 +416,7 @@ class CSP:
                             arg.value = -2 ** (self.bits - 1) + int(ds, 2)
                         else:
                             arg.value = int(ds, 2)
-                        arg.bin.clear()
+                        del arg.bin[:]
             self.add_block([-lit for lit in model])
             return True
         return False

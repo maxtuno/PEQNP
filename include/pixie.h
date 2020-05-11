@@ -12,12 +12,12 @@
 #include <Python.h>
 #include "pixie.hh"
 
-peqnp::science::pixie<double> *mip;
-peqnp::science::result<double> result;
+pixie *mip;
+result res;
 
 PyObject *reset(PyObject *self, PyObject *args) {
     delete mip;
-    mip = new peqnp::science::pixie<double>();
+    mip = new pixie();
     Py_RETURN_NONE;
 }
 
@@ -106,25 +106,25 @@ PyObject *add_constraint(PyObject *self, PyObject *args) {
 }
 
 PyObject *minimize(PyObject *self, PyObject *args) {
-    result = mip->optimize();
-    PyObject *modelList = PyList_New(result.get_variables().size());
-    for (unsigned int i = 0; i < result.get_variables().size(); i++) {
-        PyList_SetItem(modelList, i, PyFloat_FromDouble(result.get_variables()[i]));
+    res = mip->optimize();
+    PyObject *modelList = PyList_New(res.get_variables().size());
+    for (unsigned int i = 0; i < res.get_variables().size(); i++) {
+        PyList_SetItem(modelList, i, PyFloat_FromDouble(res.get_variables()[i]));
     }
     return modelList;
 }
 
 PyObject *maximize(PyObject *self, PyObject *args) {
-    result = mip->optimize();
-    PyObject *modelList = PyList_New(result.get_variables().size());
-    for (unsigned int i = 0; i < result.get_variables().size(); i++) {
-        PyList_SetItem(modelList, i, PyFloat_FromDouble(result.get_variables()[i]));
+    res = mip->optimize();
+    PyObject *modelList = PyList_New(res.get_variables().size());
+    for (unsigned int i = 0; i < res.get_variables().size(); i++) {
+        PyList_SetItem(modelList, i, PyFloat_FromDouble(res.get_variables()[i]));
     }
     return modelList;
 }
 
 PyObject *optimal(PyObject *self, PyObject *args) {
-    return PyFloat_FromDouble(result.get_optimal());
+    return PyFloat_FromDouble(res.get_optimal());
 }
 
 #endif //SLIME_SAT_SOLVER_SLIME_HH

@@ -14,12 +14,12 @@ if 'pixie' in sys.argv:
                                  language="c++",
                                  sources=['src/pixie.cc'],
                                  include_dirs=['.', 'include'],
-                                 extra_compile_args=['-std=c++17'],
+                                 extra_compile_args=['-std=c++11'],
                                  ),)
     sys.argv.remove('pixie')
 setup(
     name='PEQNP',
-    version='1.1.1',
+    version='1.2.0',
     packages=['peqnp'],
     url='http://www.peqnp.science',
     license='copyright (c) 2012-2020 Oscar Riveros. All rights reserved.',

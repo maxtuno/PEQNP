@@ -44,9 +44,9 @@ def version():
     """
     try:
         import pixie
-        print('PEQNP + SLIME 4 + PIXIE : 1.1.1 - 10-5-2020')
+        print('PEQNP + SLIME 4 + PIXIE : 1.2.0 - 11-5-2020')
     except ImportError:
-        print('PEQNP + SLIME 4 : 1.1.1 - 10-5-2020')
+        print('PEQNP + SLIME 4 : 1.2.0 - 11-5-2020')
 
 
 def engine(bits=None, deep=None):
@@ -708,7 +708,7 @@ def hyper_loop(n, m):
             k //= m
             if len(idx) == n:
                 yield idx[::-1]
-                idx.clear()
+                del idx[:]
 
 
 def reshape(lst, dimensions):

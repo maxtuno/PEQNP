@@ -11,28 +11,24 @@
 
 #include "utils.hh"
 
-namespace peqnp::science {
+struct result {
+    double z{};
+    std::vector<double> x{};
 
-    template<typename R>
-    struct result {
-        R z{};
-        std::vector<R> x{};
+    result() = default;
 
-        result() = default;
+    explicit result(const unsigned int size) {
+        z = -std::numeric_limits<double>::max();
+        x.resize(size);
+    }
 
-        explicit result(const unsigned int size) {
-            z = -std::numeric_limits<R>::max();
-            x.resize(size);
-        }
+    double get_optimal() {
+        return z;
+    }
 
-        double get_optimal() {
-            return z;
-        }
-
-        std::vector<double> get_variables() {
-            return x;
-        }
-    };
-} // namespace peqnp::science
+    std::vector<double> get_variables() {
+        return x;
+    }
+};
 
 #endif // MIP_SOLVER_RESULT_HH

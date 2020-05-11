@@ -34,8 +34,8 @@ static const int buffer_size = 1048576;
 class StreamBuffer {
     FILE *in;
     unsigned char buf[buffer_size];
-    int pos;
-    int size;
+    unsigned long pos;
+    unsigned long size;
 
     void assureLookahead() {
         if (pos >= size) {
@@ -52,7 +52,7 @@ class StreamBuffer {
         pos++;
         assureLookahead();
     }
-    int position() const { return pos; }
+    int position() const { return (int)pos; }
 };
 
 //-------------------------------------------------------------------------------------------------

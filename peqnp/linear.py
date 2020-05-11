@@ -43,7 +43,7 @@ class Linear:
         self.constraint.append('==')
         self.constraint.append(other)
         self.encoder.add_constraint(self.constraint[:-2], self.constraint[-2], self.constraint[-1])
-        self.constraint.clear()
+        del self.constraint[:]
         self.constraint.append(self)
         self.value = 1
         return True
@@ -68,7 +68,7 @@ class Linear:
         self.constraint.append('<=')
         self.constraint.append(other)
         self.encoder.add_constraint(self.constraint[:-2], self.constraint[-2], self.constraint[-1])
-        self.constraint.clear()
+        del self.constraint[:]
         self.constraint.append(self)
         self.value = 1
         return True
@@ -77,7 +77,7 @@ class Linear:
         self.constraint.append('>=')
         self.constraint.append(other)
         self.encoder.add_constraint(self.constraint[:-2], self.constraint[-2], self.constraint[-1])
-        self.constraint.clear()
+        del self.constraint[:]
         self.constraint.append(self)
         self.value = 1
         return True

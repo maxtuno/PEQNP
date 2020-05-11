@@ -85,7 +85,7 @@ class Entity:
             self.constraint.append('==')
             self.constraint.append(other)
             self.encoder.add_constraint(self.constraint[:-2], self.constraint[-2], self.constraint[-1])
-            self.constraint.clear()
+            del self.constraint[:]
             return True
         if self.value is not None:
             if isinstance(other, Entity):
@@ -214,7 +214,7 @@ class Entity:
             self.constraint.append('<=')
             self.constraint.append(other)
             self.encoder.add_constraint(self.constraint[:-2], self.constraint[-2], self.constraint[-1])
-            self.constraint.clear()
+            del self.constraint[:]
             return True
         return self.__lt__(other + 1)
 
@@ -236,7 +236,7 @@ class Entity:
             self.constraint.append('>=')
             self.constraint.append(other)
             self.encoder.add_constraint(self.constraint[:-2], self.constraint[-2], self.constraint[-1])
-            self.constraint.clear()
+            del self.constraint[:]
             return True
         if other > 0:
             return self.__gt__(other - 1)
