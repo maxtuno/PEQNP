@@ -22,6 +22,7 @@
 #include <algorithm>
 #include <iomanip>
 #include <limits>
+#include <fstream>
 
 #define EPS 1e-6
 

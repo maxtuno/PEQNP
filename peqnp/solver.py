@@ -75,20 +75,28 @@ class CSP:
     def set_integer_condition(c):
         pixie.set_integer_condition(c)
 
-    def maximize(self, objective):
+    def maximize(self, objective, lp_path):
         ll = len(self.mips) * [0]
+        ints = len(self.mips) * [0]
         for v in objective.constraint:
             ll[v.idx] = self.mips[v.idx].value
+            if not v.is_real:
+                ints[v.idx] = 1
+        self.set_integer_condition(ints)
         pixie.add_objective(ll)
-        mips = pixie.maximize()
+        mips = pixie.maximize(lp_path)
         return pixie.optimal(), mips
 
-    def minimize(self, objective):
+    def minimize(self, objective, lp_path):
         ll = len(self.mips) * [0]
+        ints = len(self.mips) * [0]
         for v in objective.constraint:
             ll[v.idx] = self.mips[v.idx].value
+            if not v.is_real:
+                ints[v.idx] = 1
+        self.set_integer_condition(ints)
         pixie.add_objective([-d for d in ll])
-        mips = pixie.minimize()
+        mips = pixie.minimize(lp_path)
         return -pixie.optimal(), mips
 
     @property

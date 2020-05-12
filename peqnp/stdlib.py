@@ -44,9 +44,9 @@ def version():
     """
     try:
         import pixie
-        print('PEQNP + SLIME 4 + PIXIE : 1.2.0 - 11-5-2020')
+        print('PEQNP + SLIME 4 + PIXIE : 1.2.1 - 12-5-2020')
     except ImportError:
-        print('PEQNP + SLIME 4 : 1.2.0 - 11-5-2020')
+        print('PEQNP + SLIME 4 : 1.2.1 - 12-5-2020')
 
 
 def engine(bits=None, deep=None):
@@ -748,7 +748,7 @@ def linear(is_real=False):
     return csp.mips[-1]
 
 
-def maximize(objective):
+def maximize(objective, lp_path=''):
     """
     Maximize the objective, according to the current linear constrains.
     :param objective: An standard linear expression.
@@ -762,19 +762,20 @@ def maximize(objective):
         else:
             ints.append(1)
     csp.set_integer_condition(ints)
-    opt, result = csp.maximize(objective)
+    opt, result = csp.maximize(objective, lp_path)
     for v, r in zip(csp.mips, result):
         if not v.is_real:
-            v.value = int(r)
+            v.value = int(r + 0.5)
         else:
             v.value = r
     return opt
 
 
-def minimize(objective):
+def minimize(objective, lp_path=''):
     """
     Minimize the objective, according to the current linear constrains.
     :param objective: An standard linear expression.
+    :param lp_path: The path for the model.
     :return: the values of the model in order of variable creation.
     """
     global csp
@@ -785,10 +786,10 @@ def minimize(objective):
         else:
             ints.append(1)
     csp.set_integer_condition(ints)
-    opt, result = csp.minimize(objective)
+    opt, result = csp.minimize(objective, lp_path)
     for v, r in zip(csp.mips, result):
         if not v.is_real:
-            v.value = int(r)
+            v.value = int(r + 0.5)
         else:
             v.value = r
     return opt

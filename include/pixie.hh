@@ -199,6 +199,34 @@ public:
         obj = objective;
         vc = objective.size();
     }
+
+    //! Show contents
+    void put(char *lp_path) const noexcept {
+        std::ofstream lp_file(lp_path);
+        lp_file << "max: ";
+        for (unsigned i = 0; i < vc; ++i) {
+            lp_file << (obj[i] >= 0? "+" + std::to_string(std::abs(obj[i])) : "-" + std::to_string(std::abs(obj[i]))) << " * x" << (i + 1) << " ";
+        }
+        lp_file << ";" << std::endl;
+        for (unsigned i = 0; i < ec; ++i) {
+            for (unsigned j = 0; j < vc; ++j) {
+                if (ii(ll[i][j]) != 0.0) {
+                    lp_file << (ll[i][j] >= 0? "+" + std::to_string(std::abs(ll[i][j])) : "-" + std::to_string(std::abs(ll[i][j]))) << " * x" << (j + 1) << " ";
+                }
+            }
+            std::string tt{"< >"};
+            lp_file << tt[static_cast<unsigned int>(cc[i])] << "= ";
+            lp_file << (rr[i] >= 0? "+" + std::to_string(std::abs(rr[i])) : "-" + std::to_string(std::abs(rr[i]))) << "; \n";
+        }
+        for (unsigned i = 0; i < vc; ++i) {
+            if (ints[i]) {
+                lp_file << "int " << "x" << (i + 1) << ";" << std::endl;
+            }
+        }
+        lp_file << std::endl;
+
+        lp_file.close();
+    }
 };
 
 #endif // MIP_SOLVER_MIP_HH

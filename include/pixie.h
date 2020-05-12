@@ -106,6 +106,13 @@ PyObject *add_constraint(PyObject *self, PyObject *args) {
 }
 
 PyObject *minimize(PyObject *self, PyObject *args) {
+    char *path;
+    if (!PyArg_ParseTuple(args, "s", &path)) {
+        Py_RETURN_NONE;
+    }
+    if (strcmp(path, "") != 0) {
+        mip->put(path);
+    }
     res = mip->optimize();
     PyObject *modelList = PyList_New(res.get_variables().size());
     for (unsigned int i = 0; i < res.get_variables().size(); i++) {
@@ -115,6 +122,13 @@ PyObject *minimize(PyObject *self, PyObject *args) {
 }
 
 PyObject *maximize(PyObject *self, PyObject *args) {
+    char *path;
+    if (!PyArg_ParseTuple(args, "s", &path)) {
+        Py_RETURN_NONE;
+    }
+    if (strcmp(path, "") != 0) {
+        mip->put(path);
+    }
     res = mip->optimize();
     PyObject *modelList = PyList_New(res.get_variables().size());
     for (unsigned int i = 0; i < res.get_variables().size(); i++) {

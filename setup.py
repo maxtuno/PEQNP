@@ -19,7 +19,7 @@ if 'pixie' in sys.argv:
     sys.argv.remove('pixie')
 setup(
     name='PEQNP',
-    version='1.2.0',
+    version='1.2.1',
     packages=['peqnp'],
     url='http://www.peqnp.science',
     license='copyright (c) 2012-2020 Oscar Riveros. All rights reserved.',
