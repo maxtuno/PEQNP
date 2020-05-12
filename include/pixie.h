@@ -106,35 +106,43 @@ PyObject *add_constraint(PyObject *self, PyObject *args) {
 }
 
 PyObject *minimize(PyObject *self, PyObject *args) {
+    bool solve;
     char *path;
-    if (!PyArg_ParseTuple(args, "s", &path)) {
+    if (!PyArg_ParseTuple(args, "bs", &solve, &path)) {
         Py_RETURN_NONE;
     }
     if (strcmp(path, "") != 0) {
         mip->put(path);
     }
-    res = mip->optimize();
-    PyObject *modelList = PyList_New(res.get_variables().size());
-    for (unsigned int i = 0; i < res.get_variables().size(); i++) {
-        PyList_SetItem(modelList, i, PyFloat_FromDouble(res.get_variables()[i]));
+    if (solve) {
+        res = mip->optimize();
+        PyObject *modelList = PyList_New(res.get_variables().size());
+        for (unsigned int i = 0; i < res.get_variables().size(); i++) {
+            PyList_SetItem(modelList, i, PyFloat_FromDouble(res.get_variables()[i]));
+        }
+        return modelList;
     }
-    return modelList;
+    Py_RETURN_NONE;
 }
 
 PyObject *maximize(PyObject *self, PyObject *args) {
+    bool solve;
     char *path;
-    if (!PyArg_ParseTuple(args, "s", &path)) {
+    if (!PyArg_ParseTuple(args, "bs", &solve, &path)) {
         Py_RETURN_NONE;
     }
     if (strcmp(path, "") != 0) {
         mip->put(path);
     }
-    res = mip->optimize();
-    PyObject *modelList = PyList_New(res.get_variables().size());
-    for (unsigned int i = 0; i < res.get_variables().size(); i++) {
-        PyList_SetItem(modelList, i, PyFloat_FromDouble(res.get_variables()[i]));
+    if (solve) {
+        res = mip->optimize();
+        PyObject *modelList = PyList_New(res.get_variables().size());
+        for (unsigned int i = 0; i < res.get_variables().size(); i++) {
+            PyList_SetItem(modelList, i, PyFloat_FromDouble(res.get_variables()[i]));
+        }
+        return modelList;
     }
-    return modelList;
+    Py_RETURN_NONE;
 }
 
 PyObject *optimal(PyObject *self, PyObject *args) {

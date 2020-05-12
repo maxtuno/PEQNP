@@ -394,18 +394,21 @@ def linear(is_real=False):
     """
 
 
-def maximize(objective, lp_path=''):
+def maximize(objective, solve=True, lp_path=''):
     """
     Maximize the objective, according to the current linear constrains.
     :param objective: An standard linear expression.
+    :param solve: Used to render lp file solve by PIXIE if True else only render lp file.
+    :param lp_path: The path for the model.
     :return: the values of the model in order of variable creation.
     """
 
 
-def minimize(objective, lp_path=''):
+def minimize(objective, solve=True, lp_path=''):
     """
     Minimize the objective, according to the current linear constrains.
     :param objective: An standard linear expression.
+    :param solve: Used to render lp file solve by PIXIE if True else only render lp file.
     :param lp_path: The path for the model.
     :return: the values of the model in order of variable creation.
     """

@@ -24,7 +24,6 @@
 #include <limits>
 #include <fstream>
 
-#define EPS 1e-6
 
 enum C {
     L,
@@ -32,6 +31,8 @@ enum C {
     G,
 };
 
-bool ii(const double x) { return (std::abs(x - round(x)) < EPS); }
+#define EPS 1e-10
+
+bool ii(const double x) { return (std::abs(x - round(x)) <= EPS); }
 
 #endif // MIP_SOLVER_UTILS_HH

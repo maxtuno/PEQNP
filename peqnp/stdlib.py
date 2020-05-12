@@ -44,9 +44,9 @@ def version():
     """
     try:
         import pixie
-        print('PEQNP + SLIME 4 + PIXIE : 1.2.1 - 12-5-2020')
+        print('PEQNP + SLIME 4 + PIXIE : 1.2.2 - 12-5-2020')
     except ImportError:
-        print('PEQNP + SLIME 4 : 1.2.1 - 12-5-2020')
+        print('PEQNP + SLIME 4 : 1.2.2 - 12-5-2020')
 
 
 def engine(bits=None, deep=None):
@@ -748,33 +748,11 @@ def linear(is_real=False):
     return csp.mips[-1]
 
 
-def maximize(objective, lp_path=''):
+def maximize(objective, solve=True, lp_path=''):
     """
     Maximize the objective, according to the current linear constrains.
     :param objective: An standard linear expression.
-    :return: the values of the model in order of variable creation.
-    """
-    global csp
-    ints = []
-    for var in csp.mips:
-        if var.is_real:
-            ints.append(0)
-        else:
-            ints.append(1)
-    csp.set_integer_condition(ints)
-    opt, result = csp.maximize(objective, lp_path)
-    for v, r in zip(csp.mips, result):
-        if not v.is_real:
-            v.value = int(r + 0.5)
-        else:
-            v.value = r
-    return opt
-
-
-def minimize(objective, lp_path=''):
-    """
-    Minimize the objective, according to the current linear constrains.
-    :param objective: An standard linear expression.
+    :param solve: Used to render lp file solve by PIXIE if True else only render lp file.
     :param lp_path: The path for the model.
     :return: the values of the model in order of variable creation.
     """
@@ -786,7 +764,32 @@ def minimize(objective, lp_path=''):
         else:
             ints.append(1)
     csp.set_integer_condition(ints)
-    opt, result = csp.minimize(objective, lp_path)
+    opt, result = csp.maximize(objective, solve, lp_path)
+    for v, r in zip(csp.mips, result):
+        if not v.is_real:
+            v.value = int(r + 0.5)
+        else:
+            v.value = r
+    return opt
+
+
+def minimize(objective, solve=True, lp_path=''):
+    """
+    Minimize the objective, according to the current linear constrains.
+    :param objective: An standard linear expression.
+    :param solve: Used to render lp file solve by PIXIE if True else only render lp file.
+    :param lp_path: The path for the model.
+    :return: the values of the model in order of variable creation.
+    """
+    global csp
+    ints = []
+    for var in csp.mips:
+        if var.is_real:
+            ints.append(0)
+        else:
+            ints.append(1)
+    csp.set_integer_condition(ints)
+    opt, result = csp.minimize(objective, solve, lp_path)
     for v, r in zip(csp.mips, result):
         if not v.is_real:
             v.value = int(r + 0.5)

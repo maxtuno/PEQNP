@@ -152,19 +152,16 @@ private:
     result optimize(const result &lb) {
         result pr = po();
         if (pr.z < lb.z) {
-            return lb;
-        } else if (pr.z > lb.z) {
-            size_t idx = 0;
-            for (size_t i = 0; i < vc; ++i) {
-                if (ints[i] && !ii(pr.x[i])) {
-                    idx = i + 1;
-                    auto p_l{*this};
-                    p_l.sb(idx - 1, pr.x[idx - 1], C::L);
-                    auto ub = p_l.optimize(lb);
-                    auto p_r{*this};
-                    p_r.sb(idx - 1, pr.x[idx - 1], C::G);
-                    return p_r.optimize(ub);
-                }
+            return lb;            
+        }
+        size_t idx = 0;
+        for (size_t i = 0; i < vc; ++i) {
+            if (ints[i] && !ii(pr.x[i])) {
+                idx = i + 1;
+                auto br{*this};
+                br.sb(idx - 1, pr.x[idx - 1], C::L);         
+                sb(idx - 1, pr.x[idx - 1], C::G);    
+                return optimize(br.optimize(lb));
             }
         }
         return pr;
