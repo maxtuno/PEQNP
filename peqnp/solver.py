@@ -29,7 +29,7 @@ from peqnp.entity import Entity
 
 
 class CSP:
-    def __init__(self, bits=None, deep=None):
+    def __init__(self, bits=None):
         slime.reset()
         try:
             import pixie
@@ -43,8 +43,7 @@ class CSP:
         self.variables = []
         self.map = {}
         self.bits = bits
-        self.oo = 2 ** bits - 2
-        self.deep = deep if deep is not None else bits // 4
+        self.oo = 2 ** bits - 1
         self.number_of_clauses = 0
         self.number_of_variables = 0
         self.__0 = None

@@ -8,7 +8,7 @@ The PEQNP System its an automatic CNF encoder and SAT Solver for General Constra
 
 [![Downloads](https://pepy.tech/badge/peqnp)](https://pepy.tech/project/peqnp)
 
-    [PEQNP + SLIME 4 : 1.2.2 - 12-5-2020]
+    [PEQNP + SLIME 4 : 1.2.6 - 17-5-2020]
 
 To install the latest version:
 
@@ -99,7 +99,7 @@ Output:
 
 PIXIE: Otional submodule for Mixed Integer Programming. 
 
-    [PEQNP + SLIME 4 + PIXIE : 1.2.2 - 12-5-2020]
+    [PEQNP + SLIME 4 + PIXIE : 1.2.6 - 17-5-2020]
 
 To install submodule:
 

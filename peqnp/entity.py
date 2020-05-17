@@ -142,16 +142,16 @@ class Entity:
             return self.value ** power.value
         else:
             if isinstance(power, Entity):
-                aa = Entity(self.encoder, bits=self.encoder.bits)
-                assert sum([self.encoder.zero.iff(aa[i], 1) for i in range(self.encoder.bits // 2)]) == 1
-                assert sum([self.encoder.zero.iff(aa[i], i) for i in range(self.encoder.bits // 2)]) == power
+                aa = Entity(self.encoder, bits=self.bits.bit_length())
+                assert sum([self.encoder.zero.iff(aa[i], self.encoder.true) for i in range(self.bits.bit_length())]) == 1
+                assert sum([self.encoder.zero.iff(aa[i], i) for i in range(self.bits.bit_length())]) == power
                 if modulo is not None:
                     assert modulo != 0
-                    return sum([self.encoder.zero.iff(aa[i], self ** i) for i in range(self.encoder.bits // 2)]) % modulo
-                return sum([self.encoder.zero.iff(aa[i], self ** i) for i in range(self.encoder.bits // 2)])
+                    return sum([self.encoder.zero.iff(aa[i], self ** i) for i in range(self.bits.bit_length())]) % modulo
+                return sum([self.encoder.zero.iff(aa[i], self ** i) for i in range(self.bits.bit_length())])
             else:
-                other = 1
-                for _ in range(power):
+                other = self
+                for _ in range(power - 1):
                     other *= self
                 if modulo is not None:
                     return other % modulo

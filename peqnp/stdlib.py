@@ -44,23 +44,22 @@ def version():
     """
     try:
         import pixie
-        print('PEQNP + SLIME 4 + PIXIE : 1.2.2 - 12-5-2020')
+        print('PEQNP + SLIME 4 + PIXIE : 1.2.6 - 17-5-2020')
     except ImportError:
-        print('PEQNP + SLIME 4 : 1.2.2 - 12-5-2020')
+        print('PEQNP + SLIME 4 : 1.2.6 - 17-5-2020')
 
 
-def engine(bits=None, deep=None):
+def engine(bits=None):
     """
     Initialize and reset the internal state of solver engine.
     :param bits: The bits 2 ** bits - 1 of solving space.
-    :param deep: The scope for the exponential variables bits / 4 by default.
     :return:
     """
     global csp
     if bits is None:
-        csp = CSP(0, deep)
+        csp = CSP(0)
     else:
-        csp = CSP(bits, deep)
+        csp = CSP(bits)
 
 
 def slime4(cnf_path, model_path='', proof_path=''):
