@@ -1,9 +1,6 @@
 title : PEQNP
 description : PEQNP II Mathematical Programming Solver
 logo : https://raw.githubusercontent.com/maxtuno/PEQNP/master/logo.png
-site_favicon : https://raw.githubusercontent.com/maxtuno/PEQNP/master/favicon.png
 theme: jekyll-theme-minimal
 google_analytics : UA-146115776-2
 show_downloads : true
-use_math: true
-markdown: maruku
