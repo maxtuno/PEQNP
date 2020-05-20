@@ -10,6 +10,9 @@ For more info visit [www.peqnp.com](http://www.peqnp.com)
 pip install PEQNP --upgrade
 ```
 
+# PEQNP on Google Colab 
+[PEQNP on Google Colab](https://colab.research.google.com/github/maxtuno/PEQNP/blob/master/docs/PEQNP.ipynb)
+
 # Integer factorization
 
 In number theory, integer factorization is the decomposition of a composite number into a product of smaller integers. If these factors are further restricted to prime numbers, the process is called prime factorization.
