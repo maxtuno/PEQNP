@@ -837,7 +837,7 @@ for n in range(1, 30):
     else:
         raise Exception('Error!')
 end = time.time() - start
-plt.title('TIME {}(s)')
+plt.title('TIME {}(s)'.format(ini - end))
 plt.plot(sizes, times, 'k-')
 plt.plot(sizes, times, 'r.')
 plt.show()
