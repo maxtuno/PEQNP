@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 2.4)
+project(PEQNP)
+if (APPLE)
+    set(CMAKE_MACOSX_RPATH ON)
+endif (APPLE)
+add_subdirectory(sdk/solvers/slime)
+add_subdirectory(sdk/solvers/pixie)
+add_subdirectory(sdk/solvers/cadical)

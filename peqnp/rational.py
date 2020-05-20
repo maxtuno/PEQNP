@@ -113,7 +113,7 @@ class Rational:
         return '({} / {})'.format(self.denominator, self.numerator)
 
     def __float__(self):
-        return float(self.denominator / self.numerator)
+        return float(self.denominator) / float(self.numerator)
 
     def invert(self):
         return Rational(self.numerator, self.denominator)

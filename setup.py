@@ -2,29 +2,27 @@ import sys
 from distutils.core import setup, Extension
 
 ext_modules = [
-    Extension("slime",
+    Extension("SLIME",
               language="c++",
-              sources=['src/SLIME.cc', 'src/SimpSolver.cc', 'src/Solver.cc'],
-              include_dirs=['.', 'include'],
+              sources=['sdk/solvers/slime/peqnp_sat.cc', 'sdk/solvers/slime/src/Solver.cc'],
+              include_dirs=['sdk/sat/', 'sdk/solvers/slime/', 'sdk/solvers/slime/include'],
               extra_compile_args=['-std=c++98'],
               ),
+    Extension("PIXIE",
+              language="c++",
+              sources=['sdk/solvers/pixie/peqnp_mip.cc'],
+              include_dirs=['sdk/mip/', 'sdk/solvers/pixie/', 'sdk/solvers/pixie/include'],
+              extra_compile_args=['-std=c++11'],
+              ),
 ]
-if 'pixie' in sys.argv:
-    ext_modules.append(Extension("pixie",
-                                 language="c++",
-                                 sources=['src/pixie.cc'],
-                                 include_dirs=['.', 'include'],
-                                 extra_compile_args=['-std=c++11'],
-                                 ),)
-    sys.argv.remove('pixie')
 setup(
     name='PEQNP',
-    version='1.2.6',
+    version='2.0.rc1',
     packages=['peqnp'],
     url='http://www.peqnp.science',
     license='copyright (c) 2012-2020 Oscar Riveros. All rights reserved.',
     author='Oscar Riveros',
     author_email='contact@peqnp.science',
-    description='A Multi Paradigm Constrain Satisfaction Solver.',
+    description='PEQNP II Mathematical Programming Solver from http://www.peqnp.com',
     ext_modules=ext_modules,
 )

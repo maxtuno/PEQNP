@@ -19,24 +19,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-import slime
-try:
-    import pixie
-    pixie.reset()
-except ImportError:
-    pass
+from peqnp import mip_solver, sat_solver
 from peqnp.entity import Entity
 
 
 class CSP:
-    def __init__(self, bits=None):
-        slime.reset()
-        try:
-            import pixie
-            pixie.reset()
-        except ImportError:
-            pass
-
+    def __init__(self, bits, sat_solver_path, mip_solver_path):
+        self.sat_solver = sat_solver.SATSolver(sat_solver_path)
+        self.mip_solver = mip_solver.MIPSolver(mip_solver_path)
         import sys
         sys.setrecursionlimit(1 << 16)
         self.mips = []
@@ -54,49 +44,50 @@ class CSP:
         self.add_block([-self.true])
 
     def add_constraint(self, l, c, r):
-        try:
-            import pixie
-        except ImportError:
-            raise Exception('\nPIXIE is not installed!\ntry reinstall with:\npip install PEQNP --force --install-option=pixie')
         ll = len(self.mips) * [0]
         for v in l:
             ll[v.idx] = self.mips[v.idx].value
             self.mips[v.idx].value = 1
             del self.mips[v.idx].constraint[:]
             self.mips[v.idx].constraint.append(v)
-        pixie.add_constraint(ll, c, r)
+        self.mip_solver.add_constraint(ll, c, r)
         if isinstance(r, Entity):
             r.value = 1
             del r.constraint[:]
             r.constraint.append(v)
 
-    @staticmethod
-    def set_integer_condition(c):
-        pixie.set_integer_condition(c)
+    def set_integer_condition(self, c):
+        self.mip_solver.set_integer_condition(c)
 
-    def maximize(self, objective, solve, lp_path):
+    def maximize(self, objective):
         ll = len(self.mips) * [0]
         ints = len(self.mips) * [0]
         for v in objective.constraint:
             ll[v.idx] = self.mips[v.idx].value
             if not v.is_real:
                 ints[v.idx] = 1
-        self.set_integer_condition(ints)
-        pixie.add_objective(ll)
-        mips = pixie.maximize(solve, lp_path)
-        return pixie.optimal(), mips
+        self.mip_solver.set_integer_condition(ints)
+        self.mip_solver.set_objective(ll)
+        optimal = self.mip_solver.maximize()
+        sols = []
+        for i in range(len(self.mips)):
+            sols.append(self.mip_solver.val(i))
+        return optimal, sols
 
-    def minimize(self, objective, solve, lp_path):
+    def minimize(self, objective):
         ll = len(self.mips) * [0]
         ints = len(self.mips) * [0]
         for v in objective.constraint:
             ll[v.idx] = self.mips[v.idx].value
             if not v.is_real:
                 ints[v.idx] = 1
-        self.set_integer_condition(ints)
-        pixie.add_objective([-d for d in ll])
-        mips = pixie.minimize(solve, lp_path)
-        return -pixie.optimal(), mips
+        self.mip_solver.set_integer_condition(ints)
+        self.mip_solver.set_objective([-d for d in ll])
+        optimal = self.mip_solver.maximize()
+        sols = []
+        for i in range(len(self.mips)):
+            sols.append(self.mip_solver.val(i))
+        return optimal, sols
 
     @property
     def zero(self):
@@ -114,9 +105,10 @@ class CSP:
         self.number_of_variables += 1
         return self.number_of_variables
 
-    @staticmethod
-    def add_block(clause):
-        slime.add_clause(sorted(set(clause), key=abs))
+    def add_block(self, clause):
+        for lit in clause:
+            self.sat_solver.add(lit)
+        self.sat_solver.add(0)
         return clause
 
     def mapping(self, key, value):
@@ -407,7 +399,7 @@ class CSP:
     def to_sat(self, args, solve=True, turbo=False, log=False, assumptions=None, cnf_path='', model_path='', proof_path='', normalize=False):
         if assumptions is None:
             assumptions = []
-        model = slime.solve(solve, turbo, log, assumptions, cnf_path, model_path, proof_path)
+        model = self.sat_solver.solve()  # solve, turbo, log, assumptions, cnf_path, model_path, proof_path)
         if cnf_path:
             with open(cnf_path, 'a') as file:
                 maps = {}
