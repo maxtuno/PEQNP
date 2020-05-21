@@ -36,3 +36,8 @@ void peqnp_mip_set_integer_condition(void *solver, int *integer_condition, int s
 double peqnp_mip_maximize(void *solver) { return static_cast<pixie *>(solver)->optimize(); }
 
 double peqnp_mip_val(void *solver, int idx) { return static_cast<pixie *>(solver)->get_variable(idx); }
+
+#if _WIN32 || _WIN64
+#include <Python.h>
+PyMODINIT_FUNC PyInit_PIXIE() { Py_RETURN_NONE; }
+#endif

@@ -87,7 +87,7 @@ class CSP:
         sols = []
         for i in range(len(self.mips)):
             sols.append(self.mip_solver.val(i))
-        return optimal, sols
+        return -optimal, sols
 
     @property
     def zero(self):

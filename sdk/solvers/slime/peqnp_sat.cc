@@ -50,3 +50,8 @@ void peqnp_sat_add(void *s, int l) { import(s)->add(l); }
 int peqnp_sat_solve(void *s) { return import(s)->solve(); }
 int peqnp_sat_val(void *s, int l) { return import(s)->val(l); }
 };
+
+#if _WIN32 || _WIN64
+#include <Python.h>
+PyMODINIT_FUNC PyInit_SLIME() { Py_RETURN_NONE; }
+#endif
