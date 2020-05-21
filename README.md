@@ -401,7 +401,7 @@ plt.show()
 ```
 
 
-    <Figure size 640x480 with 1 Axes>
+![png](img/rationals.png)
 
 
 # NP-Complete
@@ -840,7 +840,7 @@ for n in range(1, 30):
     else:
         raise Exception('Error!')
 end = time.time() - start
-plt.title('TIME {}(s)'.format(ini - end))
+plt.title('TIME {}(s)'.format(end))
 plt.plot(sizes, times, 'k-')
 plt.plot(sizes, times, 'r.')
 plt.show()
