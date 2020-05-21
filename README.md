@@ -13,6 +13,7 @@ pip install PEQNP --upgrade
 # PEQNP on Google Colab 
 [PEQNP on Google Colab](https://colab.research.google.com/github/maxtuno/PEQNP/blob/master/docs/PEQNP.ipynb)
 
+
 # Integer factorization
 
 In number theory, integer factorization is the decomposition of a composite number into a product of smaller integers. If these factors are further restricted to prime numbers, the process is called prime factorization.
@@ -37,10 +38,10 @@ while pn.satisfy():
     PEQNP II Mathematical Programming Solver from http://www.peqnp.com
     SAT : SLIME SAT Solver
     MIP : PIXIE MIP Solver
-    (3007, 1)
-    (31, 97)
-    (1, 3007)
-    (97, 31)
+    3007 1
+    31 97
+    1 3007
+    97 31
 
 
 # Native Operations
@@ -160,56 +161,56 @@ for n in range(1, 10):
     DIFFERENCES  : []
     ORIGINAL     : [1]
     SOLVED       : [1]
-    COINCIDENCES : 100%
-    OK! - 0.00556302070618s
-    N, M         : 2, 2
-    DIFFERENCES  : [1]
-    ORIGINAL     : [1, 2]
-    SOLVED       : [1, 2]
-    COINCIDENCES : 100%
-    OK! - 0.0148830413818s
-    N, M         : 3, 6
-    DIFFERENCES  : [2, 0]
-    ORIGINAL     : [1, 3, 3]
-    SOLVED       : [1, 3, 3]
-    COINCIDENCES : 100%
-    OK! - 0.0351028442383s
-    N, M         : 4, 5
-    DIFFERENCES  : [1, 1, 1]
-    ORIGINAL     : [1, 2, 3, 4]
-    SOLVED       : [1, 2, 3, 4]
-    COINCIDENCES : 100%
-    OK! - 0.0578279495239s
-    N, M         : 5, 13
-    DIFFERENCES  : [1, 6, 1, 2]
-    ORIGINAL     : [2, 3, 9, 10, 12]
-    SOLVED       : [2, 3, 9, 10, 12]
-    COINCIDENCES : 100%
-    OK! - 0.118702173233s
-    N, M         : 6, 8
-    DIFFERENCES  : [0, 2, 1, 0, 2]
-    ORIGINAL     : [2, 2, 4, 5, 5, 7]
-    SOLVED       : [2, 2, 4, 5, 5, 7]
-    COINCIDENCES : 100%
-    OK! - 0.143443107605s
-    N, M         : 7, 9
-    DIFFERENCES  : [2, 1, 0, 0, 1, 2]
-    ORIGINAL     : [3, 5, 6, 6, 6, 7, 9]
-    SOLVED       : [3, 5, 6, 6, 6, 7, 9]
-    COINCIDENCES : 100%
-    OK! - 0.196148872375s
-    N, M         : 8, 7
-    DIFFERENCES  : [0, 2, 0, 2, 1, 0, 1]
-    ORIGINAL     : [1, 1, 3, 3, 5, 6, 6, 7]
-    SOLVED       : [1, 1, 3, 3, 5, 6, 6, 7]
-    COINCIDENCES : 100%
-    OK! - 0.247198104858s
-    N, M         : 9, 73
-    DIFFERENCES  : [2, 3, 3, 0, 13, 9, 5, 7]
-    ORIGINAL     : [22, 24, 27, 30, 30, 43, 52, 57, 64]
-    SOLVED       : [22, 24, 27, 30, 30, 43, 52, 57, 64]
-    COINCIDENCES : 100%
-    OK! - 0.452358961105s
+    COINCIDENCES : 100.0%
+    OK! - 0.006051301956176758s
+    N, M         : 2, 1
+    DIFFERENCES  : [0]
+    ORIGINAL     : [1, 1]
+    SOLVED       : [1, 1]
+    COINCIDENCES : 100.0%
+    OK! - 0.011089801788330078s
+    N, M         : 3, 3
+    DIFFERENCES  : [1, 1]
+    ORIGINAL     : [1, 2, 3]
+    SOLVED       : [1, 2, 3]
+    COINCIDENCES : 100.0%
+    OK! - 0.027172565460205078s
+    N, M         : 4, 16
+    DIFFERENCES  : [1, 10, 3]
+    ORIGINAL     : [1, 2, 12, 15]
+    SOLVED       : [1, 2, 12, 15]
+    COINCIDENCES : 100.0%
+    OK! - 0.061131954193115234s
+    N, M         : 5, 24
+    DIFFERENCES  : [2, 4, 6, 4]
+    ORIGINAL     : [5, 7, 11, 17, 21]
+    SOLVED       : [5, 7, 11, 17, 21]
+    COINCIDENCES : 100.0%
+    OK! - 0.10732483863830566s
+    N, M         : 6, 22
+    DIFFERENCES  : [6, 5, 2, 1, 4]
+    ORIGINAL     : [1, 7, 12, 14, 15, 19]
+    SOLVED       : [1, 7, 12, 14, 15, 19]
+    COINCIDENCES : 100.0%
+    OK! - 0.19602131843566895s
+    N, M         : 7, 45
+    DIFFERENCES  : [7, 5, 4, 4, 3, 13]
+    ORIGINAL     : [2, 9, 14, 18, 22, 25, 38]
+    SOLVED       : [2, 9, 14, 18, 22, 25, 38]
+    COINCIDENCES : 100.0%
+    OK! - 0.311415433883667s
+    N, M         : 8, 61
+    DIFFERENCES  : [6, 10, 3, 1, 14, 5, 2]
+    ORIGINAL     : [8, 14, 24, 27, 28, 42, 47, 49]
+    SOLVED       : [8, 14, 24, 27, 28, 42, 47, 49]
+    COINCIDENCES : 100.0%
+    OK! - 0.2893483638763428s
+    N, M         : 9, 16
+    DIFFERENCES  : [1, 6, 0, 3, 1, 1, 1, 1]
+    ORIGINAL     : [1, 2, 8, 8, 11, 12, 13, 14, 15]
+    SOLVED       : [1, 2, 8, 8, 11, 12, 13, 14, 15]
+    COINCIDENCES : 100.0%
+    OK! - 0.281646728515625s
 
 
 # MIP
@@ -267,9 +268,9 @@ print(x8)
 print(x9)
 ```
 
-    1810.5335856
+    1810.5335855955589
     0.0
-    16.6091605678
+    16.609160567807837
     0.0
     0.0
     0.0
@@ -284,7 +285,7 @@ print(x9)
 
 https://en.wikipedia.org/wiki/Diophantine_equation
 
-Let be \(x, y \in \mathbb{N}\) sl \(x^3 - x + 1 = y^2\)
+# Let be $x, y \in \mathbb{N} \vert x^3 - x + 1 = y^2$
 
 
 ```python
@@ -401,7 +402,7 @@ plt.show()
 ```
 
 
-![png](img/rationals.png)
+![png](img/output_21_0.png)
 
 
 # NP-Complete
@@ -594,35 +595,39 @@ else:
     print('Infeasible ...')
 ```
 
-    [[[1 4 2 3 0]
-      [0 2 1 4 3]
-      [4 0 3 1 2]
-      [2 3 4 0 1]
-      [3 1 0 2 4]]
+    /usr/local/lib/python3.6/dist-packages/peqnp/stdlib.py:404: RuntimeWarning: invalid value encountered in not_equal
+      csp.apply(args, dual=lambda x, y: x != y)
+
+
+    [[[3 2 1 4 0]
+      [0 1 4 2 3]
+      [4 3 0 1 2]
+      [2 4 3 0 1]
+      [1 0 2 3 4]]
     
-     [[2 1 3 0 4]
-      [4 3 2 1 0]
-      [3 4 0 2 1]
-      [0 2 1 4 3]
-      [1 0 4 3 2]]
-    
-     [[4 3 0 2 1]
-      [3 1 4 0 2]
-      [0 2 1 4 3]
+     [[4 3 0 1 2]
+      [2 4 3 0 1]
+      [0 1 4 2 3]
       [1 0 2 3 4]
-      [2 4 3 1 0]]
+      [3 2 1 4 0]]
     
-     [[0 2 1 4 3]
-      [1 0 3 2 4]
-      [2 1 4 3 0]
-      [3 4 0 1 2]
-      [4 3 2 0 1]]
+     [[1 0 2 3 4]
+      [3 2 1 4 0]
+      [2 4 3 0 1]
+      [0 1 4 2 3]
+      [4 3 0 1 2]]
     
-     [[3 0 4 1 2]
-      [2 4 0 3 1]
-      [1 3 2 0 4]
-      [4 1 3 2 0]
-      [0 2 1 4 3]]]
+     [[2 1 4 0 3]
+      [4 3 0 1 2]
+      [1 0 2 3 4]
+      [3 2 1 4 0]
+      [0 4 3 2 1]]
+    
+     [[0 4 3 2 1]
+      [1 0 2 3 4]
+      [3 2 1 4 0]
+      [4 3 0 1 2]
+      [2 1 4 0 3]]]
 
 
 # Travelling salesman problem
@@ -643,7 +648,7 @@ plt.show()
 ```
 
 
-![png](img/tsp.png)
+![png](img/output_32_0.png)
 
 
 # Knapsack problem
@@ -669,9 +674,9 @@ print('VALUES  : {} <= {}'.format(np.dot(values, slots), capacity))
 print('SELECT  : {}'.format(slots))
 ```
 
-    PROFIT  : 5.52168690283 vs 5.52168690283
-    VALUES  : -0.00241264744394 <= 0.772589778049
-    SELECT  : [1, 1, 1, 1, 0, 0, 1, 0, 0, 1]
+    PROFIT  : 15.983895436651677 vs 15.983895436651677
+    VALUES  : -1.1296738169998946 <= 0.6229814586258784
+    SELECT  : [1, 1, 0, 1, 1, 0, 1, 0, 1, 1]
 
 
 # Magic square
@@ -742,17 +747,17 @@ else:
     print('Infeasible ...')
 ```
 
-    [9, 13, 18, 19, 26, 27, 34, 45, 46, 52, 58, 59, 63, 65, 72, 78, 80, 81, 90, 91, 97, 98, 107, 113, 122, 123, 131, 137, 141, 145]
-    122 == 9 + 113
-    58 == 45 + 13
-    137 == 78 + 59
-    131 == 34 + 97
-    90 == 63 + 27
-    141 == 123 + 18
-    145 == 80 + 65
-    91 == 19 + 72
-    98 == 46 + 52
-    107 == 81 + 26
+    [2, 12, 19, 20, 21, 24, 30, 31, 32, 34, 53, 55, 66, 73, 83, 86, 89, 99, 102, 103, 104, 116, 118, 127, 128, 150, 172, 184, 191, 230]
+    191 == 89 + 102
+    172 == 99 + 73
+    32 == 20 + 12
+    230 == 103 + 127
+    128 == 104 + 24
+    150 == 116 + 34
+    86 == 55 + 31
+    83 == 30 + 53
+    21 == 2 + 19
+    184 == 66 + 118
 
 
 # Subset sum problem
@@ -776,10 +781,9 @@ else:
     print('Infeasible ...')
 ```
 
-    (9592, array([438, 969, 393,  11, 417, 188, 289, 348, 403, 266, 494, 387, 952,
-           490, 159, 895, 489, 961, 504, 798, 894, 522, 705, 185, 463, 280,
-           976, 539, 599, 742,  73, 682]))
-    (9592, [393, 417, 289, 387, 952, 490, 895, 489, 961, 504, 798, 894, 705, 280, 539, 599])
+    788 [797 178 691 576 290 804 899 207  83  19 725 368 360 458 775 268 984 563
+     892 769   3 605 936 320 426 936 171 271 960 876 936 739]
+    788 [178, 290, 320]
 
 
 
@@ -797,10 +801,9 @@ else:
     print('Infeasible ...')
 ```
 
-    (2168, array([637, 897, 800, 998, 610, 107, 198, 821, 955,  56, 803, 770, 457,
-           795, 235, 406, 862, 334, 820, 170, 716, 123, 821, 365, 568, 799,
-           213, 963, 626, 471, 806, 138]))
-    (2168, [610, 457, 963, 138])
+    4255 [ 56 797 515 131 824 562 521 334 420 124 181 328 107 621 572 676 647 944
+     497 609 748 295 335 106 815 843 464 757 115 668 449 724]
+    4255 [824, 334, 181, 328, 107, 335, 843, 464, 115, 724]
 
 
 # Permutation Reconstruction from Differences
@@ -848,7 +851,7 @@ plt.close()
 ```
 
 
-![png](img/curve.png)
+![png](img/output_43_0.png)
 
 
 # Hamiltonian Cycle Problem
@@ -876,26 +879,26 @@ else:
     print('Infeasible ...')
 ```
 
-    [[1 0 1 1 1 1 0 1 1 1]
-     [0 0 1 0 1 1 0 1 0 0]
-     [0 0 1 0 0 0 0 0 1 0]
-     [1 1 0 0 0 1 0 1 1 1]
-     [1 1 1 0 0 0 0 0 0 1]
-     [1 0 1 0 1 0 1 1 1 1]
-     [1 0 0 0 0 0 1 1 0 0]
-     [1 0 1 1 1 0 1 0 1 1]
-     [1 1 1 1 0 1 1 0 0 1]
-     [1 0 0 0 1 0 0 1 0 1]]
-    1 1 1 0 1 1 1 1 1 0 
-    1 1 1 0 0 0 0 0 1 0 
-    1 1 0 1 0 1 0 0 0 0 
-    0 0 1 0 1 1 0 0 1 0 
-    1 1 1 0 0 1 1 0 1 1 
-    0 0 0 0 0 1 1 0 0 0 
-    1 1 0 1 1 1 0 1 0 1 
-    1 1 0 1 1 0 1 0 1 0 
-    1 1 1 0 0 1 1 1 0 1 
-    1 0 0 0 0 0 0 0 1 1 
+    [[0 0 0 0 0 0 1 1 0 0]
+     [0 0 0 1 1 1 0 1 0 1]
+     [0 1 0 0 1 1 1 1 1 0]
+     [0 1 1 1 0 1 1 1 1 1]
+     [0 1 1 1 0 1 1 0 1 0]
+     [1 0 0 1 1 1 1 0 0 1]
+     [0 0 1 0 0 0 0 0 0 1]
+     [0 1 1 1 0 1 1 0 1 0]
+     [1 0 1 0 0 0 0 0 0 0]
+     [0 1 1 0 1 1 1 0 0 1]]
+    0 1 1 0 0 1 1 1 0 1 
+    0 1 1 1 1 0 0 0 1 1 
+    1 1 0 1 0 1 0 1 0 1 
+    1 1 0 1 1 1 1 1 0 1 
+    1 1 1 0 1 1 0 0 0 1 
+    0 1 1 1 1 0 1 0 0 0 
+    1 1 0 1 0 1 0 1 0 1 
+    1 0 0 0 0 0 0 0 1 0 
+    0 0 0 0 0 0 1 0 0 1 
+    1 0 0 0 1 0 0 0 0 0 
     
 
 
@@ -934,19 +937,20 @@ while True:
 ```
 
     50
-    [22, 22, 21, 21, 20, 20, 20, 13, 12, 11, 10, 9, 7, 7, 7, 5, 4, 2, 2, 1]
-    No solution for 4 bins...
-    Solution for 5 bins...
-    ##______________#___
-    __##________#______#
-    ______#__###________
-    ____#__##________#__
-    _____#_______###__#_
-    (48, [22, 22, 4])
-    (50, [21, 21, 7, 1])
-    (50, [20, 11, 10, 9])
-    (47, [20, 13, 12, 2])
-    (41, [20, 7, 7, 5, 2])
+    [23, 22, 21, 21, 19, 19, 19, 18, 16, 15, 14, 12, 12, 10, 7, 7, 7, 7, 5, 2]
+    Solution for 6 bins...
+    __#___________#__##_
+    ___#________#___#___
+    _#________#__#______
+    ______#_##__________
+    #______#_______#___#
+    ____##_____#________
+    40 [21, 7, 7, 5]
+    40 [21, 12, 7]
+    46 [22, 14, 10]
+    50 [19, 16, 15]
+    50 [23, 18, 7, 2]
+    50 [19, 19, 12]
 
 
 # Zero-One Integer Programming Definition
@@ -974,15 +978,15 @@ else:
     print('Infeasible...')
 ```
 
-    [[704 891 692 580 832 201 430 979 769 760]
-     [564 793 888 532 909 244 317 952 311 911]
-     [820 938 166 115   6 742   2 163 306 995]
-     [879 727 172 115 110 780 420 865 561 385]
-     [287 384 669  16 914 751  46 814 944 142]]
-    [3175 2612 1409 2147 1962]
-    [1, 0, 1, 1, 0, 0, 1, 0, 1, 0]
+    [[950 593 576 123  93 803  31 731 894   3]
+     [ 58 595 603 920 287 811 846 900  88 534]
+     [978 312 783 349 789 483 635 971 660  73]
+     [ 90  77 673 751 493 910 675 399  10 923]
+     [387 763 871 914 935 771 742 147 231   8]]
+    [2414 2627 2879 2165 3442]
+    [0, 1, 0, 0, 1, 1, 1, 0, 1, 0]
     Proof:
-    [3175 2612 1409 2147 1962]
+    [2414 2627 2879 2165 3442]
 
 
 # n-Queens Completion Problem
@@ -1059,11 +1063,11 @@ else:
     print('Infeasible ...')
 ```
 
+    . . Q . . . . . 
     . . . . . . . . 
     . . . . . . . . 
-    . Q . . . . . . 
     . . . . . . . . 
-    . . . . . . . Q 
+    . . . Q . . . . 
     . . . . . . . . 
     . . . . . . Q . 
     . . . . . . . . 
@@ -1071,13 +1075,245 @@ else:
     # seed = 0
     . . Q . . . . . 
     . . . . . Q . . 
-    . Q . . . . . . 
-    . . . . Q . . . 
     . . . . . . . Q 
+    . Q . . . . . . 
+    . . . Q . . . . 
     Q . . . . . . . 
     . . . . . . Q . 
-    . . . Q . . . . 
+    . . . . Q . . . 
     
+
+
+# Multidimensional knapsack problem
+
+https://link.springer.com/chapter/10.1007/978-3-540-24777-7_9
+
+
+```python
+import numpy as np
+import peqnp as pn
+
+n = 90
+m = 5
+
+z = 11191
+c = [360, 83, 59, 130, 431, 67, 230, 52, 93, 125, 670, 892, 600, 38, 48, 147, 78, 256, 63, 17, 120, 164, 432, 35, 92, 110, 22, 42, 50, 323, 514, 28, 87, 73, 78, 15, 26, 78, 210, 36, 85, 189, 274, 43, 33, 10, 19, 389, 276, 312, 94, 68, 73, 192, 41, 163, 16, 40, 195, 138, 73, 152, 400, 26, 14, 170, 205, 57, 369, 435, 123, 25, 94, 88, 90, 146, 55, 29, 82, 74, 100, 72, 31, 29, 316, 244, 70, 82, 90, 52]
+
+b = [2100, 1100, 3300, 3700, 3600]
+a = [[7, 0, 30, 22, 80, 94, 11, 81, 70, 64, 59, 18, 0, 36, 3, 8, 15, 42, 9, 0, 42, 47, 52, 32, 26, 48, 55, 6, 29, 84, 2, 4, 18, 56, 7, 29, 93, 44, 71, 3, 86, 66, 31, 65, 0, 79, 20, 65, 52, 13, 48, 14, 5, 72, 14, 39, 46, 27, 11, 91, 15, 25, 0, 94, 53, 48, 27, 99, 6, 17, 69, 43, 0, 57, 7, 21, 78, 10, 37, 26, 20, 8, 4, 43, 17, 25, 36, 60, 84, 40],
+     [8, 66, 98, 50, 0, 30, 0, 88, 15, 37, 26, 72, 61, 57, 17, 27, 83, 3, 9, 66, 97, 42, 2, 44, 71, 11, 25, 74, 90, 20, 0, 38, 33, 14, 9, 23, 12, 58, 6, 14, 78, 0, 12, 99, 84, 31, 16, 7, 33, 20, 5, 18, 96, 63, 31, 0, 70, 4, 66, 9, 15, 25, 2, 0, 48, 1, 40, 31, 82, 79, 56, 34, 3, 19, 52, 36, 95, 6, 35, 34, 74, 26, 10, 85, 63, 31, 22, 9, 92, 18],
+     [3, 74, 88, 50, 55, 19, 0, 6, 30, 62, 17, 81, 25, 46, 67, 28, 36, 8, 1, 52, 19, 37, 27, 62, 39, 84, 16, 14, 21, 5, 60, 82, 72, 89, 16, 5, 29, 7, 80, 97, 41, 46, 15, 92, 51, 76, 57, 90, 10, 37, 25, 93, 5, 39, 0, 97, 6, 96, 2, 81, 69, 4, 32, 78, 65, 83, 62, 89, 45, 53, 52, 76, 72, 23, 89, 48, 41, 1, 27, 19, 3, 32, 82, 20, 2, 51, 18, 42, 4, 26],
+     [21, 40, 0, 6, 82, 91, 43, 30, 62, 91, 10, 41, 12, 4, 80, 77, 98, 50, 78, 35, 7, 1, 96, 67, 85, 4, 23, 38, 2, 57, 4, 53, 0, 33, 2, 25, 14, 97, 87, 42, 15, 65, 19, 83, 67, 70, 80, 39, 9, 5, 41, 31, 36, 15, 30, 87, 28, 13, 40, 0, 51, 79, 75, 43, 91, 60, 24, 18, 85, 83, 3, 85, 2, 5, 51, 63, 52, 85, 17, 62, 7, 86, 48, 2, 1, 15, 74, 80, 57, 16],
+     [94, 86, 80, 92, 31, 17, 65, 51, 46, 66, 44, 3, 26, 0, 39, 20, 11, 6, 55, 70, 11, 75, 82, 35, 47, 99, 5, 14, 23, 38, 94, 66, 64, 27, 77, 50, 28, 25, 61, 10, 30, 15, 12, 24, 90, 25, 39, 47, 98, 83, 56, 36, 6, 66, 89, 45, 38, 1, 18, 88, 19, 39, 20, 1, 7, 34, 68, 32, 31, 58, 41, 99, 92, 67, 33, 26, 25, 68, 37, 6, 11, 17, 48, 79, 63, 77, 17, 29, 18, 60]]
+
+
+pn.engine()
+xs = np.asarray(pn.vector(size=n, is_mip=True))
+pn.apply_single(xs, lambda x: x <= 1)
+for i in range(m):
+    assert np.dot(a[i], xs) <= b[i]
+assert np.dot(c, xs) <= z
+print(pn.maximize(np.dot(c, xs)))
+print(xs)
+```
+
+    11190.999999999995
+    [1 0 0 0 1 0 1 0 1 1 1 1 1 0 0 1 0 1 1 0 0 1 1 0 0 1 0 0 0 1 1 0 0 1 1 0 0
+     0 1 1 0 1 1 0 0 0 0 1 1 1 1 1 0 1 0 1 0 1 1 1 1 1 1 1 0 1 1 0 1 1 0 0 1 1
+     0 1 0 1 0 0 0 1 1 0 1 1 1 1 0 1]
+
+
+# Partition Problem
+
+n number theory and computer science, the partition problem, or number partitioning, is the task of deciding whether a given multiset $S$ of positive integers can be partitioned into two subsets $S_1$ and $S_2$ such that the sum of the numbers in $S_1$ equals the sum of the numbers in $S_2$.
+
+https://en.wikipedia.org/wiki/Partition_problem
+
+
+
+
+```python
+import numpy as np
+import peqnp as pn
+
+size = 20
+
+data = np.random.randint(1000, size=size)
+
+print(data)
+
+pn.engine(int(sum(data)).bit_length())
+
+T, sub, com = pn.subsets(data, complement=True)
+
+assert sum(sub) == sum(com)
+
+if pn.satisfy():
+    sub_ = [data[i] for i in range(size) if T.binary[i]]
+    com_ = [data[i] for i in range(size) if not T.binary[i]]
+    print(sum(sub_), sub_)
+    print(sum(com_), com_)
+else:
+    print('Infeasible ...')
+```
+
+    [337 512 737  87 227 113 616 709 310 864 283  24 785 962 576 894   5 845
+     769  41]
+    4848 [337, 512, 737, 227, 616, 310, 864, 283, 962]
+    4848 [87, 113, 709, 24, 785, 576, 894, 5, 845, 769, 41]
+
+
+# Optimal Facility Selection & Location Problem
+
+Giben a set of facilities, select a number of them such that be optimal in terms of distance to demands.
+
+
+```python
+import numpy as np
+import peqnp as pn
+import matplotlib.pyplot as plt
+
+
+def plot(I, J=None, X=None, title='Original', obj=0):
+    plt.figure(figsize=(10, 10))
+    plt.title('{} : {}'.format(title, obj))
+    a, b = zip(*I)
+    plt.scatter(a, b, c='blue', s=50, alpha=0.6)
+    if J is not None:
+        if X is not None:
+            for i in range(m):
+                for j in range(n):
+                    if X[i][j]:
+                        plt.plot([I[i][0], J[j][0]], [I[i][1], J[j][1]], 'g-',alpha=0.2)
+        a, b = zip(*J)
+        plt.scatter(a, b, c='red', s=300, alpha=0.8)
+    else:
+        a, b = zip(*J)
+        plt.scatter(a, b, c='red', s=300, alpha=0.8)
+    plt.show()
+    plt.close()
+
+
+def oracle(seq):
+    global O, glb, n
+    M = np.zeros(shape=(m, n))
+    for i in range(m):
+        for j in range(n):
+            M[i][j] = np.linalg.norm(I[i] - J[seq[j]])
+    pn.engine()
+    X = np.asarray(pn.matrix(dimensions=(m, n), is_mip=True))
+    pn.all_binaries(X.flatten())
+    assert sum(X.flatten()) == m
+    assert (X.sum(axis=1) == 1).all()
+    obj = pn.minimize(sum(X[i][j] * M[i][j] for i in range(m) for j in range(n)))
+    O = np.vectorize(int)(X)
+    return obj
+
+m = 50
+k = 15
+n = 3
+I = np.random.sample(size=(m, 2))    
+J = np.random.sample(size=(k, 2))
+plot(I, J)
+seq = pn.hess_sequence(k, oracle=oracle, fast=False)
+plot(I, J[seq][:n], O, 'www.peqnp.com', oracle(seq))
+```
+
+
+![png](img/output_57_0.png)
+
+
+
+![png](img/output_57_1.png)
+
+
+# TSP MIP formulation vs HESS Algorithm (O. Riveros)
+
+
+```python
+import numpy as np
+import peqnp as pn
+import matplotlib.pyplot as plt
+
+
+def plot(tour, title):
+    x, y = zip(*[data[tour[i]] for i in range(n)] + [data[tour[0]]])
+    plt.title(title + ' : {}'.format(oracle(tour)))
+    plt.plot(x, y, 'r-')
+    plt.plot(x, y, 'ko')
+    plt.show()
+    plt.close()
+
+
+def oracle(seq):
+    return sum(D[seq[i - 1]][seq[i]] for i in range(n))
+
+n = 10
+data = np.random.logistic(size=(n, 2))
+D = np.zeros(shape=(n, n))
+for i in range(n):
+    for j in range(n):
+        D[i][j] = int(np.linalg.norm(data[i] - data[j]))
+
+seq = pn.hess_sequence(n, oracle=oracle, fast=False)
+print(oracle(seq))
+plot(seq, 'HESS')
+
+pn.engine()
+
+M = np.asarray(pn.matrix(dimensions=(n, n), is_mip=True))
+u = pn.vector(size=n, is_mip=True)
+
+for k in range(n):
+    assert M[k][k] == 0
+
+assert sum(M.flatten()) == n
+
+for i in range(n):
+    for j in range(n):
+        assert M[i][j] <= 1
+
+for a, b in zip(M, M.T):
+    assert sum(a) == 1
+    assert sum(b) == 1
+
+for i in range(1, n):
+    for j in range(1, n):
+        if i != j:
+            assert u[i] - u[j] + (n - 1) * M[i][j] <= n - 2
+
+optimal = pn.minimize(sum(D[i][j] * M[i][j] for i in range(n) for j in range(n)))
+print(optimal)
+
+path = {}
+for i in range(n):
+    for j in range(n):
+        if M[i][j].value:
+            path[j] = i
+
+tour = [0, path[0]]
+while len(tour) < n:
+    tour.append(path[tour[-1]])
+plot(tour, 'MIP')
+
+print('ratio HESS / MIP = {}'.format(oracle(seq) / optimal))
+```
+
+    14.0
+
+
+
+![png](img/output_59_1.png)
+
+
+    13.999999999999934
+
+
+
+![png](img/output_59_3.png)
+
+
+    ratio HESS / MIP = 1.0000000000000047
 
 
 # The PEQNP Standard Library
@@ -1479,3 +1715,4 @@ on www.peqnp.com exist a implementation of the PEQNP interface for the http://fm
 CaDiCaL = 'Path to CaDiCal dinamic linked library with PEQNP SAT Interface'
 pn.engine(sat_solver_path=CaDiCaL, info=True)
 ```
+
