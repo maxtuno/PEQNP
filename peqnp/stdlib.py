@@ -54,16 +54,28 @@ def engine(bits=None, sat_solver_path=None, mip_solver_path=None, info=False):
     :param info: Return the info of the current system.
     :return:
     """
-    import site
-    import glob
+    try:
+        import site
+        import glob
 
-    site_path = site.getsitepackages()[0]
+        for site_path in site.getsitepackages():
 
-    if mip_solver_path is None:
-        mip_solver_path = glob.glob('{}/PIXIE.*'.format(site_path))[0]
+            if mip_solver_path is None:
+                pixie = glob.glob('{}/PIXIE.*'.format(site_path))
+                if pixie:
+                    mip_solver_path = pixie[0]
+                else:
+                    continue
 
-    if sat_solver_path is None:
-        sat_solver_path = glob.glob('{}/SLIME.*'.format(site_path))[0]
+            if sat_solver_path is None:
+                slime = glob.glob('{}/SLIME.*'.format(site_path))
+                if slime:
+                    sat_solver_path = slime[0]
+                else:
+                    continue
+    except Exception:
+        print('MIP and SAT solvers are not specified.')
+        return
 
     global csp
     if bits is None:
