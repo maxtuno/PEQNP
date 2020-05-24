@@ -1,4 +1,4 @@
-# PEQNP II Mathematical Programming Solver
+# PEQNP Mathematical Programming Solver
 
 The PEQNP System its an automatic CNF and MIP encoder multi SAT and MIP Solver for General Constrained Diophantine Equations and NP-Complete Problems, full integrated with Python and zero dependencies.
 
@@ -911,7 +911,7 @@ https://en.wikipedia.org/wiki/Bin_packing_problem
 
 ```python
 capacity = 50
-size = 20
+size = 50
 elements = sorted([np.random.randint(1, capacity // 2 - 1) for _ in range(size)], reverse=True)
 print(capacity)
 print(elements)
@@ -937,20 +937,30 @@ while True:
 ```
 
     50
-    [23, 22, 21, 21, 19, 19, 19, 18, 16, 15, 14, 12, 12, 10, 7, 7, 7, 7, 5, 2]
-    Solution for 6 bins...
-    __#___________#__##_
-    ___#________#___#___
-    _#________#__#______
-    ______#_##__________
-    #______#_______#___#
-    ____##_____#________
-    40 [21, 7, 7, 5]
-    40 [21, 12, 7]
-    46 [22, 14, 10]
-    50 [19, 16, 15]
-    50 [23, 18, 7, 2]
-    50 [19, 19, 12]
+    [23, 23, 23, 22, 21, 21, 20, 19, 18, 17, 16, 15, 15, 15, 14, 14, 13, 13, 13, 11, 10, 10, 10, 9, 9, 9, 9, 9, 8, 8, 8, 6, 5, 5, 5, 4, 4, 4, 3, 3, 3, 3, 3, 2, 2, 1, 1, 1, 1, 1]
+    Solution for 11 bins...
+    ____#_________________#_________##____##_______#__
+    ______________#__##____________#____________#_____
+    ______#______#_______________#__________##_______#
+    _##________________________________#______________
+    __________________________#_#_____________________
+    #_______________________#__#________#_____________
+    _____#___#__________#________________________#____
+    ___#________#______#______________________________
+    ___________#_________#_#______#___#________#______
+    ________#_#____#______________________________#_#_
+    _______#________#________#___________#____#_______
+    48 [21, 10, 5, 5, 3, 3, 1]
+    48 [14, 13, 13, 6, 2]
+    50 [20, 15, 8, 3, 3, 1]
+    50 [23, 23, 4]
+    17 [9, 8]
+    45 [23, 9, 9, 4]
+    49 [21, 17, 10, 1]
+    48 [22, 15, 11]
+    49 [15, 10, 9, 8, 5, 2]
+    50 [18, 16, 14, 1, 1]
+    48 [19, 13, 9, 4, 3]
 
 
 # Zero-One Integer Programming Definition
@@ -961,7 +971,7 @@ https://en.wikipedia.org/wiki/Integer_programming
 
 
 ```python
-n, m = 5, 10
+n, m = 10, 5
 cc = np.random.randint(0, 1000, size=(n, m))
 d = np.dot(cc, np.random.randint(0, 2, size=(m,)))
 print(cc)
@@ -978,15 +988,20 @@ else:
     print('Infeasible...')
 ```
 
-    [[950 593 576 123  93 803  31 731 894   3]
-     [ 58 595 603 920 287 811 846 900  88 534]
-     [978 312 783 349 789 483 635 971 660  73]
-     [ 90  77 673 751 493 910 675 399  10 923]
-     [387 763 871 914 935 771 742 147 231   8]]
-    [2414 2627 2879 2165 3442]
-    [0, 1, 0, 0, 1, 1, 1, 0, 1, 0]
+    [[963 721  83 296 478]
+     [248 785 278 135 677]
+     [896 117 662 431 108]
+     [313 872 782 385 989]
+     [495 408 232 806 110]
+     [160 336 214 220 759]
+     [ 47 556 285 993 792]
+     [941 833 260 657 432]
+     [461 437 675 827 979]
+     [ 73  87 647 914 305]]
+    [2063 1446 2106 2352 1941  930 1881 2691 2400 1721]
+    [1, 1, 1, 1, 0]
     Proof:
-    [2414 2627 2879 2165 3442]
+    [2063 1446 2106 2352 1941 930 1881 2691 2400 1721]
 
 
 # n-Queens Completion Problem
@@ -1044,7 +1059,7 @@ def show(pc):
     print(table)
     print('# seed = {}'.format(seed))
     
-n, m, seed = 8, 3, 0
+n, m, seed = 30, 15, 0
 placed_queens = completion(n, m, seed)
 show(placed_queens)
 pn.engine(bits=n.bit_length() + 1)
@@ -1063,24 +1078,68 @@ else:
     print('Infeasible ...')
 ```
 
-    . . Q . . . . . 
-    . . . . . . . . 
-    . . . . . . . . 
-    . . . . . . . . 
-    . . . Q . . . . 
-    . . . . . . . . 
-    . . . . . . Q . 
-    . . . . . . . . 
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+    . . Q . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+    . . . . . . . . . Q . . . . . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . . . . . . . . . . . Q . . . 
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . Q . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . . . Q . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+    . Q . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . Q 
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . . . . Q . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+    . . . . . . . . Q . . . . . . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . Q . . . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . . . . . . . Q . . . . . . . 
+    . . . Q . . . . . . . . . . . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . Q . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . Q . 
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . Q . . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
     
     # seed = 0
-    . . Q . . . . . 
-    . . . . . Q . . 
-    . . . . . . . Q 
-    . Q . . . . . . 
-    . . . Q . . . . 
-    Q . . . . . . . 
-    . . . . . . Q . 
-    . . . . Q . . . 
+    . . . . . . Q . . . . . . . . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . . . . . Q . . . . . . . . . 
+    . . . . . . . . . . . . . Q . . . . . . . . . . . . . . . . 
+    . . Q . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+    . . . . . . . . . Q . . . . . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . . Q . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . . . . . . . . . . . Q . . . 
+    . . . . Q . . . . . . . . . . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . Q . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . . . . . . . . . Q . . . . . 
+    Q . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . . . Q . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . . . . . . . . . . Q . . . . 
+    . Q . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . Q . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . Q 
+    . . . . . . . . . . Q . . . . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . . . . Q . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . Q . . 
+    . . . . . . . . Q . . . . . . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . Q . . . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . . . . . . . Q . . . . . . . 
+    . . . Q . . . . . . . . . . . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . Q . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . Q . 
+    . . . . . . . . . . . . . . . . . . . . . . . Q . . . . . . 
+    . . . . . . . . . . . . . . . . . . . . . Q . . . . . . . . 
+    . . . . . . . . . . . . Q . . . . . . . . . . . . . . . . . 
+    . . . . . . . Q . . . . . . . . . . . . . . . . . . . . . . 
+    . . . . . Q . . . . . . . . . . . . . . . . . . . . . . . . 
     
 
 
@@ -1227,6 +1286,74 @@ plot(I, J[seq][:n], O, 'www.peqnp.com', oracle(seq))
 ![png](img/output_57_1.png)
 
 
+
+```python
+import matplotlib.pyplot as plt
+import numpy as np
+import peqnp as pn
+from sklearn.datasets import make_blobs
+
+
+def plot(X=None):
+    fig, ax = plt.subplots(figsize=(10, 10))
+    plt.title('PEQNP\nwww.peqnp.com')
+    plt.scatter(N[:, 0], N[:, 1], c='b', s=P * 500, alpha=0.5)
+    for i in range(m):
+        ax.annotate(str(round(P[i], 2)), (N[:, 0][i], N[:, 1][i]), size=10)
+    plt.scatter(M[:, 0], M[:, 1], c='r', s=L * 500, alpha=0.7)
+    for i in range(n):
+        ax.annotate(str(round(T[i], 2)), (M[:, 0][i] + 0.1, M[:, 1][i] + 0.1))
+        ax.annotate(str(L[i]), (M[:, 0][i] - 0.1, M[:, 1][i] - 0.1))
+    if X is not None:
+        for i in range(m):
+            for j in range(n):
+                if X[i][j]:
+                    plt.plot([N[i][0], M[j][0]], [N[i][1], M[j][1]], 'k--', alpha=0.3)
+    plt.show()
+
+
+n = 4
+
+L = np.random.randint(1, 100, size=n)  # capacity x facilities
+
+m = sum(L)
+
+N, _ = make_blobs(n_samples=m)  # customers
+P = np.random.sample(size=m)  # priorities x customers
+M = np.random.normal(size=(n, 2)) * n  # facilities
+T = np.random.sample(size=n)  # priorities x facility
+C = np.zeros(shape=(m, n))
+for i in range(m):
+    for j in range(n):
+        C[i][j] = np.linalg.norm(N[i] - M[j])
+
+D = np.zeros(shape=(m, n))
+for i in range(m):
+    for j in range(n):
+        D[i][j] = P[i] - T[j]
+
+plot()
+
+pn.engine()
+X = np.asarray(pn.matrix(dimensions=(m, n), is_mip=True))
+pn.all_binaries(X.flatten())
+assert (X.sum(axis=0) <= L).all()
+assert (X.sum(axis=1) == 1).all()
+print(pn.minimize((X * C * D).sum()))
+plot(np.vectorize(int)(X))
+```
+
+
+![png](img/output_58_0.png)
+
+
+    -23.126725195753018
+
+
+
+![png](img/output_58_2.png)
+
+
 # TSP MIP formulation vs HESS Algorithm (O. Riveros)
 
 
@@ -1249,7 +1376,7 @@ def oracle(seq):
     return sum(D[seq[i - 1]][seq[i]] for i in range(n))
 
 n = 10
-data = np.random.logistic(size=(n, 2))
+data = np.random.logistic(size=(n, 2)) * 10
 D = np.zeros(shape=(n, n))
 for i in range(n):
     for j in range(n):
@@ -1299,21 +1426,179 @@ plot(tour, 'MIP')
 print('ratio HESS / MIP = {}'.format(oracle(seq) / optimal))
 ```
 
-    14.0
+    178.0
 
 
 
-![png](img/output_59_1.png)
+![png](img/output_60_1.png)
 
 
-    13.999999999999934
+    178.00000000000026
 
 
 
-![png](img/output_59_3.png)
+![png](img/output_60_3.png)
 
 
-    ratio HESS / MIP = 1.0000000000000047
+    ratio HESS / MIP = 0.9999999999999986
+
+
+# Sudoku 
+
+is a logic-based, combinatorial number-placement puzzle. The objective is to fill a 9×9 grid with digits so that each column, each row, and each of the nine 3×3 subgrids that compose the grid (also called "boxes", "blocks", or "regions") contain all of the digits from 1 to 9. The puzzle setter provides a partially completed grid, which for a well-posed puzzle has a single solution.
+
+Completed games are always an example of a Latin square which include an additional constraint on the contents of individual regions. For example, the same single integer may not appear twice in the same row, column, or any of the nine 3×3 subregions of the 9×9 playing board.
+
+https://en.wikipedia.org/wiki/Sudoku
+
+
+```python
+import numpy as np
+import peqnp as pn
+
+
+def expandLine(line):
+    return line[0] + line[5:9].join([line[1:5] * (base - 1)] * base) + line[9:13]
+
+
+def show(board):
+    import string
+    line0 = expandLine('╔═══╤═══╦═══╗')
+    line1 = expandLine('║ . │ . ║ . ║')
+    line2 = expandLine('╟───┼───╫───╢')
+    line3 = expandLine('╠═══╪═══╬═══╣')
+    line4 = expandLine('╚═══╧═══╩═══╝')
+
+    symbol = ' ' + string.printable.replace(' ', '')
+    nums = [[''] + [symbol[n] for n in row] for row in board]
+    print(line0)
+    for r in range(1, side + 1):
+        print("".join(n + s for n, s in zip(nums[r - 1], line1.split('.'))))
+        print([line2, line3, line4][(r % side == 0) + (r % base == 0)])
+
+
+def generate(base):
+    # pattern for a baseline valid solution
+    def pattern(r, c):
+        return (base * (r % base) + r // base + c) % side
+
+    # randomize rows, columns and numbers (of valid base pattern)
+    from random import sample
+
+    def shuffle(s):
+        return sample(s, len(s))
+
+    rBase = range(base)
+    rows = [g * base + r for g in shuffle(rBase) for r in shuffle(rBase)]
+    cols = [g * base + c for g in shuffle(rBase) for c in shuffle(rBase)]
+    nums = shuffle(range(1, base * base + 1))
+
+    # produce board using randomized baseline pattern
+    board = [[nums[pattern(r, c)] for c in cols] for r in rows]
+
+    squares = side * side
+    empties = (squares * 3) // 4
+    for p in map(int, sample(range(squares), empties)):
+        board[p // side][p % side] = 0
+
+    show(board)
+    return board
+
+
+base = 4
+side = base * base
+
+puzzle = np.asarray(generate(base))
+
+pn.engine(side.bit_length())
+
+board = np.asarray(pn.matrix(dimensions=(side, side)))
+pn.apply_single(board.flatten(), lambda x: 1 <= x <= side)
+
+for i in range(side):
+    for j in range(side):
+        if puzzle[i][j]:
+            assert board[i][j] == puzzle[i][j]
+
+for c, r in zip(board, board.T):
+    pn.all_different(c)
+    pn.all_different(r)
+
+for i in range(base):
+    for j in range(base):
+        pn.all_different(board[i * base:(i + 1) * base, j * base:(j + 1) * base].flatten())
+
+if pn.satisfy():
+    show(np.vectorize(int)(board))
+
+```
+
+    ╔═══╤═══╤═══╤═══╦═══╤═══╤═══╤═══╦═══╤═══╤═══╤═══╦═══╤═══╤═══╤═══╗
+    ║ 8 │ 2 │   │ 5 ║ b │   │   │   ║   │   │ 4 │   ║ 6 │ f │ 9 │   ║
+    ╟───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╢
+    ║   │   │   │   ║   │   │ f │   ║   │ 8 │ c │   ║ 7 │   │   │   ║
+    ╟───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╢
+    ║   │   │   │ 3 ║   │   │   │   ║   │   │   │   ║ 2 │   │   │   ║
+    ╟───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╢
+    ║   │ 7 │ 4 │ 1 ║   │   │   │   ║   │   │ 9 │   ║ 0 │   │ b │   ║
+    ╠═══╪═══╪═══╪═══╬═══╪═══╪═══╪═══╬═══╪═══╪═══╪═══╬═══╪═══╪═══╪═══╣
+    ║   │ f │   │ 9 ║   │ a │   │   ║ d │   │   │   ║   │   │   │   ║
+    ╟───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╢
+    ║   │   │   │ b ║   │   │   │   ║   │   │ 2 │   ║   │   │   │   ║
+    ╟───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╢
+    ║   │   │   │ c ║   │   │   │   ║   │   │ 7 │   ║   │ e │   │   ║
+    ╟───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╢
+    ║   │   │ 7 │   ║   │   │ 1 │ c ║   │ e │   │   ║   │   │   │ b ║
+    ╠═══╪═══╪═══╪═══╬═══╪═══╪═══╪═══╬═══╪═══╪═══╪═══╬═══╪═══╪═══╪═══╣
+    ║ 7 │ 4 │   │   ║   │ c │ 2 │   ║   │   │   │   ║ b │ 0 │   │   ║
+    ╟───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╢
+    ║   │   │ e │   ║ 3 │   │   │ a ║   │   │ 5 │   ║   │   │ 1 │   ║
+    ╟───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╢
+    ║   │   │   │ d ║ e │   │   │   ║   │   │   │   ║   │   │   │   ║
+    ╟───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╢
+    ║   │   │   │   ║ 1 │   │   │ 8 ║   │   │   │ f ║   │   │ 5 │   ║
+    ╠═══╪═══╪═══╪═══╬═══╪═══╪═══╪═══╬═══╪═══╪═══╪═══╬═══╪═══╪═══╪═══╣
+    ║   │   │   │   ║ 8 │   │   │   ║   │   │ f │   ║ 5 │   │   │ 0 ║
+    ╟───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╢
+    ║ b │   │ f │ 6 ║   │   │   │ 7 ║   │   │   │   ║   │   │   │   ║
+    ╟───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╢
+    ║   │   │   │   ║   │   │   │   ║   │   │ a │   ║   │   │ f │   ║
+    ╟───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╢
+    ║   │   │ d │   ║   │   │ b │   ║   │ 4 │   │   ║   │   │   │   ║
+    ╚═══╧═══╧═══╧═══╩═══╧═══╧═══╧═══╩═══╧═══╧═══╧═══╩═══╧═══╧═══╧═══╝
+    ╔═══╤═══╤═══╤═══╦═══╤═══╤═══╤═══╦═══╤═══╤═══╤═══╦═══╤═══╤═══╤═══╗
+    ║ 8 │ 2 │ c │ 5 ║ b │ 1 │ 0 │ e ║ 7 │ 3 │ 4 │ a ║ 6 │ f │ 9 │ d ║
+    ╟───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╢
+    ║ d │ b │ 6 │ 0 ║ 9 │ 4 │ f │ 2 ║ 5 │ 8 │ c │ e ║ 7 │ 1 │ 3 │ a ║
+    ╟───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╢
+    ║ f │ 9 │ a │ 3 ║ d │ 8 │ 7 │ 5 ║ 0 │ 1 │ 6 │ b ║ 2 │ c │ e │ 4 ║
+    ╟───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╢
+    ║ e │ 7 │ 4 │ 1 ║ c │ 6 │ a │ 3 ║ f │ 2 │ 9 │ d ║ 0 │ 5 │ b │ 8 ║
+    ╠═══╪═══╪═══╪═══╬═══╪═══╪═══╪═══╬═══╪═══╪═══╪═══╬═══╪═══╪═══╪═══╣
+    ║ 3 │ f │ 8 │ 9 ║ 2 │ a │ e │ b ║ d │ 5 │ 0 │ 4 ║ 1 │ 6 │ c │ 7 ║
+    ╟───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╢
+    ║ a │ e │ 5 │ b ║ 7 │ 0 │ 8 │ 6 ║ c │ f │ 2 │ 1 ║ 4 │ 9 │ d │ 3 ║
+    ╟───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╢
+    ║ 1 │ 6 │ 0 │ c ║ 4 │ 9 │ 3 │ d ║ a │ b │ 7 │ 8 ║ f │ e │ 2 │ 5 ║
+    ╟───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╢
+    ║ 2 │ d │ 7 │ 4 ║ f │ 5 │ 1 │ c ║ 9 │ e │ 3 │ 6 ║ a │ 8 │ 0 │ b ║
+    ╠═══╪═══╪═══╪═══╬═══╪═══╪═══╪═══╬═══╪═══╪═══╪═══╬═══╪═══╪═══╪═══╣
+    ║ 7 │ 4 │ 1 │ f ║ 5 │ c │ 2 │ 9 ║ e │ d │ 8 │ 3 ║ b │ 0 │ a │ 6 ║
+    ╟───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╢
+    ║ 9 │ c │ e │ 8 ║ 3 │ b │ 6 │ a ║ 2 │ 7 │ 5 │ 0 ║ d │ 4 │ 1 │ f ║
+    ╟───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╢
+    ║ 5 │ 3 │ b │ d ║ e │ f │ 4 │ 0 ║ 6 │ a │ 1 │ c ║ 9 │ 7 │ 8 │ 2 ║
+    ╟───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╢
+    ║ 6 │ 0 │ 2 │ a ║ 1 │ 7 │ d │ 8 ║ 4 │ 9 │ b │ f ║ e │ 3 │ 5 │ c ║
+    ╠═══╪═══╪═══╪═══╬═══╪═══╪═══╪═══╬═══╪═══╪═══╪═══╬═══╪═══╪═══╪═══╣
+    ║ 4 │ a │ 3 │ e ║ 8 │ 2 │ c │ 1 ║ b │ 6 │ f │ 9 ║ 5 │ d │ 7 │ 0 ║
+    ╟───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╢
+    ║ b │ 8 │ f │ 6 ║ a │ e │ 9 │ 7 ║ 3 │ 0 │ d │ 5 ║ c │ 2 │ 4 │ 1 ║
+    ╟───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╢
+    ║ 0 │ 1 │ 9 │ 7 ║ 6 │ d │ 5 │ 4 ║ 8 │ c │ a │ 2 ║ 3 │ b │ f │ e ║
+    ╟───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╫───┼───┼───┼───╢
+    ║ c │ 5 │ d │ 2 ║ 0 │ 3 │ b │ f ║ 1 │ 4 │ e │ 7 ║ 8 │ a │ 6 │ 9 ║
+    ╚═══╧═══╧═══╧═══╩═══╧═══╧═══╧═══╩═══╧═══╧═══╧═══╩═══╧═══╧═══╧═══╝
 
 
 # The PEQNP Standard Library
@@ -1715,4 +2000,3 @@ on www.peqnp.com exist a implementation of the PEQNP interface for the http://fm
 CaDiCaL = 'Path to CaDiCal dinamic linked library with PEQNP SAT Interface'
 pn.engine(sat_solver_path=CaDiCaL, info=True)
 ```
-
