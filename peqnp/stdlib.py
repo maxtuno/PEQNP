@@ -42,7 +42,7 @@ def version():
     Print the current version of the system.
     :return:
     """
-    print('PEQNP II Mathematical Programming Solver from http://www.peqnp.com')
+    print('PEQNP Mathematical Programming Solver from http://www.peqnp.com')
 
 
 def engine(bits=None, sat_solver_path=None, mip_solver_path=None, info=False):
@@ -73,20 +73,17 @@ def engine(bits=None, sat_solver_path=None, mip_solver_path=None, info=False):
                     sat_solver_path = slime[0]
                 else:
                     continue
+        global csp
+        if bits is None:
+            csp = CSP(0, sat_solver_path, mip_solver_path)
+        else:
+            csp = CSP(bits, sat_solver_path, mip_solver_path)
+        if info:
+            version()
+            print('{}'.format(csp.sat_solver.version))
+            print('{}'.format(csp.mip_solver.version))
     except Exception:
         print('MIP and SAT solvers are not specified.')
-        return
-
-    global csp
-    if bits is None:
-        csp = CSP(0, sat_solver_path, mip_solver_path)
-    else:
-        csp = CSP(bits, sat_solver_path, mip_solver_path)
-
-    if info:
-        version()
-        print('SAT : {}'.format(csp.sat_solver.version))
-        print('MIP : {}'.format(csp.mip_solver.version))
 
 
 def integer(bits=None):

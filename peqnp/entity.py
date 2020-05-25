@@ -59,6 +59,17 @@ class Entity:
         if not self.deep:
             self.deep = [self.bits]
 
+    def is_in(self, item):
+        bits = self.encoder.int(size=len(item))
+        assert sum(self.encoder.zero.iff(bits[i], self.encoder.one) for i in range(len(item))) == 1
+        assert sum(self.encoder.zero.iff(bits[i], item[i]) for i in range(len(item))) == self
+        return True
+
+    def is_not_in(self, item):
+        for element in item:
+            assert self != element
+        return True
+
     def __add__(self, other):
         if self.is_mip:
             if not self.constraint:

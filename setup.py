@@ -21,7 +21,7 @@ if 'no-solver' in sys.argv:
         sys.argv.remove('no-solver')
 setup(
     name='PEQNP',
-    version='2.1.0',
+    version='2.1.1',
     packages=['peqnp'],
     url='http://www.peqnp.science',
     license='copyright (c) 2012-2020 Oscar Riveros. All rights reserved.',
