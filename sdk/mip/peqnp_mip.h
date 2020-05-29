@@ -13,7 +13,7 @@
 #ifndef PEQNP_MIP_H
 #define PEQNP_MIP_H
 
-#define VERSION 1
+#define VERSION 2
 
 #if defined(_WIN32) || defined(__CYGWIN__)
 #if defined(__GNUC__)
@@ -42,8 +42,9 @@ PEQNP_API void *peqnp_mip_init();
  * Set the objective of the current problem.
  * Need the pointer to the solver created with init,
  * The coefficients for the objective and the size of objective array.
+ * Return a pointer to the solver.
  */
-PEQNP_API void peqnp_mip_set_objective(void *solver, double *objective, int size);
+PEQNP_API void *peqnp_mip_set_objective(void *solver, double *objective, int size);
 /*
  * ax + by + cx <= d
  * Add constraint to current problem.
@@ -51,19 +52,21 @@ PEQNP_API void peqnp_mip_set_objective(void *solver, double *objective, int size
  * The coefficients for the left side of constraint,
  * A integer representing a comparator -1 <=, 0 ==, 1 >=,
  * The right number of the constraint and the size of the coefficients.
+ * Return a pointer to the solver.
  */
-PEQNP_API void peqnp_mip_add_constraint(void *solver, double *constraint, int comparator, double right, int size);
+PEQNP_API void *peqnp_mip_add_constraint(void *solver, double *constraint, int comparator, double right, int size);
 /*
  * Set when a variable is integer or double.
  * Need the pointer to the solver created with init,
  * An array of ints with 0 if is double, or 1 if its integer.
  * The size of the array.
  */
-PEQNP_API void peqnp_mip_set_integer_condition(void *solver, int *integer_condition, int size);
+PEQNP_API void *peqnp_mip_set_integer_condition(void *solver, int *integer_condition, int size);
 /*
  * Maximize the current objective
  * Need the pointer to the solver created with init,
  * NOTE: PEQNP use the symmetry to solve problems with Minimize.
+ * Return a pointer to the solver.
  */
 PEQNP_API double peqnp_mip_maximize(void *solver);
 /*

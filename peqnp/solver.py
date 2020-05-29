@@ -56,9 +56,6 @@ class CSP:
             del r.constraint[:]
             r.constraint.append(v)
 
-    def set_integer_condition(self, c):
-        self.mip_solver.set_integer_condition(c)
-
     def maximize(self, objective):
         ll = len(self.mips) * [0]
         ints = len(self.mips) * [0]

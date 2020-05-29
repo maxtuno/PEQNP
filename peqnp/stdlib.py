@@ -759,7 +759,6 @@ def maximize(objective):
             ints.append(0)
         else:
             ints.append(1)
-    csp.set_integer_condition(ints)
     opt, result = csp.maximize(objective)
     for v, r in zip(csp.mips, result):
         if not v.is_real:
@@ -782,7 +781,6 @@ def minimize(objective):
             ints.append(0)
         else:
             ints.append(1)
-    csp.set_integer_condition(ints)
     opt, result = csp.minimize(objective)
     for v, r in zip(csp.mips, result):
         if not v.is_real:

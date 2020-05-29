@@ -38,17 +38,12 @@ class MIPSolver:
         self.solver = self.peqnp_mip_init()
         return self.description()
 
-    def release(self):
-        self.peqnp_mip_release = self.library.peqnp_mip_release
-        self.peqnp_mip_release.argtypes = [ctypes.c_void_p]
-        self.peqnp_mip_release.restype = ctypes.c_void_p
-        return self.peqnp_mip_release(self.solver)
-
     def set_objective(self, values):
         self.peqnp_mip_set_objective = self.library.peqnp_mip_set_objective
         self.peqnp_mip_set_objective.argtypes = [ctypes.c_void_p, ctypes.c_double * len(values), ctypes.c_int]
         self.peqnp_mip_set_objective.restype = ctypes.c_void_p
-        return self.peqnp_mip_set_objective(self.solver, (ctypes.c_double * len(values))(*values), len(values))
+        self.solver = self.peqnp_mip_set_objective(self.solver, (ctypes.c_double * len(values))(*values), len(values))
+        return self.solver
 
     def add_constraint(self, values, comparator, rigth):
         if comparator == '<=':
@@ -60,13 +55,15 @@ class MIPSolver:
         self.peqnp_mip_add_constraint = self.library.peqnp_mip_add_constraint
         self.peqnp_mip_add_constraint.argtypes = [ctypes.c_void_p, ctypes.c_double * len(values), ctypes.c_int, ctypes.c_double, ctypes.c_int]
         self.peqnp_mip_add_constraint.restype = ctypes.c_void_p
-        return self.peqnp_mip_add_constraint(self.solver, (ctypes.c_double * len(values))(*values), comparator, rigth, len(values))
+        self.solver = self.peqnp_mip_add_constraint(self.solver, (ctypes.c_double * len(values))(*values), comparator, rigth, len(values))
+        return self.solver
 
     def set_integer_condition(self, values):
         self.peqnp_mip_set_integer_condition = self.library.peqnp_mip_set_integer_condition
         self.peqnp_mip_set_integer_condition.argtypes = [ctypes.c_void_p, ctypes.c_int * len(values), ctypes.c_int]
         self.peqnp_mip_set_integer_condition.restype = ctypes.c_void_p
-        return self.peqnp_mip_set_integer_condition(self.solver, (ctypes.c_int * len(values))(*values), len(values))
+        self.solver = self.peqnp_mip_set_integer_condition(self.solver, (ctypes.c_int * len(values))(*values), len(values))
+        return self.solver
 
     def maximize(self):
         self.peqnp_mip_maximize = self.library.peqnp_mip_maximize
