@@ -7,7 +7,7 @@ int done = 0;
 /*
  * Return a short arbitrary description of the solver.
  */
-PEQNP_API const char *peqnp_mip_description() { return "LP_SOLVE Mixed Integer Linear Programming solver"; }
+PEQNP_API const char *peqnp_mip_description() { return "LP_SOLVE Mixed Integer Linear Programming Solver"; }
 /*
  * Initialize the system, and release resources if is call with a initialized system.
  * Return a pointer to the solver.
