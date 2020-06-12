@@ -9,7 +9,7 @@ The PEQNP System its an automatic CNF and MIP encoder multi SAT and MIP Solver f
 # Installation
 [![Downloads](https://pepy.tech/badge/peqnp)](https://pepy.tech/project/peqnp)
 ```python
-pip install PEQNP --upgrade
+pip install PEQNP --install-option=pixie --upgrade
 ```
 
 # PEQNP on Google Colab 
