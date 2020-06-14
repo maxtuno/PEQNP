@@ -5,7 +5,7 @@ A pure CNF encoder functionality, you can use with any solver that support the s
 
 ##### Note: To install PEQNP without builtin solvers to use with pre-build solvers that implement PEQNP_API or use with pure CNF submodule install with:
     
-    pip install PEQNP==2.1.16 --install-option=no-solver --upgrade 
+    pip install PEQNP --install-option=no-solver --upgrade 
      
 ##### Note: Performance depend on SAT Solver, try any solver from http://www.satcompetition.org  
 
