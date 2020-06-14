@@ -1,10 +1,5 @@
 import sys
 from distutils.core import setup, Extension
-from os import path
-
-this_directory = path.abspath(path.dirname(__file__))
-with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
-    long_description = f.read()
 
 ext_modules = [
     Extension("slime",
@@ -26,7 +21,7 @@ if 'no-solver' in sys.argv:
         sys.argv.remove('no-solver')
 setup(
     name='PEQNP',
-    version='3.1.0',
+    version='3.1.2',
     packages=['peqnp', 'peqnp.cnf', 'peqnp.sdk'],
     url='http://www.peqnp.science',
     license='copyright (c) 2012-2020 Oscar Riveros. All rights reserved.',
