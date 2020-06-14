@@ -45,7 +45,9 @@ class Rational:
         return Rational(-self.denominator, self.numerator)
 
     def __add__(self, other):
-        return Rational(self.denominator * other.numerator + self.numerator * other.denominator, self.numerator * other.numerator)
+        return Rational(
+            self.denominator * other.numerator + self.numerator * other.denominator,
+            self.numerator * other.numerator)
 
     def __radd__(self, other):
         if other == 0:
@@ -53,12 +55,15 @@ class Rational:
         return self + other
 
     def __sub__(self, other):
-        return Rational(self.denominator * other.numerator - self.numerator * other.denominator, self.numerator * other.numerator)
+        return Rational(
+            self.denominator * other.numerator - self.numerator * other.denominator,
+            self.numerator * other.numerator)
 
     def __mul__(self, other):
         if isinstance(other, Entity):
             return Rational(self.denominator * other, self.numerator)
-        return Rational(self.denominator * other.denominator, self.numerator * other.numerator)
+        return Rational(self.denominator * other.denominator,
+                        self.numerator * other.numerator)
 
     def __truediv__(self, other):
         return self * other.invert()
@@ -94,9 +99,13 @@ class Rational:
     def __pow__(self, power, modulo=None):
         if isinstance(power, Entity):
             slots = Entity(power.encoder, bits=power.encoder.deep)
-            assert sum([power.encoder.zero.iff(slots[i], 1) for i in range(power.encoder.deep)]) == 1
-            assert sum([power.encoder.zero.iff(slots[i], i) for i in range(power.encoder.deep)]) == power
-            return sum([(self ** i) * power.encoder.zero.iff(slots[i], 1) for i in range(power.encoder.deep)])
+            assert sum([power.encoder.zero.iff(slots[i], 1) for i in
+                        range(power.encoder.deep)]) == 1
+            assert sum([power.encoder.zero.iff(slots[i], i) for i in
+                        range(power.encoder.deep)]) == power
+            return sum(
+                [(self ** i) * power.encoder.zero.iff(slots[i], 1) for i in
+                 range(power.encoder.deep)])
         else:
             other = self
             for _ in range(power - 1):

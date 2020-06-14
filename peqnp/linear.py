@@ -42,7 +42,8 @@ class Linear:
     def __eq__(self, other):
         self.constraint.append('==')
         self.constraint.append(other)
-        self.encoder.add_constraint(self.constraint[:-2], self.constraint[-2], self.constraint[-1])
+        self.encoder.add_constraint(self.constraint[:-2], self.constraint[-2],
+                                    self.constraint[-1])
         del self.constraint[:]
         self.constraint.append(self)
         self.value = 1
@@ -67,7 +68,8 @@ class Linear:
     def __le__(self, other):
         self.constraint.append('<=')
         self.constraint.append(other)
-        self.encoder.add_constraint(self.constraint[:-2], self.constraint[-2], self.constraint[-1])
+        self.encoder.add_constraint(self.constraint[:-2], self.constraint[-2],
+                                    self.constraint[-1])
         del self.constraint[:]
         self.constraint.append(self)
         self.value = 1
@@ -76,7 +78,8 @@ class Linear:
     def __ge__(self, other):
         self.constraint.append('>=')
         self.constraint.append(other)
-        self.encoder.add_constraint(self.constraint[:-2], self.constraint[-2], self.constraint[-1])
+        self.encoder.add_constraint(self.constraint[:-2], self.constraint[-2],
+                                    self.constraint[-1])
         del self.constraint[:]
         self.constraint.append(self)
         self.value = 1

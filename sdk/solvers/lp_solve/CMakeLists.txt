@@ -5,8 +5,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
 
-include_directories(. include ../../mip) # add path to lp_solve headers
-# link_directories() # add path to lp_solve library (lpsolve55)
+include_directories(. include ../../mip /usr/local/include)
+link_directories(/usr/local/lib)
 
 set(CMAKE_CXX_FLAGS "-std=c++11 -Os -D NDEBUG")
 

@@ -1740,8 +1740,6 @@ static Var mapVar(Var x, vec<Var> &map, Var &max) {
 }
 
 void Solver::toDimacs(FILE *f, Clause &c, vec<Var> &map, Var &max) {
-    // if (satisfied(c))
-    //    return;
 
     for (int i = 0; i < c.size(); i++)
         if (value(c[i]) != l_False)
@@ -1773,10 +1771,6 @@ void Solver::toDimacs(FILE *f, const vec<Lit> &assumps) {
 
     // Cannot use removeClauses here because it is not safe
     // to deallocate them at this point. Could be improved.
-    // int cnt = 0;
-    // for (int i = 0; i < clauses.size(); i++)
-    //    if (!satisfied(ca[clauses[i]]))
-    //        cnt++;
 
     for (int i = 0; i < clauses.size(); i++) {
         // if (!satisfied(ca[clauses[i]])) {
@@ -1789,7 +1783,6 @@ void Solver::toDimacs(FILE *f, const vec<Lit> &assumps) {
     }
 
     // Assumptions are added as unit clauses:
-    // cnt += assumptions.size();
 
     fprintf(f, "p cnf %d %d\n", max, assumptions.size() + clauses.size());
 

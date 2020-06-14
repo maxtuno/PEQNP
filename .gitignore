@@ -130,3 +130,9 @@ cmake-build-minsizerel/Makefile
 cmake-build-minsizerel/PEQNP.cbp
 .DS_Store
 dist/PEQNP-1.0.0.tar.gz
+sdk/solvers/lp_solve/.idea/vcs.xml
+sdk/solvers/lp_solve/.idea/modules.xml
+sdk/solvers/lp_solve/.idea/misc.xml
+sdk/solvers/lp_solve/.idea/lp_solve.iml
+sdk/solvers/lp_solve/.idea/inspectionProfiles/Project_Default.xml
+sdk/solvers/lp_solve/.idea/.name
