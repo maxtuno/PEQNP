@@ -1995,10 +1995,3 @@ def minimize(objective):
 # PEQNP Compatible SAT and MIP Solvers
 
 The PEQNP System offers a minimal interface to implement, for use the system with you own solver.
-
-on www.peqnp.com exist a implementation of the PEQNP interface for the http://fmv.jku.at/cadical "CaDiCaL Simplified Satisfiability Solver" created by Armin Biere.
-
-```python
-CaDiCaL = 'Path to CaDiCal dinamic linked library with PEQNP SAT Interface'
-pn.engine(sat_solver_path=CaDiCaL, info=True)
-```
