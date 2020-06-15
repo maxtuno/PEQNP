@@ -27,7 +27,7 @@ import random
 
 import peqnp as pn
 
-bits = 5
+bits = 4
 n = 7
 m = 5
 
