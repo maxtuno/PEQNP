@@ -92,7 +92,17 @@ if __name__ == '__main__':
         for i in range(base):
             for j in range(base):
                 pn.all_different(board[i * base:(i + 1) * base, j * base:(j + 1) * base].flatten())
-                
+
+        solutions = 0
+        while pn.satisfy():
+            solutions += 1
+            if solutions > 1:
+                break
+        if solutions == 1:
+            show(puzzle)
+            show(np.vectorize(int)(board))
+            break
+
 """
 ╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗
 ║   │   │ 8 ║ 6 │   │   ║   │   │   ║
@@ -133,13 +143,3 @@ if __name__ == '__main__':
 ║ 8 │ 2 │ 6 ║ 4 │ 5 │ 7 ║ 9 │ 1 │ 3 ║
 ╚═══╧═══╧═══╩═══╧═══╧═══╩═══╧═══╧═══╝
 """
-
-        solutions = 0
-        while pn.satisfy():
-            solutions += 1
-            if solutions > 1:
-                break
-        if solutions == 1:
-            show(puzzle)
-            show(np.vectorize(int)(board))
-            break
