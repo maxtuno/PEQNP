@@ -23,8 +23,6 @@ SOFTWARE.
 
 # ref: http://www.csc.kth.se/~viggo/wwwcompendium/node152.html
 
-# !pip install PEQNP
-
 import random
 
 import peqnp as pn
