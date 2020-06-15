@@ -23,12 +23,14 @@ SOFTWARE.
 
 # ref: http://www.csc.kth.se/~viggo/wwwcompendium/node152.html
 
+# !pip install PEQNP
+
 import random
 
 import peqnp as pn
 
-bits = 10
-n = 20
+bits = 5
+n = 7
 m = 5
 
 
