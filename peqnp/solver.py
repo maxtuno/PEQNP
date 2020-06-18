@@ -79,24 +79,16 @@ class CSP:
 
     def maximize(self, objective, solve, lp_path):
         ll = len(self.mips) * [0]
-        ints = len(self.mips) * [0]
         for v in objective.constraint:
             ll[v.idx] = self.mips[v.idx].value
-            if not v.is_real:
-                ints[v.idx] = 1
-        self.set_integer_condition(ints)
         pixie.add_objective(ll)
         mips = pixie.maximize(solve, lp_path)
         return pixie.optimal(), mips
 
     def minimize(self, objective, solve, lp_path):
         ll = len(self.mips) * [0]
-        ints = len(self.mips) * [0]
         for v in objective.constraint:
             ll[v.idx] = self.mips[v.idx].value
-            if not v.is_real:
-                ints[v.idx] = 1
-        self.set_integer_condition(ints)
         pixie.add_objective([-d for d in ll])
         mips = pixie.minimize(solve, lp_path)
         return -pixie.optimal(), mips

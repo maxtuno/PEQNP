@@ -786,13 +786,16 @@ def maximize(objective, solve=True, lp_path=''):
             ints.append(0)
         else:
             ints.append(1)
+    csp.set_integer_condition(ints)
     opt, result = csp.maximize(objective, solve, lp_path)
-    for v, r in zip(csp.mips, result):
-        if not v.is_real:
-            v.value = int(r + 0.5)
-        else:
-            v.value = r
-    return opt
+    if solve:
+        for v, r in zip(csp.mips, result):
+            if not v.is_real:
+                v.value = int(r + 0.5)
+            else:
+                v.value = r
+        return opt
+    return False
 
 
 def minimize(objective, solve=True, lp_path=''):
@@ -810,10 +813,13 @@ def minimize(objective, solve=True, lp_path=''):
             ints.append(0)
         else:
             ints.append(1)
+    csp.set_integer_condition(ints)
     opt, result = csp.minimize(objective, solve, lp_path)
-    for v, r in zip(csp.mips, result):
-        if not v.is_real:
-            v.value = int(r + 0.5)
-        else:
-            v.value = r
-    return opt
+    if solve:
+        for v, r in zip(csp.mips, result):
+            if not v.is_real:
+                v.value = int(r + 0.5)
+            else:
+                v.value = r
+        return opt
+    return None

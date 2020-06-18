@@ -380,7 +380,7 @@ class Entity:
                 return self.iff(functools.reduce(operator.and_, [
                     self.encoder.zero.iff(bit[j], 1) for j in
                     range(self.encoder.bits)])[0],
-                                self.encoder.create_constant(other))
+                    self.encoder.create_constant(other))
         if isinstance(other, Entity):
             output_block = self.encoder.bv_mux_gate(self.block, other.block,
                                                     bit)
