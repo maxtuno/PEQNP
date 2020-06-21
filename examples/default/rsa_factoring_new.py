@@ -23,8 +23,8 @@ rsa = 3007
 
 pn.engine(rsa.bit_length())
 
-p = pn.tensor(dimensions=(pn.bits()), key='p')
-q = pn.tensor(dimensions=(pn.bits()), key='q')
+p = pn.tensor(dimensions=(pn.bits()))
+q = pn.tensor(dimensions=(pn.bits()))
 
 assert p * q == rsa
 assert p[[0]](0, 1) == 1
