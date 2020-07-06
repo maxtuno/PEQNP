@@ -1,4 +1,4 @@
-<a href="https://www.peqnp.com"><img border="0" alt="PEQNP" src="https://raw.githubusercontent.com/maxtuno/PEQNP/master/logo.png" width="640" height="400">
+<a href="https://www.peqnp.com"><img border="0" alt="PEQNP" src="https://raw.githubusercontent.com/maxtuno/PEQNP/master/logo.png" width="400" height="300">
 
 # PEQNP [![Downloads](https://pepy.tech/badge/peqnp)](https://pepy.tech/project/peqnp)
 
