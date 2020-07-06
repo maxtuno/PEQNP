@@ -1,8 +1,6 @@
 /************************************************************************************[SimpSolver.h]
-SLIME -- Copyright (c) 2019, Oscar Riveros, oscar.riveros@peqnp.science, Santiago, Chile. - Implementation of the The Booster Heuristic.
-
-Copyright (c) 2003-2006, Niklas Een, Niklas Sorensson
-Copyright (c) 2007,      Niklas Sorensson
+MiniSat -- Copyright (c) 2006,      Niklas Een, Niklas Sorensson
+           Copyright (c) 2007-2010, Niklas Sorensson
 
 Chanseok Oh's MiniSat Patch Series -- Copyright (c) 2015, Chanseok Oh
 
@@ -28,8 +26,8 @@ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **************************************************************************************************/
 
-#ifndef SLIME_SimpSolver_h
-#define SLIME_SimpSolver_h
+#ifndef Minisat_SimpSolver_h
+#define Minisat_SimpSolver_h
 
 #include "Solver.h"
 #include "mtl/Queue.h"
@@ -40,6 +38,7 @@ namespace SLIME {
 
 class SimpSolver : public Solver {
   public:
+    bool log;
     // Constructor/Destructor:
     //
     SimpSolver();
@@ -106,8 +105,7 @@ class SimpSolver : public Solver {
     int asymm_lits;
     int eliminated_vars;
 
-        bool log, boost;
-    protected:
+  protected:
     // Helper structures:
     //
     struct ElimLt {
@@ -116,7 +114,7 @@ class SimpSolver : public Solver {
 
         // TODO: are 64-bit operations here noticably bad on 32-bit platforms? Could use a saturating
         // 32-bit implementation instead then, but this will have to do for now.
-        int cost(Var x) const { return (int)n_occ[toInt(mkLit(x))] * (int)n_occ[toInt(~mkLit(x))]; }
+        uint64_t cost(Var x) const { return (uint64_t)n_occ[toInt(mkLit(x))] * (uint64_t)n_occ[toInt(~mkLit(x))]; }
         bool operator()(Var x, Var y) const { return cost(x) < cost(y); }
 
         // TODO: investigate this order alternative more.
@@ -136,7 +134,7 @@ class SimpSolver : public Solver {
     //
     int elimorder;
     bool use_simplification;
-    vec<int> elimclauses;
+    vec<uint32_t> elimclauses;
     vec<char> touched;
     OccLists<Var, vec<CRef>, ClauseDeleted> occurs;
     vec<int> n_occ;
@@ -160,7 +158,7 @@ class SimpSolver : public Solver {
     void gatherTouchedClauses();
     bool merge(const Clause &_ps, const Clause &_qs, Var v, vec<Lit> &out_clause);
     bool merge(const Clause &_ps, const Clause &_qs, Var v, int &size);
-    bool backwardSubsumptionCheck();
+    bool backwardSubsumptionCheck(bool verbose = false);
     bool eliminateVar(Var v);
     void extendModel();
 
@@ -168,8 +166,7 @@ class SimpSolver : public Solver {
     bool strengthenClause(CRef cr, Lit l);
     bool implied(const vec<Lit> &c);
     void relocAll(ClauseAllocator &to);
-
-    };
+};
 
 //=================================================================================================
 // Implementation of inline methods:
