@@ -9,12 +9,12 @@ The PEQNP System its an automatic CNF and MIP encoder multi SAT and MIP Solver f
 # Try PEQNP on Google Colab 
 [PEQNP on Google Colab](https://colab.research.google.com/github/maxtuno/PEQNP/blob/master/docs/PEQNP.ipynb)
 
+#### Thanks to JetBrains for support this project!
+
+<a href="https://www.jetbrains.com/?from=PEQNP"><img border="0" alt="JetBrains support this project" src="https://raw.githubusercontent.com/maxtuno/PEQNP/master/jetbrains.png" width="100" height="100">
+
 # Installation
 ```python
 pip install PEQNP
 # -install-option=no-solver to use with CNF or SDK submodule
 ```
-
-#### Thanks to JetBrains for support this project!
-
-<a href="https://www.jetbrains.com/?from=PEQNP"><img border="0" alt="JetBrains support this project" src="https://raw.githubusercontent.com/maxtuno/PEQNP/master/jetbrains.png" width="100" height="100">
