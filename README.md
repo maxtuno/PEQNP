@@ -6,8 +6,7 @@
 
 The PEQNP System its an automatic CNF and MIP encoder multi SAT and MIP Solver for General Constrained Diophantine Equations and NP-Complete Problems, full integrated with Python and zero dependencies.
 
-For more info visit [www.peqnp.com](http://www.peqnp.com) 
-for consulting, personalized support, sponsoring, etc... oscar.riveros@peqnp.science
+[www.peqnp.com](http://www.peqnp.com) 
 
 #### Thanks to JetBrains for support this project!
 
