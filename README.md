@@ -6,8 +6,7 @@
 
 The PEQNP System its an automatic CNF and MIP encoder multi SAT and MIP Solver for General Constrained Diophantine Equations and NP-Complete Problems, full integrated with Python and zero dependencies.
 
-# Try PEQNP on Google Colab 
-[PEQNP on Google Colab](https://colab.research.google.com/github/maxtuno/PEQNP/blob/master/docs/PEQNP.ipynb)
+# [Try PEQNP on Google Colab ](https://colab.research.google.com/github/maxtuno/PEQNP/blob/master/docs/PEQNP.ipynb)
 
 #### Thanks to JetBrains for support this project!
 
@@ -19,9 +18,7 @@ pip install PEQNP
 # -install-option=no-solver to use with CNF or SDK submodule
 ```
 
-# PEQNP by Example
-
-https://github.com/maxtuno/PEQNP/blob/master/docs/PEQNP.ipynb
+# [PEQNP by Example](https://github.com/maxtuno/PEQNP/blob/master/docs/PEQNP.ipynb)
 
 # SLIME 5 SAT Solver
 usage: slime_cli <cnf> [model] [proof]
