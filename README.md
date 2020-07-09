@@ -21,6 +21,7 @@ pip install PEQNP
 ```
 
 # SLIME 5 SAT Solver
+```python
 usage: slime_cli <cnf> [model] [proof]
-  
+```
 <a href="https://www.peqnp.com"><img border="0" alt="PEQNP" src="https://raw.githubusercontent.com/maxtuno/PEQNP/master/slime5VSkissat.png" width="640" height="400">
