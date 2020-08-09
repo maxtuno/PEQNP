@@ -17,10 +17,13 @@ The PEQNP System its an automatic CNF and MIP encoder multi SAT and MIP Solver f
 # Installation
 ```python
 pip install PEQNP
-# -install-option=no-solver to use with CNF or SDK submodule
+# --install-option=no-solver to use with CNF or SDK submodule
 ```
 
-# SLIME 5 SAT Solver
+# SLIME 5 SAT Solver 
+
+https://maxtuno.github.io/slime-sat-solver/
+
 ```python
 usage: slime_cli <cnf> [model] [proof]
 ```
