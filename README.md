@@ -22,7 +22,7 @@ pip install PEQNP
 
 # SLIME 5 SAT Solver 
 
-https://maxtuno.github.io/slime-sat-solver/
+https://github.com/maxtuno/slime-sat-solver/tree/master/SLIME5-binary
 
 ```python
 usage: slime_cli <cnf> [model] [proof]
