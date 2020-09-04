@@ -18,11 +18,11 @@ pip install PEQNP
 # --install-option=no-solver to use with CNF or SDK submodule
 ```
 
-# SLIME 5 SAT Solver 
+# SLIME 4 SAT Solver 
 
-https://github.com/maxtuno/slime-sat-solver/tree/master/SLIME5-binary
+Sat Competition 2020, 3rd place on Cloud Tack, https://satcompetition.github.io/2020/results.html
 
-```python
-usage: slime_cli <cnf> [model] [proof]
-```
-<a href="https://raw.githubusercontent.com/maxtuno/PEQNP/master/slime5VSkissat.png"><img border="0" alt="PEQNP" src="https://raw.githubusercontent.com/maxtuno/PEQNP/master/slime5VSkissat.png" width="640" height="400">
+### Note: (https://twitter.com/maxtuno)
+
+#SLIME 5 slow at the beginning, but this cost is paid in solved problems, solve 30 more SAT instances than Kissat, however, for the CNFs that #PEQNP generates, it does not present great advantages, so tomorrow I will put SLIME 4 that solve the 1250x625 Queen Completion Problem...
+

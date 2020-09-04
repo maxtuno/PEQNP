@@ -175,18 +175,14 @@ class Entity:
             return self.value ** power.value
         else:
             if isinstance(power, Entity):
-                aa = Entity(self.encoder, bits=self.bits.bit_length())
-                assert sum(
-                    [self.encoder.zero.iff(aa[i], self.encoder.true) for i in
-                     range(self.bits.bit_length())]) == 1
-                assert sum([self.encoder.zero.iff(aa[i], i) for i in
-                            range(self.bits.bit_length())]) == power
+                aa = Entity(self.encoder, bits=self.bits // 2)
+                assert aa[[0]](0, 1) == 0
+                assert sum([aa[[i]](0, 1) for i in range(self.bits // 2)]) == 1
+                assert sum([aa[[i]](0, i) for i in range(self.bits // 2)]) == power
                 if modulo is not None:
                     assert modulo != 0
-                    return sum([self.encoder.zero.iff(aa[i], self ** i) for i in
-                                range(self.bits.bit_length())]) % modulo
-                return sum([self.encoder.zero.iff(aa[i], self ** i) for i in
-                            range(self.bits.bit_length())])
+                    return sum([aa[[i]](0, self ** i) for i in range(self.bits // 2)]) % modulo
+                return sum([aa[[i]](0, self ** i) for i in range(self.bits // 2)])
             else:
                 other = self
                 for _ in range(power - 1):
@@ -304,8 +300,10 @@ class Entity:
     def __abs__(self):
         if self.value is not None:
             return abs(self.value)
-        self.encoder.add_block([self.block[-1]])
-        return self.iff(-self.block[-1], -self)
+        lst = [self, -self]
+        bits = self.encoder.int(size=len(lst))
+        assert sum(self.encoder.zero.iff(bits[i], self.encoder.one) for i in range(len(lst))) == 1
+        return sum(self.encoder.zero.iff(bits[i], lst[i]) for i in range(len(lst)))
 
     def __and__(self, other):
         if self.value is not None:
@@ -380,7 +378,7 @@ class Entity:
                 return self.iff(functools.reduce(operator.and_, [
                     self.encoder.zero.iff(bit[j], 1) for j in
                     range(self.encoder.bits)])[0],
-                    self.encoder.create_constant(other))
+                                self.encoder.create_constant(other))
         if isinstance(other, Entity):
             output_block = self.encoder.bv_mux_gate(self.block, other.block,
                                                     bit)

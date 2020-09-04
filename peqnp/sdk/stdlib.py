@@ -42,7 +42,7 @@ def version():
     Print the current version of the system.
     :return:
     """
-    print('PEQNP Mathematical Programming Solver from http://www.peqnp.com')
+    print('PEQNP Mathematical Solver from http://www.peqnp.com')
 
 
 def engine(bits=None, sat_solver_path=None, mip_solver_path=None, info=False):

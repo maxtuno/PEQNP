@@ -42,12 +42,12 @@ def version():
     Print the current version of the system.
     :return:
     """
-    print('PEQNP Mathematical Programming Solver from http://www.peqnp.com')
+    print('PEQNP Mathematical Solver from http://www.peqnp.com')
     try:
         import pixie
-        print('PEQNP + SLIME + PIXIE')
+        print('PEQNP 2020 + SLIME 4 + PIXIE 1')
     except ImportError:
-        print('PEQNP + SLIME')
+        print('PEQNP 2020 + SLIME 4')
 
 
 def engine(bits=None, info=False):
@@ -376,6 +376,18 @@ def mul(xs, ys):
     global csp
     check_engine()
     return csp.mul(xs, ys)
+
+
+def values(lst, cleaner=None):
+    """
+    Convert to standard values
+    :param lst: List with elements.
+    :param cleaner: Filter for elements.
+    :return: Standard (filtered) values.
+    """
+    global csp
+    check_engine()
+    return csp.values(lst, cleaner)
 
 
 def apply_single(lst, f, indexed=False):

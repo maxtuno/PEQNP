@@ -217,8 +217,10 @@ class Atom:
     def __abs__(self):
         if self.value is not None:
             return abs(self.value)
-        self.encoder.add_block([self.block[-1]])
-        return self.iff(-self.block[-1], -self)
+        lst = [self, -self]
+        bits = self.encoder.int(size=len(lst))
+        assert sum(self.encoder.int(value=0).iff(bits[i], self.encoder.int(value=1)) for i in range(len(lst))) == 1
+        return sum(self.encoder.int(value=0).iff(bits[i], lst[i]) for i in range(len(lst)))
 
     def __and__(self, other):
         if self.value is not None:

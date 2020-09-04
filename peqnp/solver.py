@@ -420,8 +420,7 @@ class CSP:
             with open(cnf_path, 'a') as file:
                 maps = {}
                 for key, value in self.map.items():
-                    maps[key] = [(1 if v > 0 else -1) * (abs(v) - 1) for v in
-                                 value]
+                    maps[key] = [(1 if v > 0 else -1) * (abs(v) - 1) for v in value]
                 file.write('c {}\n'.format(maps))
         if model:
             for key, value in self.map.items():
