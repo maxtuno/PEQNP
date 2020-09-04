@@ -23,9 +23,9 @@ int v;
 
 #if _WIN32 || _WIN64
 void printHeader() {
-    printf("                                             \n");
-    printf(" SLIME SAT Solver by http://www.peqnp.science\n");
-    printf("                                             \n");
+    printf("                                          \n");
+    printf(" SLIME SAT Solver by http://www.peqnp.com \n");
+    printf("                                          \n");
 }
 #else
 
@@ -41,7 +41,7 @@ void printHeader() {
     printf("c  ░  ░  ░    ░ ░    ▒ ░░      ░      ░    \n");
     printf("c        ░      ░  ░ ░         ░      ░  ░ \n");
     printf("c                                          \n");
-    printf("c         http://www.peqnp.science         \n");
+    printf("c           http://www.peqnp.com           \n");
     printf("c                                          \n");
 }
 
@@ -149,7 +149,7 @@ PyObject *add_clause(PyObject *self, PyObject *args) {
         // Py_INCREF(pItem);
         long lit = PyLong_AsLong(pItem);
         // Py_DECREF(pItem);
-        v = (int) (abs(lit) - 1);
+        v = (int)(abs(lit) - 1);
         while (v >= S->nVars())
             S->newVar();
         clause.push((lit > 0) ? mkLit(v) : ~mkLit(v));

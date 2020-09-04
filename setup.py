@@ -6,7 +6,7 @@ ext_modules = [
               language="c++",
               sources=['src/SLIME.cc', 'src/SimpSolver.cc', 'src/Solver.cc'],
               include_dirs=['.', 'include'],
-              extra_compile_args=['-std=c++98'],
+              extra_compile_args=['-std=c++11'],
               ),
     Extension("pixie",
               language="c++",
@@ -21,7 +21,7 @@ if 'no-solver' in sys.argv:
         sys.argv.remove('no-solver')
 setup(
     name='PEQNP',
-    version='5.0.7',
+    version='5.0.8',
     packages=['peqnp', 'peqnp.cnf', 'peqnp.sdk'],
     url='http://www.peqnp.com',
     license='copyright (c) 2012-2020 Oscar Riveros. All rights reserved.',

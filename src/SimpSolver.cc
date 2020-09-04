@@ -608,15 +608,18 @@ bool SimpSolver::eliminate(bool turn_off_elim) {
     n_cls = nClauses();
     n_vars = nFreeVars();
 
-    printf("c Reduced to %d vars, %d cls (grow=%d)\n", n_vars, n_cls, grow);
-
-    if ((double)n_cls / n_vars >= 10 || n_vars < 10000) {
-        printf("c No iterative elimination performed. (vars=%d, c/v ratio=%.1f)\n", n_vars, (double)n_cls / n_vars);
-        goto cleanup;
+    if (log) {
+        printf("c Reduced to %d vars, %d cls (grow=%d)\n", n_vars, n_cls, grow);
     }
 
-    grow = grow ? grow * 2 : 8;
-    for (; grow < 10000; grow *= 2) {
+    /*
+    if ((double)n_cls / n_vars >= 10 || n_vars < 10000){
+        printf("c No iterative elimination performed. (vars=%d, c/v ratio=%.1f)\n", n_vars, (double)n_cls / n_vars);
+        goto cleanup; }
+    */
+
+    grow++;
+    for (; grow < INT32_MAX; grow++) {
         // Rebuild elimination variable heap.
         for (int i = 0; i < clauses.size(); i++) {
             const Clause &c = ca[clauses[i]];
@@ -641,13 +644,17 @@ bool SimpSolver::eliminate(bool turn_off_elim) {
         double cl_inc_rate = (double)n_cls_now / n_cls_last;
         double var_dec_rate = (double)n_vars_last / n_vars_now;
 
-        printf("c Reduced to %d vars, %d cls (grow=%d)\n", n_vars_now, n_cls_now, grow);
-        printf("c cl_inc_rate=%.3f, var_dec_rate=%.3f\n", cl_inc_rate, var_dec_rate);
+        if (log) {
+            printf("c Reduced to %d vars, %d cls (grow=%d)\n", n_vars_now, n_cls_now, grow);
+            // printf("c cl_inc_rate=%.3f, var_dec_rate=%.3f\n", cl_inc_rate, var_dec_rate);
+        }
 
         if (n_cls_now > n_cls_init || cl_inc_rate > var_dec_rate)
             break;
     }
-    printf("c No. effective iterative eliminations: %d\n", iter);
+    if (log) {
+        printf("c No. effective iterative eliminations: %d\n", iter);
+    }
 
 cleanup:
     touched.clear(true);
