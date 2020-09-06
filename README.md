@@ -20,9 +20,9 @@ pip install PEQNP
 
 # SLIME 4 SAT Solver 
 
-Sat Competition 2020, 3rd place on Cloud Tack, (https://satcompetition.github.io/2020/results.html)
+[Sat Competition 2020, 3rd place on Cloud Tack](https://satcompetition.github.io/2020/results.html)
 
 # SLIME 5 SAT Solver
 
-Currently the best sat solve, several light years around. (https://maxtuno.github.io/slime-sat-solver/)
+[Currently the best sat solve, several light years around](https://maxtuno.github.io/slime-sat-solver/)
 
