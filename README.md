@@ -20,9 +20,9 @@ pip install PEQNP
 
 # SLIME 4 SAT Solver 
 
-Sat Competition 2020, 3rd place on Cloud Tack, https://satcompetition.github.io/2020/results.html
+Sat Competition 2020, 3rd place on Cloud Tack, (https://satcompetition.github.io/2020/results.html)
 
-### Note: (https://twitter.com/maxtuno)
+# SLIME 5 SAT Solver
 
-#SLIME 5 slow at the beginning, but this cost is paid in solved problems, solve 30 more SAT instances than Kissat, however, for the CNFs that #PEQNP generates, it does not present great advantages, so tomorrow I will put SLIME 4 that solve the 1250x625 Queen Completion Problem...
+Currently the best sat solve, several light years around. (https://maxtuno.github.io/slime-sat-solver/)
 
