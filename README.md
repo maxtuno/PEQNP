@@ -24,5 +24,5 @@ pip install PEQNP
 
 # SLIME 5 SAT Solver
 
-[Currently the best sat solve, several light years around](https://maxtuno.github.io/slime-sat-solver/)
+[Currently the best sat solver, several light years around](https://maxtuno.github.io/slime-sat-solver/)
 
