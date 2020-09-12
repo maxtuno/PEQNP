@@ -60,10 +60,10 @@ namespace SLIME {
 
 class Solver {
   protected:
-    bool log, boost;
+    bool log, boost, simplify_ready;
     int global;
 
-private:
+  private:
     template <typename T> class MyQueue {
         int max_sz, q_sz;
         int ptr;
@@ -105,22 +105,21 @@ private:
     };
 
   public:
-
-    void* termCallbackState;
-    int (*termCallback)(void* state);
-    void setTermCallback(void* state, int (*termCallback)(void*)) {
+    void *termCallbackState;
+    int (*termCallback)(void *state);
+    void setTermCallback(void *state, int (*termCallback)(void *)) {
         this->termCallbackState = state;
         this->termCallback = termCallback;
     }
 
-    void* learnCallbackState;
-    int* learnCallbackBuffer;
+    void *learnCallbackState;
+    int *learnCallbackBuffer;
     int learnCallbackLimit;
-    void (*learnCallback)(void * state, int * clause);
-    void setLearnCallback(void * state, int maxLength, void (*learn)(void * state, int * clause)) {
+    void (*learnCallback)(void *state, int *clause);
+    void setLearnCallback(void *state, int maxLength, void (*learn)(void *state, int *clause)) {
         this->learnCallbackState = state;
         this->learnCallbackLimit = maxLength;
-        this->learnCallbackBuffer = (int*) realloc (this->learnCallbackBuffer, (1+maxLength)*sizeof(int));
+        this->learnCallbackBuffer = (int *)realloc(this->learnCallbackBuffer, (1 + maxLength) * sizeof(int));
         this->learnCallback = learn;
     }
 
@@ -259,8 +258,9 @@ private:
         return (cr != CRef_Undef);
     }
 
-        int rank;
-    protected:
+    int rank;
+
+  protected:
     // Helper structures:
     //
     struct VarData {
@@ -319,7 +319,7 @@ private:
     vec<VarData> vardata;                                    // Stores reason and level for each variable.
     int qhead;                                               // Head of queue (as index into the trail -- no more explicit propagation queue in MiniSat).
     int simpDB_assigns;                                      // Number of top-level assignments since last execution of 'simplify()'.
-    int simpDB_props;                                    // Remaining number of propagations that must be made before next execution of 'simplify()'.
+    int simpDB_props;                                        // Remaining number of propagations that must be made before next execution of 'simplify()'.
     vec<Lit> assumptions;                                    // Current set of assumptions provided to solve by the user.
     Heap<VarOrderLt> order_heap_CHB,                         // A priority queue of variables ordered with respect to the variable activity.
         order_heap_VSIDS, order_heap_distance;
@@ -368,8 +368,8 @@ private:
     CRef propagate();                                                               // Perform unit propagation. Returns possibly conflicting clause.
     void cancelUntil(int level);                                                    // Backtrack until a certain level.
     void analyze(CRef confl, vec<Lit> &out_learnt, int &out_btlevel, int &out_lbd); // (bt = backtrack)
-        // COULD THIS BE IMPLEMENTED BY THE ORDINARIY "analyze" BY SOME REASONABLE GENERALIZATION?
-    bool litRedundant(Lit p, int abstract_levels);                             // (helper method for 'analyze()')
+                                                                                    // COULD THIS BE IMPLEMENTED BY THE ORDINARIY "analyze" BY SOME REASONABLE GENERALIZATION?
+    bool litRedundant(Lit p, int abstract_levels);                                  // (helper method for 'analyze()')
     lbool search(int &nof_conflicts);                                               // Search for a given number of conflicts.
     lbool solve_();                                                                 // Main solve method (assumptions given in 'assumptions').
     void reduceDB();                                                                // Reduce the set of learnt clauses.
@@ -398,7 +398,7 @@ private:
 
     // Misc:
     //
-    int decisionLevel() const;           // Gives the current decisionlevel.
+    int decisionLevel() const;      // Gives the current decisionlevel.
     int abstractLevel(Var x) const; // Used to represent an abstraction of sets of decision levels.
     CRef reason(Var x) const;
 
@@ -500,11 +500,11 @@ private:
     bool simplifyAll();
     void simplifyLearnt(Clause &c);
 
-        bool simplifyLearnt_core();
+    bool simplifyLearnt_core();
     bool simplifyLearnt_tier2();
     int trailRecord;
 
-        void cancelUntilTrailRecord();
+    void cancelUntilTrailRecord();
     void simpleUncheckEnqueue(Lit p, CRef from = CRef_Undef);
     CRef simplePropagate();
     int nbSimplifyAll;
@@ -524,9 +524,9 @@ private:
 
     bool collectFirstUIP(CRef confl);
     vec<double> var_iLevel, var_iLevel_tmp;
-        vec<int> pathCs;
+    vec<int> pathCs;
 
-        double var_iLevel_inc;
+    double var_iLevel_inc;
     vec<Lit> involved_lits;
     double my_var_decay;
     bool DISTANCE;

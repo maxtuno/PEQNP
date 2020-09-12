@@ -177,7 +177,9 @@ PyObject *solve(PyObject *self, PyObject *args) {
     }
 
     if (log) {
-        printHeader();
+        if (S->simplify_ready) {
+            printHeader();
+        }
         S->log = true;
     } else {
         S->log = false;
@@ -190,11 +192,11 @@ PyObject *solve(PyObject *self, PyObject *args) {
         assumptions.push((lit > 0) ? mkLit(v) : ~mkLit(v));
     }
 
-    assumptions.clear(true);
-
     for (i = 0; i < assumptions.size(); i++) {
         S->addClause(assumptions[i]);
     }
+
+    assumptions.clear(true);
 
     if (strcmp(path, "") != 0) {
         S->toDimacs(path);
@@ -206,7 +208,10 @@ PyObject *solve(PyObject *self, PyObject *args) {
 
     if (solve) {
         if (simplify) {
-            S->eliminate();
+            if (S->simplify_ready) {
+                S->simplify_ready = false;
+                S->eliminate();
+            }
             result = S->solveLimited(assumptions, true);
         } else {
             result = S->solveLimited(assumptions, false);

@@ -52,6 +52,8 @@ SimpSolver::SimpSolver() : parsing(false), grow(opt_grow), clause_lim(opt_clause
     ca.extra_clause_field = true; // NOTE: must happen before allocating the dummy clause below.
     bwdsub_tmpunit = ca.alloc(dummy);
     remove_satisfied = false;
+    simplify_ready = true;
+    Solver::simplify_ready = simplify_ready;
 }
 
 SimpSolver::~SimpSolver() {}
@@ -108,6 +110,11 @@ lbool SimpSolver::solve_(bool do_simp, bool turn_off_simp) {
         // Unfreeze the assumptions that were frozen:
         for (int i = 0; i < extra_frozen.size(); i++)
             setFrozen(extra_frozen[i], false);
+
+    if (simplify_ready) {
+        simplify_ready = false;
+        Solver::simplify_ready = simplify_ready;
+    }
 
     return result;
 }
