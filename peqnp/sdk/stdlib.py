@@ -789,3 +789,12 @@ def minimize(objective):
         else:
             v.value = r
     return opt
+
+
+def clear(lst):
+    """
+    Clear a list of integers, used with opmization rutines.
+    :param lst: The coherent list of integers to clear.
+    """
+    for x in lst:
+        x.clear()

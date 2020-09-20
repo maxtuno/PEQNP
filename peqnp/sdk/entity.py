@@ -375,3 +375,6 @@ class Entity:
 
     def __float__(self):
         return float(self.__repr__())
+
+    def clear(self):
+        self.value = None

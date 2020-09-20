@@ -835,3 +835,12 @@ def minimize(objective, solve=True, lp_path=''):
                 v.value = r
         return opt
     return None
+
+
+def clear(lst):
+    """
+    Clear a list of integers, used with opmization rutines.
+    :param lst: The coherent list of integers to clear.
+    """
+    for x in lst:
+        x.clear()
