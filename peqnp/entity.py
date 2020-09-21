@@ -428,10 +428,17 @@ class Entity:
         return str(self.__repr__())
 
     def __int__(self):
-        return int(self.__repr__())
+        return self.value
 
     def __float__(self):
-        return float(self.__repr__())
+        return float(self.value)
 
     def clear(self):
         self.value = None
+
+    def reverse(self, copy=False):
+        if copy:
+            return Entity(self.encoder, block=self.block[::-1])
+        else:
+            self.block = self.block[::-1]
+        return self

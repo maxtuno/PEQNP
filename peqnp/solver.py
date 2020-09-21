@@ -105,7 +105,7 @@ class CSP:
             self.__1 = self.int(value=1)
         return self.__1
 
-    def add_variable(self, ):
+    def add_variable(self):
         self.number_of_variables += 1
         return self.number_of_variables
 
@@ -420,8 +420,11 @@ class CSP:
             with open(cnf_path, 'a') as file:
                 maps = {}
                 for key, value in self.map.items():
+                    if key.startswith('_'):
+                        continue
                     maps[key] = [(1 if v > 0 else -1) * (abs(v) - 1) for v in value]
-                file.write('c {}\n'.format(maps))
+                if len(maps) > 0:
+                    file.write('c {}\n'.format(maps))
         if model:
             for key, value in self.map.items():
                 for arg in args:

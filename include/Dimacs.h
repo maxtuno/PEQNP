@@ -59,7 +59,7 @@ template <class B, class Solver> static void parse_DIMACS_main(B &in, Solver &S)
                 vars = parseInt(in);
                 clauses = parseInt(in);
             } else {
-                printf("PARSE ERROR! Unexpected char: %d\n", *in), exit(3);
+                printf("c PARSE ERROR! Unexpected char: %d\n", *in), exit(3);
             }
         } else if (*in == 'c' || *in == 'p')
             skipLine(in);
@@ -70,9 +70,9 @@ template <class B, class Solver> static void parse_DIMACS_main(B &in, Solver &S)
         }
     }
     if (vars != S.nVars())
-        fprintf(stderr, "WARNING! DIMACS header mismatch: wrong number of variables.\n");
+        fprintf(stderr, "c WARNING! DIMACS header mismatch: wrong number of variables.\n");
     if (cnt != clauses)
-        fprintf(stderr, "WARNING! DIMACS header mismatch: wrong number of clauses.\n");
+        fprintf(stderr, "c WARNING! DIMACS header mismatch: wrong number of clauses.\n");
 }
 
 // Inserts problem into solver.
@@ -84,7 +84,7 @@ template <class Solver> static void parse_DIMACS(FILE *input_stream, Solver &S) 
 
 //=================================================================================================
 
-    //=================================================================================================
+//=================================================================================================
 } // namespace SLIME
 
 #endif

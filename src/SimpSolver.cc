@@ -79,6 +79,7 @@ lbool SimpSolver::solve_(bool do_simp, bool turn_off_simp) {
     lbool result = l_True;
 
     Solver::log = log;
+    Solver::render = render;
 
     do_simp &= use_simplification;
 

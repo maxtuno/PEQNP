@@ -176,6 +176,8 @@ PyObject *solve(PyObject *self, PyObject *args) {
         Py_RETURN_NONE;
     }
 
+    S->render = strcmp(path, "") != 0;
+
     if (log) {
         if (S->simplify_ready) {
             printHeader();

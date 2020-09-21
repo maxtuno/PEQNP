@@ -38,7 +38,7 @@ namespace SLIME {
 
 class SimpSolver : public Solver {
   public:
-    bool log, simplify_ready;
+    bool log, simplify_ready, render;
     // Constructor/Destructor:
     //
     SimpSolver();

@@ -602,7 +602,9 @@ bool Solver::addClause_(vec<Lit> &ps) {
         return ok = false;
     else if (ps.size() == 1) {
         uncheckedEnqueue(ps[0]);
-        return ok = (propagate() == CRef_Undef);
+        if (render) {
+            return ok = (propagate() == CRef_Undef);
+        }
     } else {
         CRef cr = ca.alloc(ps, false);
         clauses.push(cr);
@@ -1756,7 +1758,7 @@ void Solver::toDimacs(const char *file, const vec<Lit> &assumps) {
 }
 
 void Solver::toDimacs(FILE *f, const vec<Lit> &assumps) {
-    fprintf(f, "c PEQNP - www.peqnp.science\n");
+    fprintf(f, "c PEQNP - www.peqnp.com\n");
     fprintf(f, "c contact@peqnp.science\n");
     fprintf(f, "c pip install PEQNP\n");
 

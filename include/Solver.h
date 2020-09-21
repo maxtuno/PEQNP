@@ -60,7 +60,7 @@ namespace SLIME {
 
 class Solver {
   protected:
-    bool log, boost, simplify_ready;
+    bool log, boost, simplify_ready, render;
     int global;
 
   private:
