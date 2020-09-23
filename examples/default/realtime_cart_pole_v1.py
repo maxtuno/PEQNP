@@ -17,6 +17,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
+# https://twitter.com/maxtuno/status/1308584119115427845
+
 import gym
 import numpy as np
 import peqnp as cnf
