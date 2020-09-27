@@ -26,3 +26,7 @@ pip install PEQNP
 
 [Currently the best sat solver, several light years around](https://maxtuno.github.io/slime-sat-solver/)
 
+
+# HESS black-box algorithm
+
+[Possibly the proof that P = NP](https://github.com/maxtuno/HESS)
