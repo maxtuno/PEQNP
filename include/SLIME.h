@@ -22,27 +22,41 @@ SimpSolver *S;
 int v;
 
 #if _WIN32 || _WIN64
+#include <io.h>
+#include <fcntl.h>
+#include <windows.h>
 void printHeader() {
-    printf("                                          \n");
-    printf(" SLIME SAT Solver by http://www.peqnp.com \n");
-    printf("                                          \n");
+    SetConsoleOutputCP(65001);
+    std::cout << "                                         \n";
+    std::cout << "   ██████  ██▓     ██▓ ███▄ ▄███▓▓█████  \n";
+    std::cout << " ▒██    ▒ ▓██▒    ▓██▒▓██▒▀█▀ ██▒▓█   ▀  \n";
+    std::cout << " ░ ▓██▄   ▒██░    ▒██▒▓██    ▓██░▒███    \n";
+    std::cout << "   ▒   ██▒▒██░    ░██░▒██    ▒██ ▒▓█  ▄  \n";
+    std::cout << " ▒██████▒▒░██████▒░██░▒██▒   ░██▒░▒████▒ \n";
+    std::cout << " ▒ ▒▓▒ ▒ ░░ ▒░▓  ░░▓  ░ ▒░   ░  ░░░ ▒░ ░ \n";
+    std::cout << " ░ ░▒  ░ ░░ ░ ▒  ░ ▒ ░░  ░      ░ ░ ░  ░ \n";
+    std::cout << " ░  ░  ░    ░ ░    ▒ ░░      ░      ░    \n";
+    std::cout << "       ░      ░  ░ ░         ░      ░  ░ \n";
+    std::cout << "                                         \n";
+    std::cout << "           http://www.peqnp.com          \n";
+    std::cout << "                                         \n";
 }
 #else
 
 void printHeader() {
-    printf("c                                          \n");
-    printf("c    ██████  ██▓     ██▓ ███▄ ▄███▓▓█████  \n");
-    printf("c  ▒██    ▒ ▓██▒    ▓██▒▓██▒▀█▀ ██▒▓█   ▀  \n");
-    printf("c  ░ ▓██▄   ▒██░    ▒██▒▓██    ▓██░▒███    \n");
-    printf("c    ▒   ██▒▒██░    ░██░▒██    ▒██ ▒▓█  ▄  \n");
-    printf("c  ▒██████▒▒░██████▒░██░▒██▒   ░██▒░▒████▒ \n");
-    printf("c  ▒ ▒▓▒ ▒ ░░ ▒░▓  ░░▓  ░ ▒░   ░  ░░░ ▒░ ░ \n");
-    printf("c  ░ ░▒  ░ ░░ ░ ▒  ░ ▒ ░░  ░      ░ ░ ░  ░ \n");
-    printf("c  ░  ░  ░    ░ ░    ▒ ░░      ░      ░    \n");
-    printf("c        ░      ░  ░ ░         ░      ░  ░ \n");
-    printf("c                                          \n");
-    printf("c           http://www.peqnp.com           \n");
-    printf("c                                          \n");
+    printf("c                                         \n");
+    printf("c   ██████  ██▓     ██▓ ███▄ ▄███▓▓█████  \n");
+    printf("c ▒██    ▒ ▓██▒    ▓██▒▓██▒▀█▀ ██▒▓█   ▀  \n");
+    printf("c ░ ▓██▄   ▒██░    ▒██▒▓██    ▓██░▒███    \n");
+    printf("c   ▒   ██▒▒██░    ░██░▒██    ▒██ ▒▓█  ▄  \n");
+    printf("c ▒██████▒▒░██████▒░██░▒██▒   ░██▒░▒████▒ \n");
+    printf("c ▒ ▒▓▒ ▒ ░░ ▒░▓  ░░▓  ░ ▒░   ░  ░░░ ▒░ ░ \n");
+    printf("c ░ ░▒  ░ ░░ ░ ▒  ░ ▒ ░░  ░      ░ ░ ░  ░ \n");
+    printf("c ░  ░  ░    ░ ░    ▒ ░░      ░      ░    \n");
+    printf("c       ░      ░  ░ ░         ░      ░  ░ \n");
+    printf("c                                         \n");
+    printf("c           http://www.peqnp.com          \n");
+    printf("c                                         \n");
 }
 
 #endif
@@ -178,11 +192,13 @@ PyObject *solve(PyObject *self, PyObject *args) {
 
     S->render = strcmp(path, "") != 0;
 
+    S->rank = 0;
+
     if (log) {
+        S->log = true;
         if (S->simplify_ready) {
             printHeader();
         }
-        S->log = true;
     } else {
         S->log = false;
     }

@@ -99,7 +99,6 @@ PyObject *add_constraint(PyObject *self, PyObject *args) {
     }
     // Py_DECREF(pList);
 
-
     mip->add_constraint(constraint, s, d);
 
     Py_RETURN_NONE;

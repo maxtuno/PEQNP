@@ -178,10 +178,10 @@ public:
         ll.push_back(constraint);
         if (comparator == "<=") {
             cc.push_back(C::L);
-        } else if (comparator == "==") {
-            cc.push_back(C::E);
         } else if (comparator == ">=") {
             cc.push_back(C::G);
+        } else if (comparator == "==") {
+            cc.push_back(C::E);
         }
         rr.push_back(right);
         ec++;
@@ -207,11 +207,11 @@ public:
         lp_file << ";" << std::endl;
         for (unsigned i = 0; i < ec; ++i) {
             for (unsigned j = 0; j < vc; ++j) {
-                if (ii(ll[i][j]) != 0.0) {
+                if (ll[i][j] != 0.0) {
                     lp_file << (ll[i][j] >= 0? "+" + std::to_string(std::abs(ll[i][j])) : "-" + std::to_string(std::abs(ll[i][j]))) << " * x" << (j + 1) << " ";
                 }
             }
-            std::string tt{"< >"};
+            std::string tt{"<> "};
             lp_file << tt[static_cast<unsigned int>(cc[i])] << "= ";
             lp_file << (rr[i] >= 0? "+" + std::to_string(std::abs(rr[i])) : "-" + std::to_string(std::abs(rr[i]))) << "; \n";
         }
