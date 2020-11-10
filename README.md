@@ -22,7 +22,7 @@ pip install PEQNP
 
 [Sat Competition 2020, 3rd place on Cloud Tack](https://satcompetition.github.io/2020/results.html)
 
-<img border="0" alt="SLIME" src="https://raw.githubusercontent.com/maxtuno/PEQNP/master/medal.jpg" width="200" height="200">
+<img border="0" alt="SLIME" src="https://raw.githubusercontent.com/maxtuno/PEQNP/master/medal.jpg" width="200" height="267">
 
 # SLIME 5 SAT Solver
 
