@@ -6,19 +6,19 @@
 
 The PEQNP System its an automatic CNF encoder integrated with Python.
 
-# NEWS 2021
+## NEWS 2021
 
 - The PEQNP library is actually on active development and on documenting, in the next months, several actualizations and improvements can be done.
 
 - [Try PEQNP on Google Colab ](https://colab.research.google.com/github/maxtuno/PEQNP/blob/master/docs/PEQNP.ipynb) This document is valid for the 6.0.0 version.
 
 
-# Installation
+## Installation
 ```python
 pip install PEQNP
 ```
 
-# SLIME 4 SAT Solver 
+## SLIME 4 SAT Solver 
 
 [Sat Competition 2020, 3rd place on Cloud Tack](https://satcompetition.github.io/2020/results.html)
 
