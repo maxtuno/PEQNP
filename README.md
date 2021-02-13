@@ -8,14 +8,15 @@ The PEQNP System its an automatic CNF encoder integrated with Python.
 
 # [Try PEQNP on Google Colab ](https://colab.research.google.com/github/maxtuno/PEQNP/blob/master/docs/PEQNP.ipynb)
 
-#### Thanks to JetBrains for support this project!
+# NEWS 2021
 
-<a href="https://www.jetbrains.com/?from=PEQNP"><img border="0" alt="JetBrains support this project" src="https://raw.githubusercontent.com/maxtuno/PEQNP/master/jetbrains.png" width="100" height="100">
+- The PEQNP library is actually on active development and on documenting, in the next months, several actualizations and improvements can be done.
+
+- This document is valid for the 6.0.0 version.
 
 # Installation
 ```python
 pip install PEQNP
-# --install-option=no-solver to use with CNF or SDK submodule
 ```
 
 # SLIME 4 SAT Solver 
@@ -23,12 +24,3 @@ pip install PEQNP
 [Sat Competition 2020, 3rd place on Cloud Tack](https://satcompetition.github.io/2020/results.html)
 
 <img border="0" alt="SLIME" src="https://raw.githubusercontent.com/maxtuno/PEQNP/master/medal.jpg" width="200" height="267">
-
-# SLIME 5 SAT Solver
-
-[Currently the best sat solver, several light years around](https://maxtuno.github.io/slime-sat-solver/)
-
-
-# HESS black-box algorithm
-
-[Possibly the proof that P = NP](https://github.com/maxtuno/HESS)
