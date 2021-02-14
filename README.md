@@ -8,7 +8,7 @@ The PEQNP System its an automatic CNF encoder integrated with Python.
 
 - [Try PEQNP on Google Colab](https://colab.research.google.com/github/maxtuno/PEQNP/blob/master/docs/PEQNP.ipynb) This document is valid for the 6.0.0 version.
 
-- [CELL POWER COVERAGE with PEQNP TENSORS](https://colab.research.google.com/github/maxtuno/PEQNP/blob/master/docs/CELL_TOWER_COVERAGE.ipynb)
+- [CELL TOWER MAXIMALCOVERAGE AT MINIMAL COST](https://colab.research.google.com/github/maxtuno/PEQNP/blob/master/docs/CELL_TOWER_COVERAGE.ipynb)
 
 ## Installation
 ```python
