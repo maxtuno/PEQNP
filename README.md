@@ -6,7 +6,8 @@
 
 The PEQNP System its an automatic CNF encoder integrated with Python.
 
-- [Try PEQNP on Google Colab](https://colab.research.google.com/github/maxtuno/PEQNP/blob/master/docs/PEQNP.ipynb) This document is valid for the 6.0.0 version.
+- [Try PEQNP on Google Colab](https://colab.research.google.com/github/maxtuno/PEQNP/blob/master/docs/PEQNP.ipynb)
+- [DRILLING PROBLEM](https://colab.research.google.com/github/maxtuno/PEQNP/blob/master/docs/drilling_problem.ipynb)
 - [KNIGHT'S TOUR SLIME CLOUD (EXTERNAL)](https://colab.research.google.com/github/maxtuno/PEQNP/blob/master/docs/knight_cloud.ipynb)
 - [CELL TOWER MAXIMAL COVERAGE AT MINIMAL COST](https://colab.research.google.com/github/maxtuno/PEQNP/blob/master/docs/CELL_TOWER_COVERAGE.ipynb)
 
