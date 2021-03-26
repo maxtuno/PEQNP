@@ -21,3 +21,7 @@ pip install PEQNP
 [Sat Competition 2020, 3rd place on Cloud Tack](https://satcompetition.github.io/2020/results.html)
 
 <img border="0" alt="SLIME" src="https://raw.githubusercontent.com/maxtuno/PEQNP/master/medal.jpg" width="200" height="267">
+
+<img
+  src="https://cr-ss-service.azurewebsites.net/api/ScreenShot?widget=summary&username=maxtuno&badges=2&show-avatar=true&style=--header-bg-color:%23000;--border-radius:10px"
+/>
