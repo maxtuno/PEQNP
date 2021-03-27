@@ -23,12 +23,12 @@ SOFTWARE.
 The standard high level library for the PEQNP system.
 """
 
-from .gaussian import Gaussian
 from .linear import Linear
 from .rational import Rational
 from .solver import *
 
 csp = None
+render = False
 
 
 def check_engine():
@@ -45,16 +45,16 @@ def version():
     print('PEQNP Mathematical Solver from http://www.peqnp.com')
     try:
         import pixie
-        print('PEQNP 2020 + SLIME 4 + PIXIE 1')
+        print('PEQNP 2021 + SLIME 2021 + PIXIE I')
     except ImportError:
-        print('PEQNP 2020 + SLIME 4')
+        print('PEQNP 2021 + SLIME 2021')
 
 
 def engine(bits=None, info=False):
     """
-    Initialize and reset the internal state of solver engine.
-    :param bits: The bits 2 ** bits - 1 of solving space.
-    :param info: Return the info of the current system.
+    Initialize or reset the internal state of solver engine.
+    :param bits: Implies a $2^{bits} - 1$ search space.
+    :param info: Show the info of the current system.
     :return:
     """
     global csp
@@ -68,7 +68,7 @@ def engine(bits=None, info=False):
 
 def slime_cli(cnf_path, model_path='', proof_path=''):
     """
-    Use directly the SLIME 4 SAT Solver.
+    Use directly the SLIME SAT Solver.
     :param cnf_path: The cnf file to solve.
     :param model_path: The path to the model if SAT, optional.
     :param proof_path: The path for the DRUP-PROOF if UNSAT, optional.
@@ -104,8 +104,7 @@ def constant(value, bits=None):
     return csp.variables[-1]
 
 
-def satisfy(solve=True, turbo=False, log=False, assumptions=None, cnf_path='',
-            model_path='', proof_path='', normalize=False):
+def satisfy(solve=True, turbo=False, log=False, assumptions=None, cnf_path='', model_path='', proof_path='', normalize=False):
     """
     Find a model for the current problem.
     :param solve: This indicate if the instance can be solved or not, its use in conjunction with cnf_path.
@@ -118,10 +117,7 @@ def satisfy(solve=True, turbo=False, log=False, assumptions=None, cnf_path='',
     :param normalize: Indicate to the system that normalize integers from [2 ** (bits - 1), 2 ** bits - 1].
     :return: True if SATISFIABLE else False
     """
-    return csp.to_sat(csp.variables, solve=solve, turbo=turbo, log=log,
-                      assumptions=assumptions, cnf_path=cnf_path,
-                      model_path=model_path, proof_path=proof_path,
-                      normalize=normalize)
+    return csp.to_sat(csp.variables, solve=solve, turbo=turbo, log=log, assumptions=assumptions, cnf_path=cnf_path, model_path=model_path, proof_path=proof_path)
 
 
 def subsets(lst, k=None, key=None, complement=False):
@@ -172,15 +168,13 @@ def subset(data, k, empty=None, complement=False):
     return subset_
 
 
-def vector(key=None, bits=None, size=None, is_rational=False, is_gaussian=False,
-           is_mip=False, is_real=False):
+def vector(key=None, bits=None, size=None, is_rational=False, is_mip=False, is_real=False):
     """
     A vector of integers.
     :param key: The generic name for the array this appear indexed on cnf.
     :param bits: The bit bits for each integer.
     :param size: The bits of the vector.
     :param is_rational: Indicate of is a Rational vector.
-    :param is_gaussian: Indicate of is a Gaussian Integers vector.
     :param is_mip: Indicate of is a MIP vector.
     :param is_real: Indicate of is a MIP vector and is real or int.
     :return: An instance of vector.
@@ -189,8 +183,6 @@ def vector(key=None, bits=None, size=None, is_rational=False, is_gaussian=False,
     check_engine()
     if is_rational:
         return [rational() for _ in range(size)]
-    if is_gaussian:
-        return [gaussian() for _ in range(size)]
     if is_mip:
         lns = []
         for _ in range(size):
@@ -223,9 +215,7 @@ def matrix(key=None, bits=None, dimensions=None, is_mip=False, is_real=False):
                 lns.append(linear(is_real=is_real))
                 row.append(lns[-1])
             else:
-                csp.variables.append(integer(key='{}_{}_{}'.format(key, i,
-                                                                   j) if key is not None else key,
-                                             bits=bits))
+                csp.variables.append(integer(key='{}_{}_{}'.format(key, i, j) if key is not None else key, bits=bits))
                 row.append(csp.variables[-1])
         matrix_.append(row)
     return matrix_
@@ -531,19 +521,6 @@ def index(ith, data):
     csp.variables.append(item)
     csp.element(ith, data, item)
     return csp.variables[-1]
-
-
-def gaussian(x=None, y=None):
-    """
-    Create a gaussian integer from (x+yj).
-    :param x: real
-    :param y: imaginary
-    :return: (x+yj)
-    """
-    check_engine()
-    if x is None and y is None:
-        return Gaussian(integer(), integer())
-    return Gaussian(x, y)
 
 
 def rational(x=None, y=None):
@@ -915,3 +892,48 @@ def clear(lst):
     """
     for x in lst:
         x.clear()
+
+
+def external_satisfy(key, solver, params=''):
+    """
+    Solve with external solver.
+    :param key: Identifier of the problem (key.cnf is now the working file).
+    :param solver: The external solver.
+    :param params: Parameters passed to external solver.
+    :param log: Show external output.
+    :return: True if SAT else False.
+    """
+    global csp, render
+    import subprocess
+    check_engine()
+    if not render:
+        render = True
+        satisfy(solve=False, cnf_path=key + '.cnf')
+    subprocess.call('{0} {2} {1}.cnf > {1}.mod'.format(solver, key, params), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    with open('{}.mod'.format(key), 'r') as mod:
+        lines = ''
+        for line in mod.readlines():
+            if line.startswith('v '):
+                lines += line.strip('v ').strip('\n') + ' '
+        if len(lines) > 0:
+            model = list(map(int, lines.strip(' ').split(' ')))
+            for k, v in csp.maps.items():
+                for arg in csp.variables:
+                    if isinstance(arg, Entity) and arg.key == k:
+                        arg.value = int(''.join(map(str, [int(int(model[abs(bit) - 1]) > 0) for bit in v[::-1]])), 2)
+            with open('{}.cnf'.format(key), 'a') as file:
+                file.write(' '.join([str(-int(literal)) for literal in model]) + '\n')
+            return True
+    return False
+
+
+def external_reset(key):
+    global render
+    """
+    Use this with external_satisfy on optimization rutines.
+    :param key: key of the external_satisfy problem
+    :return:
+    """
+    import os
+    os.remove(key + '.cnf')
+    render = False

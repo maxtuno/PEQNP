@@ -1,0 +1,11 @@
+Metadata-Version: 1.0
+Name: PEQNP
+Version: 6.0.0
+Summary: PEQNP Mathematical Solver from http://www.peqnp.com
+Home-page: http://www.peqnp.com
+Author: Oscar Riveros
+Author-email: contact@peqnp.science
+License: copyright (c) 2012-2021 Oscar Riveros. All rights reserved.
+Description: UNKNOWN
+Keywords: csp,mip
+Platform: UNKNOWN

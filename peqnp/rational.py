@@ -24,17 +24,18 @@ from .entity import *
 
 class Rational:
     def __init__(self, x, y):
-        self.denominator = x
-        self.numerator = y
-        assert self.numerator > 0
+        self.numerator = x
+        self.denominator = y
+        assert self.denominator != self.denominator.encoder.zero
 
     def __eq__(self, other):
+        c = Entity(self.numerator.encoder)
         if isinstance(other, Entity):
-            assert self.denominator == other
-            assert self.numerator == 1
+            assert self.numerator == c * other
+            assert self.denominator == c * self.denominator.encoder.one
         else:
-            assert self.denominator == other.denominator
-            assert self.numerator == other.numerator
+            assert self.numerator == c * other.numerator
+            assert self.denominator == c * other.denominator
         return True
 
     def __ne__(self, other):
@@ -42,31 +43,31 @@ class Rational:
         return True
 
     def __neg__(self):
-        return Rational(-self.denominator, self.numerator)
+        return Rational(-self.numerator, self.denominator)
 
     def __add__(self, other):
-        return Rational(
-            self.denominator * other.numerator + self.numerator * other.denominator,
-            self.numerator * other.numerator)
+        return Rational(self.denominator * other.numerator + self.numerator * other.denominator, self.denominator * other.denominator)
 
     def __radd__(self, other):
         if other == 0:
             return self
         return self + other
 
+    def __rmul__(self, other):
+        if other == 1:
+            return self
+        return self * other
+
     def __sub__(self, other):
-        return Rational(
-            self.denominator * other.numerator - self.numerator * other.denominator,
-            self.numerator * other.numerator)
+        return Rational(self.denominator * other.numerator - self.numerator * other.denominator, self.denominator * other.denominator)
 
     def __mul__(self, other):
         if isinstance(other, Entity):
-            return Rational(self.denominator * other, self.numerator)
-        return Rational(self.denominator * other.denominator,
-                        self.numerator * other.numerator)
+            return Rational(self.numerator * other, self.denominator)
+        return Rational(self.numerator * other.numerator, self.denominator * other.denominator)
 
     def __truediv__(self, other):
-        return self * other.invert()
+        return other.invert() * self
 
     def __le__(self, other):
         if isinstance(other, Entity):
@@ -97,32 +98,42 @@ class Rational:
         return True
 
     def __pow__(self, power, modulo=None):
+        other = Rational(self.numerator, self.denominator)
         if isinstance(power, Entity):
-            slots = Entity(power.encoder, bits=power.encoder.deep)
-            assert sum([power.encoder.zero.iff(slots[i], 1) for i in
-                        range(power.encoder.deep)]) == 1
-            assert sum([power.encoder.zero.iff(slots[i], i) for i in
-                        range(power.encoder.deep)]) == power
-            return sum(
-                [(self ** i) * power.encoder.zero.iff(slots[i], 1) for i in
-                 range(power.encoder.deep)])
+            aa = Entity(power.encoder, bits=power.bits // 2)
+            assert aa[[0]](0, 1) == 0
+            assert sum([aa[[i]](0, 1) for i in range(power.bits // 2)]) == 1
+            assert sum([aa[[i]](0, i) for i in range(power.bits // 2)]) == power
+            if modulo is not None:
+                assert modulo != 0
+                return sum([Rational(aa[[i]](0, other.numerator), aa[[i]](1, other.denominator)) for i in range(power.bits // 2)]) % modulo
+            return sum([Rational(aa[[i]](0, other.numerator), aa[[i]](1, other.denominator)) ** i for i in range(power.bits // 2)])
         else:
-            other = self
             for _ in range(power - 1):
-                other = other * self
+                other *= self
+            if modulo is not None:
+                return other % modulo
             return other
 
     def __abs__(self):
-        return Rational(abs(self.denominator), abs(self.numerator))
+        if self.denominator == 0:
+            self.denominator = 1
+        return Rational(abs(self.numerator), abs(self.denominator))
 
     def __str__(self):
         return self.__repr__()
 
     def __repr__(self):
-        return '({} / {})'.format(self.denominator, self.numerator)
+        if self.denominator == 0:
+            self.denominator = 1        
+        return '({} / {})'.format(self.numerator, self.denominator)
 
     def __float__(self):
-        return float(self.denominator) / float(self.numerator)
+        if self.denominator == 0:
+            self.denominator = 1
+        return float(self.numerator) / float(self.denominator)
 
     def invert(self):
-        return Rational(self.numerator, self.denominator)
+        if self.denominator == 0:
+            self.denominator = 1
+        return Rational(self.denominator, self.numerator)

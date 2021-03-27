@@ -18,8 +18,8 @@ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **************************************************************************************************/
 
-#ifndef SLIME_Dimacs_h
-#define SLIME_Dimacs_h
+#ifndef SLIME_DIMACS_H
+#define SLIME_DIMACS_H
 
 #include <stdio.h>
 

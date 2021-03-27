@@ -1,53 +1,69 @@
-/***********************************************************************************[SimpSolver.cc]
-MiniSat -- Copyright (c) 2006,      Niklas Een, Niklas Sorensson
-           Copyright (c) 2007-2010, Niklas Sorensson
+/***************************************************************************************s
+SLIME -- Copyright (c) 2021, Oscar Riveros, oscar.riveros@peqnp.science,
+Santiago, Chile. https://github.com/maxtuno/SLIME
 
-Chanseok Oh's MiniSat Patch Series -- Copyright (c) 2015, Chanseok Oh
+DurianSat -- Copyright (c) 2020, Arijit Shaw, Kuldeep S. Meel
 
-Maple_LCM, Based on MapleCOMSPS_DRUP -- Copyright (c) 2017, Mao Luo, Chu-Min LI, Fan Xiao: implementing a learnt clause minimisation approach
-Reference: M. Luo, C.-M. Li, F. Xiao, F. Manya, and Z. L. , “An effective learnt clause minimization approach for cdcl sat solvers,” in IJCAI-2017, 2017, pp. to–appear.
+SLIME -- Copyright (c) 2019, Oscar Riveros, oscar.riveros@peqnp.science,
+Santiago, Chile. https://maxtuno.github.io/slime-sat-solver
 
-Maple_LCM_Dist, Based on Maple_LCM -- Copyright (c) 2017, Fan Xiao, Chu-Min LI, Mao Luo: using a new branching heuristic called Distance at the beginning of search
+Maple_LCM_Dist_Chrono -- Copyright (c) 2018, Vadim Ryvchin, Alexander Nadel
 
+GlucoseNbSAT -- Copyright (c) 2016,Chu Min LI,Mao Luo and Fan Xiao
+                           Huazhong University of science and technology, China
+                           MIS, Univ. Picardie Jules Verne, France
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
-associated documentation files (the "Software"), to deal in the Software without restriction,
-including without limitation the rights to use, copy, modify, merge, publish, distribute,
-sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+MapleSAT -- Copyright (c) 2016, Jia Hui Liang, Vijay Ganesh
 
-The above copyright notice and this permission notice shall be included in all copies or
-substantial portions of the Software.
+MiniSat -- Copyright (c) 2003-2006, Niklas Een, Niklas Sorensson
+           Copyright (c) 2007-2010  Niklas Sorensson
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
-NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT
-OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **************************************************************************************************/
 
-#include "SimpSolver.h"
 #include "mtl/Sort.h"
+#include "SimpSolver.h"
 
 using namespace SLIME;
 
 //=================================================================================================
 // Options:
 
-static const char *_cat = "SLIME";
 
-static bool opt_use_asymm = false;
-static bool opt_use_rcheck = false;
-static bool opt_use_elim = true;
-static int opt_grow = 0;
-static int opt_clause_lim = 20;
-static int opt_subsumption_lim = 1000;
-static double opt_simp_garbage_frac = 0.5;
+static const char *_cat = "SIMP";
+
+static BoolOption opt_use_asymm(_cat, "asymm", "Shrink clauses by asymmetric branching.", false);
+static BoolOption opt_use_rcheck(_cat, "rcheck", "Check if a clause is already implied. (costly)", false);
+static BoolOption opt_use_elim(_cat, "elim", "Perform variable elimination.", true);
+static IntOption opt_grow(_cat, "grow", "Allow a variable elimination step to grow by a number of clauses.", 0);
+static IntOption opt_clause_lim(_cat, "cl-lim", "Variables are not eliminated if it produces a resolvent with a length above this limit. -1 means no limit", 20, IntRange(-1, INT32_MAX));
+static IntOption opt_subsumption_lim(_cat, "sub-lim", "Do not check if subsumption against a clause larger than this. -1 means no limit.", 1000, IntRange(-1, INT32_MAX));
+static DoubleOption opt_simp_garbage_frac(_cat, "simp-gc-frac", "The fraction of wasted memory allowed before a garbage collection is triggered during simplification.", 0.5, DoubleRange(0, false, HUGE_VAL, false));
+
 
 //=================================================================================================
 // Constructor/Destructor:
 
-SimpSolver::SimpSolver() : parsing(false), grow(opt_grow), clause_lim(opt_clause_lim), subsumption_lim(opt_subsumption_lim), simp_garbage_frac(opt_simp_garbage_frac), use_asymm(opt_use_asymm), use_rcheck(opt_use_rcheck), use_elim(opt_use_elim), merges(0), asymm_lits(0), eliminated_vars(0), elimorder(1), use_simplification(true), occurs(ClauseDeleted(ca)), elim_heap(ElimLt(n_occ)), bwdsub_assigns(0), n_touched(0) {
+
+SimpSolver::SimpSolver() :
+        parsing(false), grow(opt_grow), clause_lim(opt_clause_lim), subsumption_lim(opt_subsumption_lim), simp_garbage_frac(opt_simp_garbage_frac), use_asymm(opt_use_asymm), use_rcheck(opt_use_rcheck), use_elim(opt_use_elim), merges(0), asymm_lits(0), eliminated_vars(0), use_simplification(true), occurs(ClauseDeleted(ca)), elim_heap(ElimLt(n_occ)), bwdsub_assigns(0), n_touched(0) {
     vec<Lit> dummy(1, lit_Undef);
     ca.extra_clause_field = true; // NOTE: must happen before allocating the dummy clause below.
     bwdsub_tmpunit = ca.alloc(dummy);
@@ -56,13 +72,16 @@ SimpSolver::SimpSolver() : parsing(false), grow(opt_grow), clause_lim(opt_clause
     Solver::simplify_ready = simplify_ready;
 }
 
-SimpSolver::~SimpSolver() {}
+
+SimpSolver::~SimpSolver() {
+}
+
 
 Var SimpSolver::newVar(bool sign, bool dvar) {
     Var v = Solver::newVar(sign, dvar);
 
-    frozen.push((char)false);
-    eliminated.push((char)false);
+    frozen.push((char) false);
+    eliminated.push((char) false);
 
     if (use_simplification) {
         n_occ.push(0);
@@ -73,6 +92,7 @@ Var SimpSolver::newVar(bool sign, bool dvar) {
     }
     return v;
 }
+
 
 lbool SimpSolver::solve_(bool do_simp, bool turn_off_simp) {
     vec<Var> extra_frozen;
@@ -119,6 +139,7 @@ lbool SimpSolver::solve_(bool do_simp, bool turn_off_simp) {
 
     return result;
 }
+
 
 bool SimpSolver::addClause_(vec<Lit> &ps) {
 #ifndef NDEBUG
@@ -168,6 +189,7 @@ bool SimpSolver::addClause_(vec<Lit> &ps) {
     return true;
 }
 
+
 void SimpSolver::removeClause(CRef cr) {
     const Clause &c = ca[cr];
 
@@ -180,6 +202,7 @@ void SimpSolver::removeClause(CRef cr) {
 
     Solver::removeClause(cr);
 }
+
 
 bool SimpSolver::strengthenClause(CRef cr, Lit l) {
     Clause &c = ca[cr];
@@ -195,8 +218,7 @@ bool SimpSolver::strengthenClause(CRef cr, Lit l) {
         binDRUP_strengthen(c, l, drup_file);
 #else
         for (int i = 0; i < c.size(); i++)
-            if (c[i] != l)
-                fprintf(drup_file, "%i ", (var(c[i]) + 1) * (-2 * sign(c[i]) + 1));
+            if (c[i] != l) fprintf(drup_file, "%i ", (var(c[i]) + 1) * (-2 * sign(c[i]) + 1));
         fprintf(drup_file, "0\n");
 #endif
     }
@@ -224,8 +246,9 @@ bool SimpSolver::strengthenClause(CRef cr, Lit l) {
         updateElimHeap(var(l));
     }
 
-    return c.size() == 1 ? enqueue(c[0]) && propagate() == CRef_Undef : true;
+    return c.size() != 1 || enqueue(c[0]) && propagate() == CRef_Undef;
 }
+
 
 // Returns FALSE if clause is always satisfied ('out_clause' should not be used).
 bool SimpSolver::merge(const Clause &_ps, const Clause &_qs, Var v, vec<Lit> &out_clause) {
@@ -246,10 +269,10 @@ bool SimpSolver::merge(const Clause &_ps, const Clause &_qs, Var v, vec<Lit> &ou
                         goto next;
                     }
                 }
-                out_clause.push(qs[i]);
             }
+            out_clause.push(qs[i]);
         }
-    next:;
+        next:;
     }
 
     for (int i = 0; i < ps.size(); i++)
@@ -259,6 +282,7 @@ bool SimpSolver::merge(const Clause &_ps, const Clause &_qs, Var v, vec<Lit> &ou
     return true;
 }
 
+
 // Returns FALSE if clause is always satisfied.
 bool SimpSolver::merge(const Clause &_ps, const Clause &_qs, Var v, int &size) {
     merges++;
@@ -266,8 +290,8 @@ bool SimpSolver::merge(const Clause &_ps, const Clause &_qs, Var v, int &size) {
     bool ps_smallest = _ps.size() < _qs.size();
     const Clause &ps = ps_smallest ? _qs : _ps;
     const Clause &qs = ps_smallest ? _ps : _qs;
-    const Lit *__ps = (const Lit *)ps;
-    const Lit *__qs = (const Lit *)qs;
+    const Lit *__ps = (const Lit *) ps;
+    const Lit *__qs = (const Lit *) qs;
 
     size = ps.size() - 1;
 
@@ -284,15 +308,15 @@ bool SimpSolver::merge(const Clause &_ps, const Clause &_qs, Var v, int &size) {
             }
             size++;
         }
-    next:;
+        next:;
     }
 
     return true;
 }
 
+
 void SimpSolver::gatherTouchedClauses() {
-    if (n_touched == 0)
-        return;
+    if (n_touched == 0) return;
 
     int i, j;
     for (i = j = 0; i < subsumption_queue.size(); i++)
@@ -317,6 +341,7 @@ void SimpSolver::gatherTouchedClauses() {
     n_touched = 0;
 }
 
+
 bool SimpSolver::implied(const vec<Lit> &c) {
     assert(decisionLevel() == 0);
 
@@ -335,6 +360,7 @@ bool SimpSolver::implied(const vec<Lit> &c) {
     return result;
 }
 
+
 // Backward subsumption + backward subsumption resolution
 bool SimpSolver::backwardSubsumptionCheck(bool verbose) {
     int cnt = 0;
@@ -343,13 +369,6 @@ bool SimpSolver::backwardSubsumptionCheck(bool verbose) {
     assert(decisionLevel() == 0);
 
     while (subsumption_queue.size() > 0 || bwdsub_assigns < trail.size()) {
-
-        // Empty subsumption queue and return immediately on user-interrupt:
-        if (asynch_interrupt) {
-            subsumption_queue.clear();
-            bwdsub_assigns = trail.size();
-            break;
-        }
 
         // Check top-level assignments by creating a dummy clause and placing it in the queue:
         if (subsumption_queue.size() == 0 && bwdsub_assigns < trail.size()) {
@@ -363,10 +382,9 @@ bool SimpSolver::backwardSubsumptionCheck(bool verbose) {
         subsumption_queue.pop();
         Clause &c = ca[cr];
 
-        if (c.mark())
-            continue;
+        if (c.mark()) continue;
 
-        assert(c.size() > 1 || value(c[0]) == l_True); // Unit-clauses should have been propagated before this point.
+        assert(c.size() > 1 || value(c[0]) == l_True);    // Unit-clauses should have been propagated before this point.
 
         // Find best variable to scan:
         Var best = var(c[0]);
@@ -376,7 +394,7 @@ bool SimpSolver::backwardSubsumptionCheck(bool verbose) {
 
         // Search all candidates:
         vec<CRef> &_cs = occurs.lookup(best);
-        CRef *cs = (CRef *)_cs;
+        CRef *cs = (CRef *) _cs;
 
         for (int j = 0; j < _cs.size(); j++)
             if (c.mark())
@@ -402,12 +420,12 @@ bool SimpSolver::backwardSubsumptionCheck(bool verbose) {
     return true;
 }
 
+
 bool SimpSolver::asymm(Var v, CRef cr) {
     Clause &c = ca[cr];
     assert(decisionLevel() == 0);
 
-    if (c.mark() || satisfied(c))
-        return true;
+    if (c.mark() || satisfied(c)) return true;
 
     trail_lim.push(trail.size());
     Lit l = lit_Undef;
@@ -429,6 +447,7 @@ bool SimpSolver::asymm(Var v, CRef cr) {
     return true;
 }
 
+
 bool SimpSolver::asymmVar(Var v) {
     assert(use_simplification);
 
@@ -444,10 +463,12 @@ bool SimpSolver::asymmVar(Var v) {
     return backwardSubsumptionCheck();
 }
 
+
 static void mkElimClause(vec<uint32_t> &elimclauses, Lit x) {
     elimclauses.push(toInt(x));
     elimclauses.push(1);
 }
+
 
 static void mkElimClause(vec<uint32_t> &elimclauses, Var v, Clause &c) {
     int first = elimclauses.size();
@@ -472,6 +493,7 @@ static void mkElimClause(vec<uint32_t> &elimclauses, Var v, Clause &c) {
     elimclauses.push(c.size());
 }
 
+
 bool SimpSolver::eliminateVar(Var v) {
     assert(!frozen[v]);
     assert(!isEliminated(v));
@@ -492,7 +514,8 @@ bool SimpSolver::eliminateVar(Var v) {
 
     for (int i = 0; i < pos.size(); i++)
         for (int j = 0; j < neg.size(); j++)
-            if (merge(ca[pos[i]], ca[neg[j]], v, clause_size) && (++cnt > cls.size() + grow || (clause_lim != -1 && clause_size > clause_lim)))
+            if (merge(ca[pos[i]], ca[neg[j]], v, clause_size) &&
+                (++cnt > cls.size() + grow || (clause_lim != -1 && clause_size > clause_lim)))
                 return true;
 
     // Delete and store old clauses:
@@ -532,37 +555,6 @@ bool SimpSolver::eliminateVar(Var v) {
     return backwardSubsumptionCheck();
 }
 
-bool SimpSolver::substitute(Var v, Lit x) {
-    assert(!frozen[v]);
-    assert(!isEliminated(v));
-    assert(value(v) == l_Undef);
-
-    if (!ok)
-        return false;
-
-    eliminated[v] = true;
-    setDecisionVar(v, false);
-    const vec<CRef> &cls = occurs.lookup(v);
-
-    vec<Lit> &subst_clause = add_tmp;
-    for (int i = 0; i < cls.size(); i++) {
-        Clause &c = ca[cls[i]];
-
-        subst_clause.clear();
-        for (int j = 0; j < c.size(); j++) {
-            Lit p = c[j];
-            subst_clause.push(var(p) == v ? x ^ sign(p) : p);
-        }
-
-        if (!addClause_(subst_clause))
-            return ok = false;
-
-        removeClause(cls[i]);
-    }
-
-    return true;
-}
-
 void SimpSolver::extendModel() {
     int i, j;
     Lit x;
@@ -574,7 +566,7 @@ void SimpSolver::extendModel() {
 
         x = toLit(elimclauses[i]);
         model[var(x)] = lbool(!sign(x));
-    next:;
+        next:;
     }
 }
 
@@ -601,30 +593,21 @@ bool SimpSolver::eliminate(bool turn_off_elim) {
     int iter = 0;
     int n_cls, n_cls_init, n_vars;
 
-    if (nVars() == 0)
-        goto cleanup; // User disabling preprocessing.
+    if (nVars() == 0) goto cleanup; // User disabling preprocessing.
 
     // Get an initial number of clauses (more accurately).
-    if (trail.size() != 0)
-        removeSatisfied();
+    if (trail.size() != 0) removeSatisfied();
     n_cls_init = nClauses();
 
     res = eliminate_(); // The first, usual variable elimination of MiniSat.
-    if (!res)
-        goto cleanup;
+    if (!res) goto cleanup;
 
     n_cls = nClauses();
     n_vars = nFreeVars();
 
-    if (log) {
+    if (rank == 0 && log) {
         printf("c Reduced to %d vars, %d cls (grow=%d)\n", n_vars, n_cls, grow);
     }
-
-    /*
-    if ((double)n_cls / n_vars >= 10 || n_vars < 10000){
-        printf("c No iterative elimination performed. (vars=%d, c/v ratio=%.1f)\n", n_vars, (double)n_cls / n_vars);
-        goto cleanup; }
-    */
 
     grow++;
     for (; grow < INT32_MAX; grow++) {
@@ -642,29 +625,27 @@ bool SimpSolver::eliminate(bool turn_off_elim) {
         int n_vars_last = nFreeVars();
 
         res = eliminate_();
-        if (!res || n_vars_last == nFreeVars())
-            break;
+        if (!res || n_vars_last == nFreeVars()) break;
         iter++;
 
         int n_cls_now = nClauses();
         int n_vars_now = nFreeVars();
 
-        double cl_inc_rate = (double)n_cls_now / n_cls_last;
-        double var_dec_rate = (double)n_vars_last / n_vars_now;
+        double cl_inc_rate = (double) n_cls_now / n_cls_last;
+        double var_dec_rate = (double) n_vars_last / n_vars_now;
 
-        if (log) {
+        if (rank == 0 && log) {
             printf("c Reduced to %d vars, %d cls (grow=%d)\n", n_vars_now, n_cls_now, grow);
             // printf("c cl_inc_rate=%.3f, var_dec_rate=%.3f\n", cl_inc_rate, var_dec_rate);
         }
 
-        if (n_cls_now > n_cls_init || cl_inc_rate > var_dec_rate)
-            break;
+        if (n_cls_now > n_cls_init || cl_inc_rate > var_dec_rate) break;
     }
-    if (log) {
+    if (rank == 0 && log) {
         printf("c No. effective iterative eliminations: %d\n", iter);
     }
 
-cleanup:
+    cleanup:
     touched.clear(true);
     occurs.clear(true);
     n_occ.clear(true);
@@ -682,6 +663,7 @@ cleanup:
     return res;
 }
 
+
 bool SimpSolver::eliminate_() {
     if (!simplify())
         return false;
@@ -696,17 +678,9 @@ bool SimpSolver::eliminate_() {
 
         gatherTouchedClauses();
         // printf("  ## (time = %6.2f s) BWD-SUB: queue = %d, trail = %d\n", cpuTime(), subsumption_queue.size(), trail.size() - bwdsub_assigns);
-        if ((subsumption_queue.size() > 0 || bwdsub_assigns < trail.size()) && !backwardSubsumptionCheck(true)) {
+        if ((subsumption_queue.size() > 0 || bwdsub_assigns < trail.size()) &&
+            !backwardSubsumptionCheck(true)) {
             ok = false;
-            goto cleanup;
-        }
-
-        // Empty elim_heap and return immediately on user-interrupt:
-        if (asynch_interrupt) {
-            assert(bwdsub_assigns == trail.size());
-            assert(subsumption_queue.size() == 0);
-            assert(n_touched == 0);
-            elim_heap.clear();
             goto cleanup;
         }
 
@@ -714,11 +688,7 @@ bool SimpSolver::eliminate_() {
         for (int cnt = 0; !elim_heap.empty(); cnt++) {
             Var elim = elim_heap.removeMin();
 
-            if (asynch_interrupt)
-                break;
-
-            if (isEliminated(elim) || value(elim) != l_Undef)
-                continue;
+            if (isEliminated(elim) || value(elim) != l_Undef) continue;
 
             if (use_asymm) {
                 // Temporarily freeze variable. Otherwise, it would immediately end up on the queue again:
@@ -743,7 +713,7 @@ bool SimpSolver::eliminate_() {
 
         assert(subsumption_queue.size() == 0);
     }
-cleanup:
+    cleanup:
     // To get an accurate number of clauses.
     if (trail_size_last != trail.size())
         removeSatisfied();
@@ -759,12 +729,13 @@ cleanup:
     return ok;
 }
 
+
 //=================================================================================================
 // Garbage Collection methods:
 
+
 void SimpSolver::relocAll(ClauseAllocator &to) {
-    if (!use_simplification)
-        return;
+    if (!use_simplification) return;
 
     // All occurs lists:
     //
@@ -784,6 +755,7 @@ void SimpSolver::relocAll(ClauseAllocator &to) {
     //
     ca.reloc(bwdsub_tmpunit, to);
 }
+
 
 void SimpSolver::garbageCollect() {
     // Initialize the next region to a size corresponding to the estimated utilization degree. This
