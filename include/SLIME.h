@@ -14,7 +14,7 @@
 #include <SimpSolver.h>
 #include <SolverTypes.h>
 
-// #define DRAT Generate unsat proof.
+#define DRAT // Generate unsat proof.
 
 using namespace SLIME;
 

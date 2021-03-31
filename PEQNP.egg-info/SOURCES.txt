@@ -6,8 +6,6 @@ PEQNP.egg-info/SOURCES.txt
 PEQNP.egg-info/dependency_links.txt
 PEQNP.egg-info/top_level.txt
 include/Dimacs.h
-include/Ls.h
-include/Options.h
 include/ParseUtils.h
 include/SLIME.h
 include/SimpSolver.h
@@ -33,7 +31,6 @@ peqnp/linear.py
 peqnp/rational.py
 peqnp/solver.py
 peqnp/stdlib.py
-src/Ls.cc
 src/SLIME.cc
 src/SimpSolver.cc
 src/Solver.cc

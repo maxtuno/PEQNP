@@ -937,3 +937,16 @@ def external_reset(key):
     import os
     os.remove(key + '.cnf')
     render = False
+
+
+def rotate(x, k):
+    """
+    Rotate an integer k places
+    :param x: the integer.
+    :param k: k-places.
+    :return: a rotated integer.
+    """
+    v = integer()
+    for i in range(bits()):
+        assert x[[(i + k) % bits()]](0, 1) == v[[i]](0, 1)
+    return v
