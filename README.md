@@ -4,7 +4,7 @@
 
 ## Mathematical Solver
 
-The PEQNP System its an automatic CNF encoder integrated with Python.
+The PEQNP system its an automatic CNF compiler and interpreter integrated with Python.
 
 - [Try PEQNP on Google Colab](https://colab.research.google.com/github/maxtuno/PEQNP/blob/master/docs/PEQNP.ipynb)
 - [DRILLING PROBLEM](https://colab.research.google.com/github/maxtuno/PEQNP/blob/master/docs/drilling_problem.ipynb)
