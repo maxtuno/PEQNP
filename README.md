@@ -11,6 +11,7 @@ The PEQNP system its an automatic CNF compiler and interpreter integrated with P
 - [A TRANSPORTATION PROBLEM](https://colab.research.google.com/github/maxtuno/PEQNP/blob/master/docs/transport.ipynb)
 - [KNIGHT'S TOUR SLIME CLOUD (EXTERNAL)](https://colab.research.google.com/github/maxtuno/PEQNP/blob/master/docs/knight_cloud.ipynb)
 - [CELL TOWER MAXIMAL COVERAGE AT MINIMAL COST](https://colab.research.google.com/github/maxtuno/PEQNP/blob/master/docs/CELL_TOWER_COVERAGE.ipynb)
+- [INTRODUCTION TO TENSORS](https://colab.research.google.com/github/maxtuno/PEQNP/blob/master/docs/tensors.ipynb)
 
 ## Installation
 ```python
