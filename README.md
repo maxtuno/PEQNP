@@ -18,6 +18,8 @@ The PEQNP system its an automatic CNF compiler and interpreter integrated with P
 pip install PEQNP
 ```
 
+Note: Try [SATX](https://github.com/maxtuno/SATX) an experimental extension of www.PEQNP.com with support for negative numbers, modular arithmetics, and more...
+
 ## SLIME 4 SAT Solver 
 
 [Sat Competition 2020, 3rd place on Cloud Tack](https://satcompetition.github.io/2020/results.html)
