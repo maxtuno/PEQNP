@@ -18,7 +18,7 @@ The PEQNP system its an automatic CNF compiler and interpreter integrated with P
 pip install PEQNP
 ```
 
-Note: Try [SAT-X](https://github.com/maxtuno/SATX) an experimental extension of www.PEQNP.com with support for negative numbers, modular arithmetics, and more...
+Try [SAT-X](https://github.com/maxtuno/SATX) SAT-X is a language for constrained optimization and decision problems over positive integers, that work with any SAT Competition standard SAT solver. Is based on Python, and is ase to learn and easy to use with all technologies associated to this language.
 
 ## SLIME 4 SAT Solver 
 
