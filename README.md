@@ -20,9 +20,8 @@ pip install PEQNP
 
 Try [SAT-X](https://github.com/maxtuno/SATX) a language for constrained optimization and decision problems over positive integers, that work with any SAT Competition standard SAT solver. Is based on Python, and is ase to learn and easy to use with all technologies associated to this language.
 
-## SLIME [sc2021]
-Winner of Crypto Track and 3rd place on Cloud Track at the SAT Competition 2021 https://satcompetition.github.io/2021/  
-http://github.com/maxtuno/SLIME
+## SLIME
+[SLIME](http://github.com/maxtuno/SLIME) Winner of Crypto Track and 3rd place on Cloud Track at the [SAT Competition 2021](https://satcompetition.github.io/2021/)
   
 ## SLIME 4 SAT Solver 
 
