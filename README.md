@@ -22,6 +22,8 @@ Try [SAT-X](https://github.com/maxtuno/SATX) a language for constrained optimiza
 
 ## SLIME
 [SLIME](http://github.com/maxtuno/SLIME) Winner of Crypto Track and 3rd place on Cloud Track at the [SAT Competition 2021](https://satcompetition.github.io/2021/)
+
+<img border="0" alt="SLIME" src="https://raw.githubusercontent.com/maxtuno/PEQNP/master/medals.jpeg" width="200" height="267">
   
 ## SLIME 4 SAT Solver 
 
